@@ -4,6 +4,7 @@
 #include "EdGraphUtilities.h"
 #include "Modules/ModuleManager.h"
 #include "IAssetTools.h"
+#include "Room/SRoomGraphNodeFactory.h"
 
 class IAssetTypeActions;
 
@@ -14,5 +15,6 @@ public:
     virtual void ShutdownModule() override;
 
 private:
-    TSharedPtr<IAssetTypeActions> ProceduralLevelGraphAssetTypeActions;
+    TSharedPtr<IAssetTypeActions> AssetTypeActions;
+    TSharedPtr<FSRoomGraphNodeFactory> SRoomGraphNodeFactory;
 };

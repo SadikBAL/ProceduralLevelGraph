@@ -52,12 +52,16 @@ void UMazeGraphSchema::GetGraphContextActions(FGraphContextMenuBuilder& ContextM
 
 const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const
 {
-    //You cannot connect yourself.
-    if (A->GetOwningNode() == B->GetOwningNode())
-    {
-        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
-    }
+    
     return FPinConnectionResponse(CONNECT_RESPONSE_MAKE, FText::GetEmpty());
 }
+
+ class FConnectionDrawingPolicy* UMazeGraphSchema::CreateConnectionDrawingPolicy(int32 InBackLayerID,
+     int32 InFrontLayerID, float InZoomFactor, const FSlateRect& InClippingRect,
+     class FSlateWindowElementList& InDrawElements, class UEdGraph* InGraphObj) const
+ {
+     return Super::CreateConnectionDrawingPolicy(InBackLayerID, InFrontLayerID, InZoomFactor, InClippingRect,
+                                                 InDrawElements, InGraphObj);
+ }
 
 #undef LOCTEXT_NAMESPACE

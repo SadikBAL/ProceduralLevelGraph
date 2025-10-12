@@ -8,13 +8,14 @@
 void FProceduralLevelGraphEditorModule::StartupModule()
 {
     IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
-
-    // Custom asset kategorisi oluştur
+    
     EAssetTypeCategories::Type PLGCategory = AssetTools.RegisterAdvancedAssetCategory(FName(TEXT("ProceduralLevelGraph")), LOCTEXT("ProceduralLevelGraphCategory", "Procedural Level Graph"));
+    
+    AssetTypeActions = MakeShareable(new FAssetTypeActions_ProceduralLevelGraph(PLGCategory));
+    AssetTools.RegisterAssetTypeActions(AssetTypeActions.ToSharedRef());
 
-    // Asset'imizi kaydet
-    ProceduralLevelGraphAssetTypeActions = MakeShareable(new FAssetTypeActions_ProceduralLevelGraph(PLGCategory));
-    AssetTools.RegisterAssetTypeActions(ProceduralLevelGraphAssetTypeActions.ToSharedRef());
+    SRoomGraphNodeFactory = MakeShareable(new FSRoomGraphNodeFactory());
+    FEdGraphUtilities::RegisterVisualNodeFactory(SRoomGraphNodeFactory);
 }
 
 void FProceduralLevelGraphEditorModule::ShutdownModule()
@@ -22,10 +23,14 @@ void FProceduralLevelGraphEditorModule::ShutdownModule()
     if (FModuleManager::Get().IsModuleLoaded("AssetTools"))
     {
         IAssetTools& AssetTools = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools").Get();
-        if (ProceduralLevelGraphAssetTypeActions.IsValid())
+        if (AssetTypeActions.IsValid())
         {
-            AssetTools.UnregisterAssetTypeActions(ProceduralLevelGraphAssetTypeActions.ToSharedRef());
+            AssetTools.UnregisterAssetTypeActions(AssetTypeActions.ToSharedRef());
         }
+    }
+    if (SRoomGraphNodeFactory.IsValid())
+    {
+        FEdGraphUtilities::UnregisterVisualNodeFactory(SRoomGraphNodeFactory);
     }
 }
 
