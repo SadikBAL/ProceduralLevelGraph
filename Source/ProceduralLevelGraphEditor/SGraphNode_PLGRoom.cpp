@@ -64,19 +64,28 @@ void SGraphNode_PLGRoom::UpdateGraphNode()
     LeftPinBox->ClearChildren();
     RightPinBox->ClearChildren();
 
-    // Pinleri oluştur ve VAR OLAN kutuların içine yerleştir
+    // Pinleri oluştur, dizilere ekle ve kutuların içine yerleştir
     for (UEdGraphPin* Pin : GraphNode->Pins)
     {
         if (Pin && !Pin->bHidden)
         {
             TSharedPtr<SGraphPin> PinWidget = SNew(SGraphPinExec, Pin);
             
+            // Pin widget'ını ana sınıfın dizilerine ekle
+            if (Pin->Direction == EEdGraphPinDirection::EGPD_Input)
+            {
+                InputPins.Add(PinWidget.ToSharedRef());
+            }
+            else
+            {
+                OutputPins.Add(PinWidget.ToSharedRef());
+            }
+
             const FName PinName = Pin->GetFName();
             if (PinName == FName("North")) TopPinBox->AddSlot().HAlign(HAlign_Center).AutoWidth().Padding(5)[PinWidget.ToSharedRef()];
             else if (PinName == FName("South")) BottomPinBox->AddSlot().HAlign(HAlign_Center).AutoWidth().Padding(5)[PinWidget.ToSharedRef()];
             else if (PinName == FName("West")) LeftPinBox->AddSlot().VAlign(VAlign_Center).AutoHeight().Padding(5)[PinWidget.ToSharedRef()];
             else if (PinName == FName("East")) RightPinBox->AddSlot().VAlign(VAlign_Center).AutoHeight().Padding(5)[PinWidget.ToSharedRef()];
-            
         }
     }
 }
