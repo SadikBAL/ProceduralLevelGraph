@@ -17,9 +17,9 @@ public:
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs, UEdGraphNode_PLGRoom* InNode);
-	virtual void UpdateGraphNode() override;
 
 protected:
+	virtual void CreatePinWidgets() override;
 	TSharedPtr<SNodeTitle> NodeTitle;
 	// Pinlerin yerleştirileceği konteyner widget'ları için pointer'lar
 	TSharedPtr<SHorizontalBox> TopPinBox;
