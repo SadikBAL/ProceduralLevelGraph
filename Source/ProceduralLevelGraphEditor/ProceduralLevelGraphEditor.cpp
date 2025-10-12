@@ -1,12 +1,11 @@
 #include "ProceduralLevelGraphEditor.h"
-#include "ProceduralLevelGraphRuntime/ProceduralLevelGraph.h"
-#include "EdGraph_ProceduralLevelGraph.h"
+#include "ProceduralLevelGraphRuntime/MazeGraph.h"
 #include "EdGraph/EdGraph.h"
 #include "Widgets/Docking/SDockTab.h"
 #include "PropertyEditorModule.h"
 #include "IDetailsView.h"
 //#include "SGraphEditor.h"
-#include "EdGraphSchema_ProceduralLevelGraph.h"
+#include "Maze/MazeGraphSchema.h"
 #include "GraphEditAction.h"
 #include "EdGraph/EdGraphSchema.h"
 #include "Framework/Commands/GenericCommands.h"
@@ -21,7 +20,7 @@ FDelegateHandle OnGraphChangedDelegateHandle;
 
 void FProceduralLevelGraphEditor::HandleDelete()
 {
-    const FScopedTransaction Transaction( NSLOCTEXT("UnrealEd", "SoundCueEditorDeleteSelectedNode", "Delete Selected Sound Cue Node") );
+    const FScopedTransaction Transaction( NSLOCTEXT("UnrealEd", "EditorDeleteSelectedNode", "Delete Selected Node") );
 
     GraphEditorWidget->GetCurrentGraph()->Modify();
 
@@ -62,14 +61,14 @@ FProceduralLevelGraphEditor::~FProceduralLevelGraphEditor()
 
 
 
-void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UProceduralLevelGraph* InGraph)
+void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UMazeGraph* InGraph)
 {
     GraphAsset = InGraph;
 
     if (GraphAsset->EdGraph == nullptr)
     {
-        GraphAsset->EdGraph = NewObject<UEdGraph_ProceduralLevelGraph>(GraphAsset, FName("ProceduralLevelGraph_EdGraph"), RF_Transactional);
-        GraphAsset->EdGraph->Schema = UEdGraphSchema_ProceduralLevelGraph::StaticClass();
+        GraphAsset->EdGraph = NewObject<UEdGraph>(GraphAsset, FName("MazeGraph_EdGraph"), RF_Transactional);
+        GraphAsset->EdGraph->Schema = UMazeGraphSchema::StaticClass();
         GraphAsset->EdGraph->bAllowDeletion = false;
     }
     
@@ -77,7 +76,7 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
 
     FGraphEditorCommands::Register();
 
-    TSharedRef<FTabManager::FLayout> StandaloneDefaultLayout = FTabManager::NewLayout("Standalone_ProceduralLevelGraphEditor_Layout_v1")
+    TSharedRef<FTabManager::FLayout> StandaloneDefaultLayout = FTabManager::NewLayout("Standalone_MazeGraph_Layout_V1")
         ->AddArea
         (
             FTabManager::NewPrimaryArea()->SetOrientation(Orient_Vertical)

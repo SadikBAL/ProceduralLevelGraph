@@ -1,6 +1,7 @@
 #include "AssetTypeActions_ProceduralLevelGraph.h"
-#include "ProceduralLevelGraphEditor.h" // Henüz oluşturmadık, bir sonraki adım
-#include "ProceduralLevelGraphRuntime/ProceduralLevelGraph.h"
+
+#include "ProceduralLevelGraphEditor/ProceduralLevelGraphEditor.h"
+#include "ProceduralLevelGraphRuntime/MazeGraph.h"
 
 #define LOCTEXT_NAMESPACE "AssetTypeActions_ProceduralLevelGraph"
 
@@ -21,7 +22,7 @@ FColor FAssetTypeActions_ProceduralLevelGraph::GetTypeColor() const
 
 UClass* FAssetTypeActions_ProceduralLevelGraph::GetSupportedClass() const
 {
-    return UProceduralLevelGraph::StaticClass();
+    return UMazeGraph::StaticClass();
 }
 
 void FAssetTypeActions_ProceduralLevelGraph::OpenAssetEditor(const TArray<UObject*>& InObjects, TSharedPtr<class IToolkitHost> EditWithinLevelEditor)
@@ -30,7 +31,7 @@ void FAssetTypeActions_ProceduralLevelGraph::OpenAssetEditor(const TArray<UObjec
 
     for (auto ObjIt = InObjects.CreateConstIterator(); ObjIt; ++ObjIt)
     {
-        if (UProceduralLevelGraph* Graph = Cast<UProceduralLevelGraph>(*ObjIt))
+        if (UMazeGraph* Graph = Cast<UMazeGraph>(*ObjIt))
         {
             TSharedRef<FProceduralLevelGraphEditor> NewEditor(new FProceduralLevelGraphEditor());
             NewEditor->InitEditor(Mode, EditWithinLevelEditor, Graph);

@@ -1,5 +1,5 @@
-#include "EdGraphSchema_ProceduralLevelGraph.h"
-#include "EdGraphNode_PLGRoom.h"
+ #include "MazeGraphSchema.h"
+#include "ProceduralLevelGraphEditor/Room/RoomGraphNode.h"
 #include "EdGraph/EdGraph.h"
 #include "Framework/MultiBox/MultiBoxBuilder.h"
 #include "ToolMenus.h"
@@ -40,30 +40,23 @@ UEdGraphNode* FPLGGraphSchemaAction_NewNode::PerformAction(class UEdGraph* Paren
     return ResultNode;
 }
 
-void UEdGraphSchema_ProceduralLevelGraph::GetGraphContextActions(FGraphContextMenuBuilder& ContextMenuBuilder) const
+void UMazeGraphSchema::GetGraphContextActions(FGraphContextMenuBuilder& ContextMenuBuilder) const
 {
     TSharedPtr<FPLGGraphSchemaAction_NewNode> NewNodeAction_Room(new FPLGGraphSchemaAction_NewNode(
         LOCTEXT("NodeCategory", "Procedural"),
         LOCTEXT("NewRoomNode", "Add Room Node"),
         LOCTEXT("NewRoomNodeTooltip", "Adds a room node."), 0));
-    NewNodeAction_Room->NodeTemplate = NewObject<UEdGraphNode_PLGRoom>(ContextMenuBuilder.OwnerOfTemporaries);
+    NewNodeAction_Room->NodeTemplate = NewObject<URoomGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
     ContextMenuBuilder.AddAction(NewNodeAction_Room);
 }
 
-const FPinConnectionResponse UEdGraphSchema_ProceduralLevelGraph::CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const
+const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const
 {
-    // Aynı node'a bağlanmayı engelle
+    //You cannot connect yourself.
     if (A->GetOwningNode() == B->GetOwningNode())
     {
         return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
     }
-
-    // Input'u input'a, output'u output'a bağlamayı engelle
-    if (A->Direction == B->Direction)
-    {
-        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameDirection", "Cannot connect pins with the same direction."));
-    }
-
     return FPinConnectionResponse(CONNECT_RESPONSE_MAKE, FText::GetEmpty());
 }
 

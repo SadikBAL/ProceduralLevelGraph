@@ -2,18 +2,18 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "ProceduralLevelGraph.generated.h"
+#include "MazeGraph.generated.h"
 
 // Forward declaration
 class UEdGraph;
 
 UCLASS(Blueprintable)
-class PROCEDURALLEVELGRAPHRUNTIME_API UProceduralLevelGraph : public UObject
+class PROCEDURALLEVELGRAPHRUNTIME_API UMazeGraph : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UProceduralLevelGraph();
+    UMazeGraph();
 
 #if WITH_EDITORONLY_DATA
     // Editörde grafiği görselleştirmek için kullanılacak olan EdGraph referansı.

@@ -1,6 +1,7 @@
 #include "ProceduralLevelGraphEditorModule.h"
-#include "AssetTypeActions_ProceduralLevelGraph.h"
+
 #include "EdGraphUtilities.h"
+#include "AssetTypeActions/AssetTypeActions_ProceduralLevelGraph.h"
 
 #define LOCTEXT_NAMESPACE "FProceduralLevelGraphEditorModule"
 

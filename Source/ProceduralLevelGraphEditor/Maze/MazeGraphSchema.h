@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "EdGraph/EdGraphSchema.h"
 #include "ScopedTransaction.h"
-#include "EdGraphSchema_ProceduralLevelGraph.generated.h"
+#include "MazeGraphSchema.generated.h"
 
 class UEdGraphNode_PLGBase;
 
@@ -12,7 +12,6 @@ struct FPLGGraphSchemaAction_NewNode : public FEdGraphSchemaAction
 {
     GENERATED_BODY();
 
-    // Simple constructor
     FPLGGraphSchemaAction_NewNode() : NodeTemplate(nullptr) {}
 
     FPLGGraphSchemaAction_NewNode(FText InNodeCategory, FText InMenuDesc, FText InToolTip, const int32 InGrouping)
@@ -26,7 +25,7 @@ struct FPLGGraphSchemaAction_NewNode : public FEdGraphSchemaAction
 
 
 UCLASS()
-class UEdGraphSchema_ProceduralLevelGraph : public UEdGraphSchema
+class UMazeGraphSchema : public UEdGraphSchema
 {
     GENERATED_BODY()
 public:
