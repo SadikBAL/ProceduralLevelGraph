@@ -1,7 +1,6 @@
 #include "ProceduralLevelGraphEditorModule.h"
 #include "AssetTypeActions_ProceduralLevelGraph.h"
 #include "EdGraphUtilities.h"
-#include "PLGRoomFactory.h"
 
 #define LOCTEXT_NAMESPACE "FProceduralLevelGraphEditorModule"
 
@@ -15,12 +14,6 @@ void FProceduralLevelGraphEditorModule::StartupModule()
     // Asset'imizi kaydet
     ProceduralLevelGraphAssetTypeActions = MakeShareable(new FAssetTypeActions_ProceduralLevelGraph(PLGCategory));
     AssetTools.RegisterAssetTypeActions(ProceduralLevelGraphAssetTypeActions.ToSharedRef());
-
-    // 1. Yeni fabrikamızdan bir obje oluşturuyoruz.
-    PLGRoomFactory = MakeShareable(new FPLGRoomFactory());
-    
-    // 2. Oluşturduğumuz fabrikayı Unreal Engine'in görsel nod fabrikaları listesine kaydediyoruz.
-    FEdGraphUtilities::RegisterVisualNodeFactory(PLGRoomFactory);
 }
 
 void FProceduralLevelGraphEditorModule::ShutdownModule()
@@ -32,12 +25,6 @@ void FProceduralLevelGraphEditorModule::ShutdownModule()
         {
             AssetTools.UnregisterAssetTypeActions(ProceduralLevelGraphAssetTypeActions.ToSharedRef());
         }
-    }
-    // Modül kapanırken, fabrikamızın kaydını temizliyoruz.
-    if (PLGRoomFactory.IsValid())
-    {
-        FEdGraphUtilities::UnregisterVisualNodeFactory(PLGRoomFactory);
-        PLGRoomFactory.Reset();
     }
 }
 

@@ -15,5 +15,4 @@ public:
 
 private:
     TSharedPtr<IAssetTypeActions> ProceduralLevelGraphAssetTypeActions;
-    TSharedPtr<FGraphPanelNodeFactory> PLGRoomFactory;
 };
