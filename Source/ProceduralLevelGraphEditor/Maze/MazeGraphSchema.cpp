@@ -8,7 +8,7 @@
 #include "GraphEditor.h"
 #include "Framework/Commands/UIAction.h" // FUIAction için gerekli
 
-#define LOCTEXT_NAMESPACE "EdGraphSchema_ProceduralLevelGraph"
+#define LOCTEXT_NAMESPACE "MazeGraphSchema"
 
 UEdGraphNode* FPLGGraphSchemaAction_NewNode::PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin, const FVector2D Location, bool bSelectNewNode)
 {
@@ -55,13 +55,5 @@ const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGrap
     
     return FPinConnectionResponse(CONNECT_RESPONSE_MAKE, FText::GetEmpty());
 }
-
- class FConnectionDrawingPolicy* UMazeGraphSchema::CreateConnectionDrawingPolicy(int32 InBackLayerID,
-     int32 InFrontLayerID, float InZoomFactor, const FSlateRect& InClippingRect,
-     class FSlateWindowElementList& InDrawElements, class UEdGraph* InGraphObj) const
- {
-     return Super::CreateConnectionDrawingPolicy(InBackLayerID, InFrontLayerID, InZoomFactor, InClippingRect,
-                                                 InDrawElements, InGraphObj);
- }
 
 #undef LOCTEXT_NAMESPACE
