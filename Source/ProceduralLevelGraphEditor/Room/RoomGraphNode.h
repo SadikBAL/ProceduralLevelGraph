@@ -1,10 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RoomGraphNodeBase.h"
 #include "RoomGraphNode.generated.h"
 
 UCLASS()
-class URoomGraphNode : public UEdGraphNode
+class URoomGraphNode : public URoomGraphNodeBase
 {
     GENERATED_BODY()
 
