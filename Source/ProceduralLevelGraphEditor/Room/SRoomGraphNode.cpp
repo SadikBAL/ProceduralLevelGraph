@@ -15,7 +15,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
     this->GraphNode = InNode;
 
 	UpdateGraphNode();
-	
+
 	GetOrAddSlot(ENodeZone::Center)
 	.HAlign(HAlign_Center)
 	.VAlign(VAlign_Center)
@@ -24,19 +24,19 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 
 		// Katman 1: Pinler (Kapılar)
 		+ SOverlay::Slot()
-		.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0, -30, 0, 0)
+		.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0, -18, 0, 0)
 		[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
 
 		+ SOverlay::Slot()
-		.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0, 0, 0, -30)
+		.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0, 0, 0, -18)
 		[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
 
 		+ SOverlay::Slot()
-		.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(-36, 0, 0, 0)
+		.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(-24, 0, 0, 0)
 		[ LeftPin.IsValid() ? LeftPin.ToSharedRef() : SNullWidget::NullWidget ]
 
 		+ SOverlay::Slot()
-		.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0, 0, -30, 0)
+		.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0, 0, -18, 0)
 		[ RightPin.IsValid() ? RightPin.ToSharedRef() : SNullWidget::NullWidget ]
 
 		+ SOverlay::Slot()
@@ -61,7 +61,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 			 ]
 		  ]
 	   ]
-	];
+	]; 
 }
 
 void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
@@ -84,7 +84,7 @@ void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 	{
 		RightPin = PinToAdd;
 	}
-	PinToAdd->SetOwner(SharedThis(this));
+	SGraphNode::AddPin(PinToAdd);
 }
 
 TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const

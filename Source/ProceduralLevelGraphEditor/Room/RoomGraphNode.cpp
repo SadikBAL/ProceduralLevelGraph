@@ -12,10 +12,10 @@ FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 }
 void URoomGraphNode::AllocateDefaultPins()
 {
-    CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Delegate, FName("Up"));
-    CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Delegate, FName("Down"));
-    CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Delegate, FName("Left"));
-    CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Delegate, FName("Right"));
+    CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Up"));
+    CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Down"));
+    CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Left"));
+    CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Right"));
     
     FCreatePinParams PinParams;
     PinParams.bIsReference = true;
