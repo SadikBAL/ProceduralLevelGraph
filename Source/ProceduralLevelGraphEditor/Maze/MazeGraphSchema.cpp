@@ -18,6 +18,7 @@ UEdGraphNode* FPLGGraphSchemaAction_NewNode::PerformAction(class UEdGraph* Paren
     if (NodeTemplate)
     {
         const FScopedTransaction Transaction(LOCTEXT("NewNodeTransaction", "New Node"));
+        
         ParentGraph->Modify();
         if (FromPin)
         {
@@ -26,18 +27,14 @@ UEdGraphNode* FPLGGraphSchemaAction_NewNode::PerformAction(class UEdGraph* Paren
 
         NodeTemplate->Rename(nullptr, ParentGraph);
         ParentGraph->AddNode(NodeTemplate, true, bSelectNewNode);
-
         NodeTemplate->CreateNewGuid();
         NodeTemplate->PostPlacedNewNode();
         NodeTemplate->AllocateDefaultPins();
         NodeTemplate->bCanRenameNode = true;
-
         NodeTemplate->NodePosX = Location.X;
         NodeTemplate->NodePosY = Location.Y;
-
         ResultNode = NodeTemplate;
     }
-
     return ResultNode;
 }
 

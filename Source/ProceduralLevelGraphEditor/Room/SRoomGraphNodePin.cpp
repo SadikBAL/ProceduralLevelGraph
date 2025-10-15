@@ -4,8 +4,7 @@
 #include "Interfaces/IPluginManager.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Images/SImage.h"
-#include "Styling/SlateStyleRegistry.h" // Brush oluşturmak için
-#include "Styling/SlateTypes.h"         // FSlateImageBrush için
+#include "Styling/SlateTypes.h"
 
 
 void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
@@ -34,7 +33,7 @@ FSlateColor SRoomGraphNodePin::GetPinColor() const
 	}
 	else
 	{
-		return FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f)); 
+		return FSlateColor(FLinearColor(0.9f, 0.2f, 0.1f)); 
 	}
 	
 }

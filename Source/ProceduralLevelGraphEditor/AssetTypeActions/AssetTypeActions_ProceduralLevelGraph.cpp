@@ -17,7 +17,7 @@ FText FAssetTypeActions_ProceduralLevelGraph::GetName() const
 
 FColor FAssetTypeActions_ProceduralLevelGraph::GetTypeColor() const
 {
-    return FColor(129, 38, 192); // Mor bir renk
+    return FColor(129, 38, 192);
 }
 
 UClass* FAssetTypeActions_ProceduralLevelGraph::GetSupportedClass() const

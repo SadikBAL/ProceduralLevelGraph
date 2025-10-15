@@ -4,15 +4,12 @@
 #include "Widgets/Docking/SDockTab.h"
 #include "PropertyEditorModule.h"
 #include "IDetailsView.h"
-//#include "SGraphEditor.h"
 #include "Maze/MazeGraphSchema.h"
 #include "GraphEditAction.h"
 #include "EdGraph/EdGraphSchema.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "GraphEditorActions.h"
 #include "Kismet2/BlueprintEditorUtils.h"
-#include "Room/MazeGraphNodeBase.h"
-#include "Room/SMazeGraphNodeBase.h"
 
 #define LOCTEXT_NAMESPACE "ProceduralLevelGraphEditor"
 
@@ -60,8 +57,6 @@ FProceduralLevelGraphEditor::~FProceduralLevelGraphEditor()
         GraphAsset->EdGraph->RemoveOnGraphChangedHandler(OnGraphChangedDelegateHandle);
     }
 }
-
-
 
 void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UMazeGraph* InGraph)
 {
@@ -199,14 +194,12 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_Properties(const FSpa
 
 void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Action)
 {
-    // Bir değişiklik olduğunda asset'i kirli olarak işaretle
     if (Action.Action == GRAPHACTION_AddNode || Action.Action == GRAPHACTION_RemoveNode)
     {
         GraphAsset->MarkPackageDirty();
     }
 }
 
-// Helper methods to be added to the class for selection to work
 void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObject*>& NewSelection)
 {
 	if (PropertyWidget.IsValid())

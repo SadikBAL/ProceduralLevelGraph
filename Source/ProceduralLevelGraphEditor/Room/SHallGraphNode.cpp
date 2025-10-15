@@ -57,11 +57,11 @@ void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
 
-	if (PinName == FName("DoorA"))
+	if (PinName == FName("Up"))
 	{
 		UpPin = PinToAdd;
 	}
-	else if (PinName == FName("DoorB"))
+	else if (PinName == FName("Down"))
 	{
 		DownPin = PinToAdd;
 	}
