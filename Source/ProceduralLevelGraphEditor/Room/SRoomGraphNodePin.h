@@ -16,4 +16,6 @@ protected:
 	// Base class'ın implementasyonunu direkt kullanacağız.
 	virtual const FSlateBrush* GetPinIcon() const override;
 	TSharedPtr<FSlateBrush> PinBrush;
+	TSharedPtr<FSlateBrush> BlackBrush;
+	TSharedPtr<FSlateBrush> GreenBrush;
 };
