@@ -27,7 +27,7 @@ void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
 	GreenBrush->DrawAs = ESlateBrushDrawType::Box;
 	GreenBrush->TintColor = FLinearColor::Green;
 	GreenBrush->Margin = FMargin(0.0f);
-	BlackBrush->ImageSize = FVector2D(32.0f, 32.0f);
+	GreenBrush->ImageSize = FVector2D(32.0f, 32.0f);
 	
 	SGraphPin::Construct(SGraphPin::FArguments(), InPin);
 }
