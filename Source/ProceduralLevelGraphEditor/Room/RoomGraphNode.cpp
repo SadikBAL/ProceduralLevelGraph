@@ -16,10 +16,5 @@ void URoomGraphNode::AllocateDefaultPins()
     CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Down"));
     CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Left"));
     CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Right"));
-    
-    FCreatePinParams PinParams;
-    PinParams.bIsReference = true;
-
-    CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Struct, FGameplayTagContainer::StaticStruct(), TEXT("Gameplay Tag Container"), PinParams);
 }
 #undef LOCTEXT_NAMESPACE

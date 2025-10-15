@@ -1,5 +1,5 @@
-﻿#include "SRoomGraphNode.h"
-#include "ProceduralLevelGraphEditor/Room/RoomGraphNode.h"
+﻿#include "SHallGraphNode.h"
+#include "ProceduralLevelGraphEditor/Room/HallGraphNode.h"
 #include "Widgets/SBoxPanel.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Images/SImage.h"
@@ -11,7 +11,7 @@
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNode"
 
-void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
+void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 {
     this->GraphNode = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
@@ -26,34 +26,26 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 		SNew(SOverlay)
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0, -18, 0, 0)
-		[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
+		[ PinA.IsValid() ? PinA.ToSharedRef() : SNullWidget::NullWidget ]
 
 		+ SOverlay::Slot()
-		.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0, 0, 0, -18)
-		[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
-
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(-24, 0, 0, 0)
-		[ LeftPin.IsValid() ? LeftPin.ToSharedRef() : SNullWidget::NullWidget ]
-
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0, 0, -18, 0)
-		[ RightPin.IsValid() ? RightPin.ToSharedRef() : SNullWidget::NullWidget ]
+		.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0, 0,0, -18)
+		[ PinB.IsValid() ? PinB.ToSharedRef() : SNullWidget::NullWidget ]
 		+ SOverlay::Slot()
 	   [
 		  SNew(SBox)
-		  .WidthOverride(250.f)
-		  .HeightOverride(250.f)
+		  .WidthOverride(80.f)
+		  .HeightOverride(200.f)
 		  [
 			 SNew(SBorder)
 			 .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
 			 .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
 			 .HAlign(HAlign_Center) // İçeriği (metni) yatayda ortala
-		  	 .Padding(FMargin(0, 25, 0, 0))
+			   .Padding(FMargin(0, 25, 0, 0))
 			 [
 				SNew(STextBlock)
-				.Text(FText::FromString("ROOM"))
-			 	.Font(TitleFont)
+				.Text(FText::FromString("HALL"))
+				 .Font(TitleFont)
 			 	
 			 ]
 		  ]
@@ -61,30 +53,22 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	]; 
 }
 
-void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
+void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
 
-	if (PinName == FName("Up"))
+	if (PinName == FName("DoorA"))
 	{
-		UpPin = PinToAdd;
+		PinA = PinToAdd;
 	}
-	else if (PinName == FName("Down"))
+	else if (PinName == FName("DoorB"))
 	{
-		DownPin = PinToAdd;
-	}
-	else if (PinName == FName("Left"))
-	{
-		LeftPin = PinToAdd;
-	}
-	else if (PinName == FName("Right"))
-	{
-		RightPin = PinToAdd;
+		PinB = PinToAdd;
 	}
 	SGraphNode::AddPin(PinToAdd);
 }
 
-TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
+TSharedPtr<SGraphPin> SHallGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 {
 	if (Pin->Direction == EGPD_Input)
 	{

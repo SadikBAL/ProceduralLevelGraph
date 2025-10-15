@@ -15,7 +15,9 @@ void FProceduralLevelGraphEditorModule::StartupModule()
     AssetTools.RegisterAssetTypeActions(AssetTypeActions.ToSharedRef());
 
     SRoomGraphNodeFactory = MakeShareable(new FSRoomGraphNodeFactory());
+    SHallGraphNodeFactory = MakeShareable(new FSHallGraphNodeFactory());
     FEdGraphUtilities::RegisterVisualNodeFactory(SRoomGraphNodeFactory);
+    FEdGraphUtilities::RegisterVisualNodeFactory(SHallGraphNodeFactory);
 }
 
 void FProceduralLevelGraphEditorModule::ShutdownModule()
@@ -31,6 +33,10 @@ void FProceduralLevelGraphEditorModule::ShutdownModule()
     if (SRoomGraphNodeFactory.IsValid())
     {
         FEdGraphUtilities::UnregisterVisualNodeFactory(SRoomGraphNodeFactory);
+    }
+    if (SHallGraphNodeFactory.IsValid())
+    {
+        FEdGraphUtilities::UnregisterVisualNodeFactory(SHallGraphNodeFactory);
     }
 }
 

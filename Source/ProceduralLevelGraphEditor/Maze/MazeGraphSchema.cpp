@@ -7,6 +7,7 @@
 #include "ToolMenus.h"
 #include "GraphEditor.h"
 #include "Framework/Commands/UIAction.h" // FUIAction için gerekli
+#include "ProceduralLevelGraphEditor/Room/HallGraphNode.h"
 
 #define LOCTEXT_NAMESPACE "MazeGraphSchema"
 
@@ -103,6 +104,13 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
         LOCTEXT("NewRoomNodeTooltip", "Adds a room node."), 0));
     NewNodeAction_Room->NodeTemplate = NewObject<URoomGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
     ContextMenuBuilder.AddAction(NewNodeAction_Room);
+
+    TSharedPtr<FPLGGraphSchemaAction_NewNode> NewNodeAction_Hall(new FPLGGraphSchemaAction_NewNode(
+        LOCTEXT("NodeCategory", "Procedural"),
+        LOCTEXT("NewRoomNode", "Add Hall Node"),
+        LOCTEXT("NewRoomNodeTooltip", "Adds a hall node."), 0));
+    NewNodeAction_Hall->NodeTemplate = NewObject<UHallGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
+    ContextMenuBuilder.AddAction(NewNodeAction_Hall);
 }
 
 const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const

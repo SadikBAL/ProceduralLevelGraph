@@ -4,7 +4,7 @@
 #include "EdGraphUtilities.h"
 #include "Modules/ModuleManager.h"
 #include "IAssetTools.h"
-#include "Room/SRoomGraphNodeFactory.h"
+#include "Room/MazeNodesFactory.h"
 
 class IAssetTypeActions;
 
@@ -17,4 +17,5 @@ public:
 private:
     TSharedPtr<IAssetTypeActions> AssetTypeActions;
     TSharedPtr<FSRoomGraphNodeFactory> SRoomGraphNodeFactory;
+    TSharedPtr<FSHallGraphNodeFactory> SHallGraphNodeFactory;
 };
