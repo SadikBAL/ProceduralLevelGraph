@@ -1,5 +1,5 @@
-﻿#include "SRoomGraphNode.h"
-#include "ProceduralLevelGraphEditor/Room/RoomGraphNode.h"
+﻿#include "SRouterGraphNode.h"
+#include "ProceduralLevelGraphEditor/Room/RouterGraphNode.h"
 #include "Widgets/SBoxPanel.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Images/SImage.h"
@@ -9,9 +9,9 @@
 #include "SGraphPin.h"
 #include "SRoomGraphNodePin.h"
 
-#define LOCTEXT_NAMESPACE "SRoomGraphNode"
+#define LOCTEXT_NAMESPACE "SRouterGraphNode"
 
-void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
+void SRouterGraphNode::Construct(const FArguments& InArgs, URouterGraphNode* InNode)
 {
     this->GraphNode = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
@@ -42,8 +42,8 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 		+ SOverlay::Slot()
 	   [
 		  SNew(SBox)
-		  .WidthOverride(250.f)
-		  .HeightOverride(250.f)
+		  .WidthOverride(80.f)
+		  .HeightOverride(80.f)
 		  [
 			 SNew(SBorder)
 			 .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
@@ -52,7 +52,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 		  	 .VAlign(VAlign_Center)
 			 [
 				SNew(STextBlock)
-				.Text(FText::FromString("ROOM"))
+				.Text(FText::FromString("0"))
 			 	.Font(TitleFont)
 			 	
 			 ]
@@ -61,7 +61,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	]; 
 }
 
-void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
+void SRouterGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
 
@@ -84,7 +84,7 @@ void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 	SGraphNode::AddPin(PinToAdd);
 }
 
-TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
+TSharedPtr<SGraphPin> SRouterGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 {
 	if (Pin->Direction == EGPD_Input)
 	{
@@ -99,7 +99,7 @@ TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 
 }
 
-void SRoomGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
+void SRouterGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
 {
 	if(UpPin.IsValid()) OutPinWidgets.Add(UpPin);
 	if(DownPin.IsValid()) OutPinWidgets.Add(DownPin);

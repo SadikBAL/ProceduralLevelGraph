@@ -1,11 +1,12 @@
 ﻿#include "HallGraphNode.h"
-
-#include "GameplayTagContainer.h"
 #include "EdGraph/EdGraphPin.h"
-#include "Framework/Commands/GenericCommands.h"
 
 #define LOCTEXT_NAMESPACE "HallGraphNode"
 
+UHallGraphNode::UHallGraphNode()
+{
+	HallLength = 200.0f;
+}
 FText UHallGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
 	return LOCTEXT("HallNodeTitle", "Hall");

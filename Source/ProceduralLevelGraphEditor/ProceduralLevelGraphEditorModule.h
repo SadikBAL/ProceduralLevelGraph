@@ -18,4 +18,5 @@ private:
     TSharedPtr<IAssetTypeActions> AssetTypeActions;
     TSharedPtr<FSRoomGraphNodeFactory> SRoomGraphNodeFactory;
     TSharedPtr<FSHallGraphNodeFactory> SHallGraphNodeFactory;
+    TSharedPtr<FSRouterGraphNodeFactory> SRouterGraphNodeFactory;
 };

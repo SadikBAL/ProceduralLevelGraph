@@ -16,8 +16,10 @@ void FProceduralLevelGraphEditorModule::StartupModule()
 
     SRoomGraphNodeFactory = MakeShareable(new FSRoomGraphNodeFactory());
     SHallGraphNodeFactory = MakeShareable(new FSHallGraphNodeFactory());
+    SRouterGraphNodeFactory = MakeShareable(new FSRouterGraphNodeFactory());
     FEdGraphUtilities::RegisterVisualNodeFactory(SRoomGraphNodeFactory);
     FEdGraphUtilities::RegisterVisualNodeFactory(SHallGraphNodeFactory);
+    FEdGraphUtilities::RegisterVisualNodeFactory(SRouterGraphNodeFactory);
 }
 
 void FProceduralLevelGraphEditorModule::ShutdownModule()
@@ -37,6 +39,10 @@ void FProceduralLevelGraphEditorModule::ShutdownModule()
     if (SHallGraphNodeFactory.IsValid())
     {
         FEdGraphUtilities::UnregisterVisualNodeFactory(SHallGraphNodeFactory);
+    }
+    if (SRouterGraphNodeFactory.IsValid())
+    {
+        FEdGraphUtilities::UnregisterVisualNodeFactory(SRouterGraphNodeFactory);
     }
 }
 

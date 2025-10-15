@@ -27,15 +27,15 @@ void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilt
     TSharedPtr<SGraphPanel> OwnerPanel = GetOwnerPanel();
     if(!OwnerPanel.IsValid()) return;
 
-    constexpr float ConnectionThreshold = 50.0f;
+    constexpr float ConnectionThreshold = 40.0f;
     UEdGraph* Graph = MovedNode->GetGraph();
     for (UEdGraphPin* MovedNodePin : MovedNode->Pins)
     {
-        FVector2D MovedNodePinPos = GetPinAbsolutePosition(OwnerPanel,MovedNodePin);
+        FVector2D MovedNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,MovedNodePin);
         TArray<UEdGraphPin*> LinkedPins = MovedNodePin->LinkedTo;
         for (UEdGraphPin* OtherPin : LinkedPins)
         {
-            FVector2D OtherNodePinPos = GetPinAbsolutePosition(OwnerPanel,OtherPin);
+            FVector2D OtherNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,OtherPin);
             if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) > ConnectionThreshold)
             {
                  const FScopedTransaction Transaction(NSLOCTEXT("UnrealEd", "GraphEd_BreakPinLink", "Break Pin Link"));
@@ -55,8 +55,8 @@ void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilt
                 {
                     continue;
                 }
-                FVector2D MovedNodePinPos = GetPinAbsolutePosition(OwnerPanel,MovedNodePin);;
-                FVector2D OtherNodePinPos = GetPinAbsolutePosition(OwnerPanel,OtherNodePin);
+                FVector2D MovedNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,MovedNodePin);;
+                FVector2D OtherNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,OtherNodePin);
                 if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) < ConnectionThreshold)
                 {
                     const UEdGraphSchema* Schema = Graph->GetSchema();
@@ -71,7 +71,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilt
     }
 }
 
-FVector2D SMazeGraphNodeBase::GetPinAbsolutePosition(const TSharedPtr<SGraphPanel>& GraphPanel, const UEdGraphPin* Pin)
+FVector2D SMazeGraphNodeBase::GetPinPositionInGraphSpace(const TSharedPtr<SGraphPanel>& GraphPanel, const UEdGraphPin* Pin)
 {
     if (!Pin || !GraphPanel.IsValid())
     {
@@ -85,12 +85,20 @@ FVector2D SMazeGraphNodeBase::GetPinAbsolutePosition(const TSharedPtr<SGraphPane
             TSharedPtr<SGraphPin> PinWidget = NodeWidget->FindWidgetForPin(const_cast<UEdGraphPin*>(Pin));
             if (PinWidget.IsValid())
             {
-                const FGeometry& PinGeometry = PinWidget->GetCachedGeometry();
+                const FGeometry& PinGeometry = PinWidget->GetTickSpaceGeometry();
                 const FVector2D LocalCenter = PinGeometry.GetLocalSize() * 0.5f;
-                return PinGeometry.LocalToAbsolute(LocalCenter);
+                const FVector2D AbsolutePosition = PinGeometry.LocalToAbsolute(LocalCenter);
+                const FGeometry& PanelGeometry = GraphPanel->GetTickSpaceGeometry();
+                FVector2D LocalPosition = PanelGeometry.AbsoluteToLocal(AbsolutePosition);
+                FVector2D ViewOffset = GraphPanel->GetViewOffset();
+                float Zoom = GraphPanel->GetZoomAmount();
+                
+                return (LocalPosition - ViewOffset) / Zoom;
+                
             }
         }
     }
     return FVector2D::ZeroVector;
 }
+
 #undef LOCTEXT_NAMESPACE

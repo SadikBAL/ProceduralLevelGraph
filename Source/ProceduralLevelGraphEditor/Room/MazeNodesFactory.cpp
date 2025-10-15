@@ -3,8 +3,10 @@
 
 #include "HallGraphNode.h"
 #include "RoomGraphNode.h"
+#include "RouterGraphNode.h"
 #include "SHallGraphNode.h"
 #include "SRoomGraphNode.h"
+#include "SRouterGraphNode.h"
 
 TSharedPtr<SGraphNode> FSRoomGraphNodeFactory::CreateNode(UEdGraphNode* Node) const
 {
@@ -19,6 +21,15 @@ TSharedPtr<SGraphNode> FSHallGraphNodeFactory::CreateNode(UEdGraphNode* Node) co
 	if (UHallGraphNode* HallNode = Cast<UHallGraphNode>(Node))
 	{
 		return SNew(SHallGraphNode, HallNode);
+	}
+	return nullptr;
+}
+
+TSharedPtr<SGraphNode> FSRouterGraphNodeFactory::CreateNode(UEdGraphNode* Node) const
+{
+	if (URouterGraphNode* RouteNode = Cast<URouterGraphNode>(Node))
+	{
+		return SNew(SRouterGraphNode, RouteNode);
 	}
 	return nullptr;
 }
