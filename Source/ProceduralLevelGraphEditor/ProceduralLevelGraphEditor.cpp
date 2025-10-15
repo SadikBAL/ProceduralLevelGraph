@@ -11,6 +11,8 @@
 #include "Framework/Commands/GenericCommands.h"
 #include "GraphEditorActions.h"
 #include "Kismet2/BlueprintEditorUtils.h"
+#include "Room/MazeGraphNodeBase.h"
+#include "Room/SMazeGraphNodeBase.h"
 
 #define LOCTEXT_NAMESPACE "ProceduralLevelGraphEditor"
 

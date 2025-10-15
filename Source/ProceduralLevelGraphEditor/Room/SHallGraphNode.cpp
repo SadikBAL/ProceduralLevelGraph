@@ -26,11 +26,11 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 		SNew(SOverlay)
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0, -18, 0, 0)
-		[ PinA.IsValid() ? PinA.ToSharedRef() : SNullWidget::NullWidget ]
+		[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
 
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0, 0,0, -18)
-		[ PinB.IsValid() ? PinB.ToSharedRef() : SNullWidget::NullWidget ]
+		[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
 		+ SOverlay::Slot()
 	   [
 		  SNew(SBox)
@@ -59,11 +59,11 @@ void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 
 	if (PinName == FName("DoorA"))
 	{
-		PinA = PinToAdd;
+		UpPin = PinToAdd;
 	}
 	else if (PinName == FName("DoorB"))
 	{
-		PinB = PinToAdd;
+		DownPin = PinToAdd;
 	}
 	SGraphNode::AddPin(PinToAdd);
 }
@@ -81,5 +81,12 @@ TSharedPtr<SGraphPin> SHallGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 		return PinWidget;
 	}
 
+}
+
+void SHallGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
+{
+	if(UpPin.IsValid()) OutPinWidgets.Add(UpPin);
+	if(DownPin.IsValid()) OutPinWidgets.Add(DownPin);
+	SMazeGraphNodeBase::GetAllPinWidgets(OutPinWidgets);
 }
 #undef LOCTEXT_NAMESPACE

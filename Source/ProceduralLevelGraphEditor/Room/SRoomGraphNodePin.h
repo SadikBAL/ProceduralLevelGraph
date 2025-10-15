@@ -12,10 +12,7 @@ public:
 	void Construct(const FArguments& InArgs, UEdGraphPin* InPin);
 
 protected:
-	// Bu fonksiyon, pinin ikonunu (yuvarlak şeklini) döndürür.
-	// Base class'ın implementasyonunu direkt kullanacağız.
 	virtual const FSlateBrush* GetPinIcon() const override;
+	virtual FSlateColor GetPinColor() const override;
 	TSharedPtr<FSlateBrush> PinBrush;
-	TSharedPtr<FSlateBrush> BlackBrush;
-	TSharedPtr<FSlateBrush> GreenBrush;
 };

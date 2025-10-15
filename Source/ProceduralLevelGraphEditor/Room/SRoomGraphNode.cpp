@@ -98,4 +98,13 @@ TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 	}
 
 }
+
+void SRoomGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
+{
+	if(UpPin.IsValid()) OutPinWidgets.Add(UpPin);
+	if(DownPin.IsValid()) OutPinWidgets.Add(DownPin);
+	if(LeftPin.IsValid()) OutPinWidgets.Add(LeftPin);
+	if(RightPin.IsValid()) OutPinWidgets.Add(RightPin);
+	SMazeGraphNodeBase::GetAllPinWidgets(OutPinWidgets);
+}
 #undef LOCTEXT_NAMESPACE

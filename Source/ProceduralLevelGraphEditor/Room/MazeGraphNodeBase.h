@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "RoomGraphNodeBase.generated.h"
+#include "MazeGraphNodeBase.generated.h"
 
 UCLASS()
-class URoomGraphNodeBase : public UEdGraphNode
+class UMazeGraphNodeBase : public UEdGraphNode
 {
 	GENERATED_BODY()
 

@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "SGraphNode.h"
+#include "SMazeGraphNodeBase.h"
 
 class URoomGraphNode;
 
-class SRoomGraphNode : public SGraphNode
+class SRoomGraphNode : public SMazeGraphNodeBase
 {
 public:
 	SLATE_BEGIN_ARGS(SRoomGraphNode) {}
@@ -14,6 +15,7 @@ public:
 	void Construct(const FArguments& InArgs, URoomGraphNode* InNode);
 	virtual void AddPin(const TSharedRef<SGraphPin>& PinToAdd) override;
 	virtual TSharedPtr<SGraphPin> CreatePinWidget(UEdGraphPin* Pin) const override;
+	virtual void GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const override;
 
 protected:
 	TSharedPtr<SGraphPin> UpPin;

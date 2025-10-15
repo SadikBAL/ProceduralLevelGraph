@@ -1,18 +1,18 @@
-﻿#include "RoomGraphNodeBase.h"
+﻿#include "MazeGraphNodeBase.h"
 
 #include "Framework/Commands/GenericCommands.h"
 #define LOCTEXT_NAMESPACE "RoomGraphNodeBase"
-FText URoomGraphNodeBase::GetNodeTitle(ENodeTitleType::Type TitleType) const
+FText UMazeGraphNodeBase::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
 	return LOCTEXT("RoomNodeTitle", "Room");
 }
 
-bool URoomGraphNodeBase::CanUserDeleteNode() const
+bool UMazeGraphNodeBase::CanUserDeleteNode() const
 {
 	return true;
 }
 
-void URoomGraphNodeBase::GetNodeContextMenuActions(class UToolMenu* Menu,
+void UMazeGraphNodeBase::GetNodeContextMenuActions(class UToolMenu* Menu,
                                                    class UGraphNodeContextMenuContext* Context) const
 {
 	if (Context->Node)
@@ -22,3 +22,4 @@ void URoomGraphNodeBase::GetNodeContextMenuActions(class UToolMenu* Menu,
 	}
 	Super::GetNodeContextMenuActions(Menu, Context);
 }
+
