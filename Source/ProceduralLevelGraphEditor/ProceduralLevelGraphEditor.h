@@ -14,7 +14,7 @@ public:
     void HandleDelete();
     bool CanDelete();
     FProceduralLevelGraphEditor();
-    virtual ~FProceduralLevelGraphEditor();
+    virtual ~FProceduralLevelGraphEditor() override;
 
     void InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UProceduralLevelGraphRuntime* InGraph);
 
@@ -28,6 +28,7 @@ public:
     virtual FText GetBaseToolkitName() const override;
     virtual FString GetWorldCentricTabPrefix() const override;
     virtual FLinearColor GetWorldCentricTabColorScale() const override;
+    virtual void PostInitAssetEditor() override;
     // End of FAssetEditorToolkit interface
 
 private:
@@ -36,6 +37,8 @@ private:
     TSharedRef<SDockTab> SpawnTab_GraphCanvas(const FSpawnTabArgs& Args);
     TSharedRef<SDockTab> SpawnTab_Properties(const FSpawnTabArgs& Args);
 
+    void SaveGraphToRuntimeData();
+    
     void OnGraphChanged(const FEdGraphEditAction& Action);
     
     UProceduralLevelGraphRuntime* GraphAsset;

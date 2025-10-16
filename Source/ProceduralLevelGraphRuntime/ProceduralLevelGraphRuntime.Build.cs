@@ -9,7 +9,7 @@ public class ProceduralLevelGraphRuntime : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core",
+                "Core"
             }
         );
 
@@ -18,8 +18,7 @@ public class ProceduralLevelGraphRuntime : ModuleRules
             {
                 "CoreUObject",
                 "Engine",
-                "GameplayTags", 
-                "ProceduralLevelGraphEditor"
+                "GameplayTags"
             }
         );
         

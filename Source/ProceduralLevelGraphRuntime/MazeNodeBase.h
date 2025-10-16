@@ -11,11 +11,20 @@ class PROCEDURALLEVELGRAPHRUNTIME_API UMazeNodeBase : public UObject
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
-	TArray<UMazeNodeBase*> ConnectedNodes;
-	
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	FGameplayTagContainer GameplayTags;
-
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	FGuid NodeGuid;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	TObjectPtr<UMazeNodeBase> DownNode;
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	TObjectPtr<UMazeNodeBase> LeftNode;
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	TObjectPtr<UMazeNodeBase> RightNode;
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	TObjectPtr<UMazeNodeBase> UpNode;
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	TArray<UMazeNodeBase*> Others;
+
+	
 };

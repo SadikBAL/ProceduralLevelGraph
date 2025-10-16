@@ -7,6 +7,17 @@
 #include "MazeGraphSchema.generated.h"
 
 class UEdGraphNode_PLGBase;
+
+UENUM()
+enum FEnumPinType : int
+{
+    Up,
+    Down,
+    Left,
+    Right,
+    None,
+};
+
 struct FPinPair
 {
     UEdGraphPin* Pin1;
@@ -38,6 +49,7 @@ struct FPinPair
         return HashCombine(GetTypeHash(InPair.Pin1), GetTypeHash(InPair.Pin2));
     }
 };
+
 USTRUCT()
 struct FPLGGraphSchemaAction_NewNode : public FEdGraphSchemaAction
 {
@@ -74,6 +86,7 @@ class UMazeGraphSchema : public UEdGraphSchema
     GENERATED_BODY()
 public:
     virtual void GetGraphContextActions(FGraphContextMenuBuilder& ContextMenuBuilder) const override;
+    FEnumPinType GetPinType(const UEdGraphPin* A) const;
     virtual const FPinConnectionResponse CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const override;
     virtual class FConnectionDrawingPolicy* CreateConnectionDrawingPolicy(int32 InBackLayerID, int32 InFrontLayerID, float InZoomFactor, const FSlateRect& InClippingRect, class FSlateWindowElementList& InDrawElements, class UEdGraph* InGraphObj) const override;
 };

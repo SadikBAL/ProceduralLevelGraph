@@ -10,6 +10,13 @@
 #include "Framework/Commands/GenericCommands.h"
 #include "GraphEditorActions.h"
 #include "Kismet2/BlueprintEditorUtils.h"
+#include "ProceduralLevelGraphRuntime/HallNode.h"
+#include "ProceduralLevelGraphRuntime/RoomNode.h"
+#include "ProceduralLevelGraphRuntime/RouterNode.h"
+#include "Room/HallGraphNode.h"
+#include "Room/MazeGraphNodeBase.h"
+#include "Room/RoomGraphNode.h"
+#include "Room/RouterGraphNode.h"
 
 #define LOCTEXT_NAMESPACE "ProceduralLevelGraphEditor"
 
@@ -152,6 +159,12 @@ FLinearColor FProceduralLevelGraphEditor::GetWorldCentricTabColorScale() const
     return FLinearColor(0.3f, 0.2f, 0.5f, 0.5f);
 }
 
+void FProceduralLevelGraphEditor::PostInitAssetEditor()
+{
+    FAssetEditorToolkit::PostInitAssetEditor();
+    SaveGraphToRuntimeData();
+}
+
 TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSpawnTabArgs& Args)
 {
     SGraphEditor::FGraphEditorEvents InEvents;
@@ -192,13 +205,211 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_Properties(const FSpa
         ];
 }
 
+void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
+{
+    if (GraphAsset == nullptr || GraphAsset->EdGraph == nullptr) return;
+    
+    GraphAsset->AllNodes.Empty();
+    GraphAsset->StartNode = nullptr;
+
+    TMap<UEdGraphNode*, UMazeNodeBase*> NodeMap;
+    for (UEdGraphNode* EdNode : GraphAsset->EdGraph->Nodes)
+    {
+        if (UMazeGraphNodeBase* MazeEdNode = Cast<UMazeGraphNodeBase>(EdNode))
+        {
+            UMazeNodeBase* NewRuntimeNode = nullptr;
+            
+            if (URoomGraphNode* RoomEdNode = Cast<URoomGraphNode>(EdNode))
+            {
+                URoomNode* RuntimeRoom = NewObject<URoomNode>(GraphAsset);
+                NewRuntimeNode = RuntimeRoom;
+            }
+            else if (UHallGraphNode* HallEdNode = Cast<UHallGraphNode>(EdNode))
+            {
+                UHallNode* RuntimeHall = NewObject<UHallNode>(GraphAsset);
+                RuntimeHall->HallLength = HallEdNode->HallLength;
+                RuntimeHall->bIsHorizontal = HallEdNode->bHorizentalMode;
+                NewRuntimeNode = RuntimeHall;
+            }
+            else if (URouterGraphNode* RouterEdNode = Cast<URouterGraphNode>(EdNode))
+            {
+                URouterNode* RuntimeHall = NewObject<URouterNode>(GraphAsset);
+                NewRuntimeNode = RuntimeHall;
+            }
+            
+            if (NewRuntimeNode)
+            {
+                NewRuntimeNode->GameplayTags = MazeEdNode->GameplayTags;
+                NewRuntimeNode->NodeGuid = MazeEdNode->NodeGuid;
+                NodeMap.Add(EdNode, NewRuntimeNode);
+                if (GraphAsset->StartNode == nullptr)
+                {
+                    GraphAsset->StartNode = NewRuntimeNode;
+                }
+            }
+        }
+    }
+    for (auto Map : NodeMap)
+    {
+        UEdGraphNode* EdGraph = Map.Key;
+        UMazeNodeBase* RuntimeNode = Map.Value;
+        
+        if (URoomGraphNode* RoomEdNode = Cast<URoomGraphNode>(EdGraph))
+        {
+            for (UEdGraphPin* LinkedPin : EdGraph->Pins)
+            {
+                if (LinkedPin->GetName() == FName("Up"))
+                {
+                    for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                    {
+                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                        {
+                            RuntimeNode->UpNode = NodeMap[LinkedTo->GetOwningNode()];
+                        }
+                    }
+                }
+                else if (LinkedPin->GetName() == FName("Down"))
+                {
+                    for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                    {
+                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                        {
+                            RuntimeNode->DownNode = NodeMap[LinkedTo->GetOwningNode()];
+                        }
+                    }
+                }
+                else if (LinkedPin->GetName() == FName("Left"))
+                {
+                    for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                    {
+                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                        {
+                            RuntimeNode->LeftNode = NodeMap[LinkedTo->GetOwningNode()];
+                        }
+                    }
+                }
+                else if (LinkedPin->GetName() == FName("Right"))
+                {
+                    for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                    {
+                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                        {
+                            RuntimeNode->RightNode = NodeMap[LinkedTo->GetOwningNode()];
+                        }
+                    }
+                }
+            }
+        }
+        else if (UHallGraphNode* HallEdNode = Cast<UHallGraphNode>(EdGraph))
+        {
+            for (UEdGraphPin* LinkedPin : EdGraph->Pins)
+            {
+                if (HallEdNode->bHorizentalMode)
+                {
+                    if (LinkedPin->GetName() == FName("Left"))
+                    {
+                        for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                        {
+                            if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                            {
+                                RuntimeNode->UpNode = NodeMap[LinkedTo->GetOwningNode()];
+                            }
+                        }
+                    }
+                    else if (LinkedPin->GetName() == FName("Right"))
+                    {
+                        for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                        {
+                            if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                            {
+                                RuntimeNode->DownNode = NodeMap[LinkedTo->GetOwningNode()];
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (LinkedPin->GetName() == FName("Left"))
+                    {
+                        for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                        {
+                            if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                            {
+                                RuntimeNode->LeftNode = NodeMap[LinkedTo->GetOwningNode()];
+                            }
+                        }
+                    }
+                    else if (LinkedPin->GetName() == FName("Right"))
+                    {
+                        for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                        {
+                            if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                            {
+                                RuntimeNode->RightNode = NodeMap[LinkedTo->GetOwningNode()];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if (URouterGraphNode* MazeEdNode = Cast<URouterGraphNode>(EdGraph))
+        {
+            for (UEdGraphPin* LinkedPin : EdGraph->Pins)
+            {
+                if (LinkedPin->GetName() == FName("Up"))
+                {
+                    for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                    {
+                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                        {
+                            RuntimeNode->UpNode = NodeMap[LinkedTo->GetOwningNode()];
+                        }
+                    }
+                }
+                else if (LinkedPin->GetName() == FName("Down"))
+                {
+                    for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                    {
+                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                        {
+                            RuntimeNode->DownNode = NodeMap[LinkedTo->GetOwningNode()];
+                        }
+                    }
+                }
+                else if (LinkedPin->GetName() == FName("Left"))
+                {
+                    for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                    {
+                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                        {
+                            RuntimeNode->LeftNode = NodeMap[LinkedTo->GetOwningNode()];
+                        }
+                    }
+                }
+                else if (LinkedPin->GetName() == FName("Right"))
+                {
+                    for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                    {
+                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                        {
+                            RuntimeNode->RightNode = NodeMap[LinkedTo->GetOwningNode()];
+                        }
+                    }
+                }
+            }
+        }
+        
+        GraphAsset->AllNodes.Add(RuntimeNode);
+    }
+}
+
 void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Action)
 {
     if (Action.Action == GRAPHACTION_AddNode || Action.Action == GRAPHACTION_RemoveNode)
     {
         GraphAsset->MarkPackageDirty();
     }
-    GraphAsset->SaveGraphToRuntimeData();
+    SaveGraphToRuntimeData();
 }
 
 void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObject*>& NewSelection)

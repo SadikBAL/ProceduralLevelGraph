@@ -36,7 +36,8 @@ void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilt
         for (UEdGraphPin* OtherPin : LinkedPins)
         {
             FVector2D OtherNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,OtherPin);
-            if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) > ConnectionThreshold)
+            if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) > ConnectionThreshold
+                || MovedNodePin->bHidden || OtherPin->bHidden)
             {
                  const FScopedTransaction Transaction(NSLOCTEXT("UnrealEd", "GraphEd_BreakPinLink", "Break Pin Link"));
                  MovedNodePin->BreakLinkTo(OtherPin);
