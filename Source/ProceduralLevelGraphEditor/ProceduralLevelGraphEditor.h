@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Toolkits/AssetEditorToolkit.h"
 
-class UMazeGraph;
+class UProceduralLevelGraphRuntime;
 class SGraphEditor;
 
 class FProceduralLevelGraphEditor : public FAssetEditorToolkit, public FNotifyHook
@@ -16,7 +16,7 @@ public:
     FProceduralLevelGraphEditor();
     virtual ~FProceduralLevelGraphEditor();
 
-    void InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UMazeGraph* InGraph);
+    void InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UProceduralLevelGraphRuntime* InGraph);
 
     // IToolkit interface
     virtual void RegisterTabSpawners(const TSharedRef<class FTabManager>& TabManager) override;
@@ -38,7 +38,7 @@ private:
 
     void OnGraphChanged(const FEdGraphEditAction& Action);
     
-    UMazeGraph* GraphAsset;
+    UProceduralLevelGraphRuntime* GraphAsset;
     TSharedPtr<SGraphEditor> GraphEditorWidget;
     TSharedPtr<class IDetailsView> PropertyWidget;
     TSharedPtr<FUICommandList> CommandList;

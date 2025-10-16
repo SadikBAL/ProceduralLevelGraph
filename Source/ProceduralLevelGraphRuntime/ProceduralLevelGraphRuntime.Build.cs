@@ -18,8 +18,10 @@ public class ProceduralLevelGraphRuntime : ModuleRules
             {
                 "CoreUObject",
                 "Engine",
-                "GameplayTags"
+                "GameplayTags", 
+                "ProceduralLevelGraphEditor"
             }
         );
+        
     }
 }

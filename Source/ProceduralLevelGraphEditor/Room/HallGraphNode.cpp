@@ -5,7 +5,7 @@
 
 UHallGraphNode::UHallGraphNode()
 {
-	HallLength = 200.0f;
+	HallLength = 5.0f;
 }
 FText UHallGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {

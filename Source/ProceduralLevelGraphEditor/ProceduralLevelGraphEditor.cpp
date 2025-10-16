@@ -1,5 +1,5 @@
 #include "ProceduralLevelGraphEditor.h"
-#include "ProceduralLevelGraphRuntime/MazeGraph.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphRuntime.h"
 #include "EdGraph/EdGraph.h"
 #include "Widgets/Docking/SDockTab.h"
 #include "PropertyEditorModule.h"
@@ -58,7 +58,7 @@ FProceduralLevelGraphEditor::~FProceduralLevelGraphEditor()
     }
 }
 
-void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UMazeGraph* InGraph)
+void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UProceduralLevelGraphRuntime* InGraph)
 {
     GraphAsset = InGraph;
 
@@ -198,6 +198,7 @@ void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Actio
     {
         GraphAsset->MarkPackageDirty();
     }
+    GraphAsset->SaveGraphToRuntimeData();
 }
 
 void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObject*>& NewSelection)

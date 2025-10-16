@@ -10,7 +10,7 @@ public class ProceduralLevelGraphEditor : ModuleRules
             new string[]
             {
                 "Core",
-                "ProceduralLevelGraphRuntime" // Runtime modülümüze bağımlıyız
+                "ProceduralLevelGraphRuntime"
             }
         );
 
@@ -21,14 +21,14 @@ public class ProceduralLevelGraphEditor : ModuleRules
                 "Engine",
                 "Slate",
                 "SlateCore",
-                "UnrealEd",      // Genel Editör fonksiyonları
-                "GraphEditor",   // SGraphEditor widget'ı
-                "AssetTools",    // Yeni asset oluşturma menüsü için
+                "UnrealEd",
+                "GraphEditor",
+                "AssetTools",
                 "EditorStyle",
-                "KismetWidgets", // Düğüm ve pin widget'ları
-                "ToolMenus",     // Menü ve toolbar'lar
+                "KismetWidgets",
+                "ToolMenus",
                 "ApplicationCore",
-                "Projects",       // Plugin içeriğini bulmak için
+                "Projects",
                 "GameplayTags",
                 "GameplayTagsEditor",
                 "BlueprintGraph"

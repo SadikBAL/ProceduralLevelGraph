@@ -14,8 +14,8 @@ public:
     
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual void AllocateDefaultPins() override;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hall", meta = (UIMin = "2.0", UIMax = "2000.0", ClampMin = "100.0", ClampMax = "2000.0", MultipleOf = "2.0"))
-	float HallLength;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hall", meta = (UIMin = "1", UIMax = "20", ClampMin = "1", ClampMax = "20", MultipleOf = "1"))
+	int HallLength;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hall")
 	bool bHorizentalMode = false;
     

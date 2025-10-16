@@ -132,7 +132,7 @@ FOptionalSize SHallGraphNode::GetNodeHeight() const
 {
 	if (UHallGraphNode* HallNode = Cast<UHallGraphNode>(GraphNode))
 	{
-		return FMath::Max(20.0f, HallNode->HallLength); 
+		return FMath::Max(20.0f, HallNode->HallLength * 100); 
 	}
 	return 200.0f;
 }

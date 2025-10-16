@@ -3,18 +3,18 @@
 #include "MazeGraphSchema.h"
 #include "EdGraph/EdGraph.h"
 #include "Kismet2/Kismet2NameValidators.h"
-#include "ProceduralLevelGraphRuntime/MazeGraph.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphRuntime.h"
 
 UMazeGraphSchemaFactory::UMazeGraphSchemaFactory()
 {
     bCreateNew = true;
     bEditAfterNew = true;
-    SupportedClass = UMazeGraph::StaticClass();
+    SupportedClass = UProceduralLevelGraphRuntime::StaticClass();
 }
 
 UObject* UMazeGraphSchemaFactory::FactoryCreateNew(UClass* InClass, UObject* InParent, FName InName, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn)
 {
-    UMazeGraph* MazeGraph = NewObject<UMazeGraph>(InParent, InClass, InName, Flags | RF_Transactional);
+    UProceduralLevelGraphRuntime* MazeGraph = NewObject<UProceduralLevelGraphRuntime>(InParent, InClass, InName, Flags | RF_Transactional);
     if (MazeGraph)
     {
         MazeGraph->EdGraph = NewObject<UEdGraph>(MazeGraph, FName("UMazeGraphSchema"), RF_Transactional);
