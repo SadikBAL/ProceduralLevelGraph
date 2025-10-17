@@ -278,7 +278,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                         }
                     }
                 }
-                else if (LinkedPin->GetName() == FName("Left"))
+                else if (LinkedPin->GetName() == FName("Up"))
                 {
                     for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                     {
@@ -288,7 +288,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                         }
                     }
                 }
-                else if (LinkedPin->GetName() == FName("Right"))
+                else if (LinkedPin->GetName() == FName("Down"))
                 {
                     for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                     {
@@ -306,7 +306,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             {
                 if (HallEdNode->bHorizentalMode)
                 {
-                    if (LinkedPin->GetName() == FName("Left"))
+                    if (LinkedPin->GetName() == FName("Up"))
                     {
                         for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                         {
@@ -316,7 +316,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                             }
                         }
                     }
-                    else if (LinkedPin->GetName() == FName("Right"))
+                    else if (LinkedPin->GetName() == FName("Down"))
                     {
                         for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                         {
@@ -329,7 +329,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 }
                 else
                 {
-                    if (LinkedPin->GetName() == FName("Left"))
+                    if (LinkedPin->GetName() == FName("Up"))
                     {
                         for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                         {
@@ -339,7 +339,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                             }
                         }
                     }
-                    else if (LinkedPin->GetName() == FName("Right"))
+                    else if (LinkedPin->GetName() == FName("Down"))
                     {
                         for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                         {
