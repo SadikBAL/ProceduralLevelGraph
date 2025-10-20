@@ -45,4 +45,7 @@ private:
     TSharedPtr<SGraphEditor> GraphEditorWidget;
     TSharedPtr<class IDetailsView> PropertyWidget;
     TSharedPtr<FUICommandList> CommandList;
+    
+    TObjectPtr<UTexture2D> GridTexture;
+    TSharedPtr<FSlateBrush> GridBrush;
 };

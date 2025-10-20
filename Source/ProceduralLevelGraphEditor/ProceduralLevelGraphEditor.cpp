@@ -1,4 +1,6 @@
 #include "ProceduralLevelGraphEditor.h"
+
+#include "BlueprintEditor.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphRuntime.h"
 #include "EdGraph/EdGraph.h"
 #include "Widgets/Docking/SDockTab.h"
@@ -9,6 +11,7 @@
 #include "EdGraph/EdGraphSchema.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "GraphEditorActions.h"
+#include "Experimental/Graph/GraphConvert.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "ProceduralLevelGraphRuntime/HallNode.h"
 #include "ProceduralLevelGraphRuntime/RoomNode.h"
@@ -63,6 +66,7 @@ FProceduralLevelGraphEditor::~FProceduralLevelGraphEditor()
     {
         GraphAsset->EdGraph->RemoveOnGraphChangedHandler(OnGraphChangedDelegateHandle);
     }
+    GridBrush.Reset();
 }
 
 void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UProceduralLevelGraphRuntime* InGraph)
@@ -170,11 +174,40 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
     SGraphEditor::FGraphEditorEvents InEvents;
     InEvents.OnSelectionChanged = SGraphEditor::FOnSelectionChanged::CreateSP(this, &FProceduralLevelGraphEditor::OnSelectedNodesChanged);
 
+    const int32 GridSize = 16;
+    const FColor BackgroundColor(40, 40, 40); // Ana arka plan rengi
+    const FColor GridLineColor(55, 55, 55);   // Çizgi rengi
+    
+    GridTexture = UTexture2D::CreateTransient(GridSize, GridSize, PF_B8G8R8A8);
+    if (GridTexture)
+    {
+        GridTexture->AddToRoot();
+        TArray<FColor> Pixels;
+        Pixels.Init(BackgroundColor, GridSize * GridSize);
+        for (int32 i = 0; i < GridSize; ++i)
+        {
+            Pixels[i] = GridLineColor;
+            Pixels[i * GridSize] = GridLineColor;
+        }
+        void* MipData = GridTexture->GetPlatformData()->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
+        FMemory::Memcpy(MipData, Pixels.GetData(), GridSize * GridSize * sizeof(FColor));
+        GridTexture->GetPlatformData()->Mips[0].BulkData.Unlock();
+        GridTexture->UpdateResource();
+    }
+    GridBrush = MakeShareable(new FSlateBrush());
+    GridBrush->SetResourceObject(GridTexture);
+    GridBrush->SetImageSize(FVector2D(GridSize, GridSize));
+    GridBrush->Tiling = ESlateBrushTileType::Both;
+    
+    FGraphAppearanceInfo AppearanceInfo;
+    AppearanceInfo.CornerImage = GridBrush.Get();
+    
     GraphEditorWidget = SNew(SGraphEditor)
         .AdditionalCommands(GetToolkitCommands())
         .GraphToEdit(GraphAsset->EdGraph)
         .GraphEvents(InEvents)
-        .AdditionalCommands(CommandList);
+        .AdditionalCommands(CommandList)
+        .Appearance(AppearanceInfo);
         //.GraphEditorEvents(InEvents);
 
     return SNew(SDockTab)
