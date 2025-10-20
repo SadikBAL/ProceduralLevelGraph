@@ -81,7 +81,6 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
     }
     
     OnGraphChangedDelegateHandle = GraphAsset->EdGraph->AddOnGraphChangedHandler(FOnGraphChanged::FDelegate::CreateRaw(this, &FProceduralLevelGraphEditor::OnGraphChanged));
-
     FGraphEditorCommands::Register();
 
     TSharedRef<FTabManager::FLayout> StandaloneDefaultLayout = FTabManager::NewLayout("Standalone_MazeGraph_Layout_V1")
@@ -238,6 +237,12 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_Properties(const FSpa
         ];
 }
 
+void FProceduralLevelGraphEditor::SaveAsset_Execute()
+{
+    FAssetEditorToolkit::SaveAsset_Execute();
+    SaveGraphToRuntimeData();
+}
+
 void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
 {
     if (GraphAsset == nullptr || GraphAsset->EdGraph == nullptr) return;
@@ -282,6 +287,17 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                     GraphAsset->StartNode = NewRuntimeNode;
                 }
             }
+        }
+    }
+    for (UMazeNodeBase* Node : GraphAsset->AllNodes)
+    {
+        if (Node)
+        {
+            Node->UpNode = nullptr;
+            Node->DownNode = nullptr;
+            Node->LeftNode = nullptr;
+            Node->RightNode = nullptr;
+            Node->Others.Empty(); 
         }
     }
     for (auto Map : NodeMap)
@@ -339,7 +355,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
         {
             for (UEdGraphPin* LinkedPin : EdGraph->Pins)
             {
-                if (HallEdNode->bHorizentalMode)
+                if (!HallEdNode->bHorizentalMode)
                 {
                     if (LinkedPin->GetName() == FName("Up"))
                     {
@@ -439,7 +455,9 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
 
 void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Action)
 {
-    if (Action.Action == GRAPHACTION_AddNode || Action.Action == GRAPHACTION_RemoveNode)
+    if (Action.Action == GRAPHACTION_AddNode ||
+        Action.Action == GRAPHACTION_RemoveNode
+        )
     {
         GraphAsset->MarkPackageDirty();
     }

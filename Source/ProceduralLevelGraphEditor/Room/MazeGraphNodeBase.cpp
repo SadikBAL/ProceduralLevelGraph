@@ -23,3 +23,12 @@ void UMazeGraphNodeBase::GetNodeContextMenuActions(class UToolMenu* Menu,
 	Super::GetNodeContextMenuActions(Menu, Context);
 }
 
+void UMazeGraphNodeBase::PinConnectionListChanged(UEdGraphPin* Pin)
+{
+	Super::PinConnectionListChanged(Pin);
+	if (UEdGraph* Graph = GetGraph())
+	{
+		Graph->GetOuter()->MarkPackageDirty();
+	}
+}
+

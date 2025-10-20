@@ -15,14 +15,13 @@ UHallNode::UHallNode()
 	}
 }
 
+UHallNode::~UHallNode()
+{
+	
+}
+
 float UHallNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
-	if (Orientation == EMazeOrientation::Horizontal)
-	{
-		return 40 * 0.5;
-	}
-	else
-	{
-		return 100 * HallLength * 0.5;
-	}
+	return 100 * HallLength * 0.5;
 }
+

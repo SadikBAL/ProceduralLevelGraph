@@ -52,4 +52,5 @@ public:
 	virtual FVector GetEdgePosition(EMazeDirection Direction);
 	UFUNCTION(BlueprintCallable)
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation);
+	
 };

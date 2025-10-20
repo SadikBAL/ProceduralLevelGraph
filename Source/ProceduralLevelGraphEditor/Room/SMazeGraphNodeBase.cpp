@@ -18,7 +18,7 @@ void SMazeGraphNodeBase::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinW
 
 void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilter, bool bMarkDirty)
 {
-
+    SGraphNode::MoveTo(NewPosition, NodeFilter, bMarkDirty);
     UMazeGraphNodeBase* MovedNode = Cast<UMazeGraphNodeBase>(GraphNode);
     if (!MovedNode)
     {
@@ -40,6 +40,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilt
             {
                  const FScopedTransaction Transaction(NSLOCTEXT("UnrealEd", "GraphEd_BreakPinLink", "Break Pin Link"));
                  MovedNodePin->BreakLinkTo(OtherPin);
+                
             }
         }
     }
@@ -69,7 +70,6 @@ void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilt
             }
         }
     }
-    SGraphNode::MoveTo(NewPosition, NodeFilter, bMarkDirty);
 }
 
 FVector2D SMazeGraphNodeBase::GetPinPositionInGraphSpace(const TSharedPtr<SGraphPanel>& GraphPanel, const UEdGraphPin* Pin)

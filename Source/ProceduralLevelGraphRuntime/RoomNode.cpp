@@ -19,11 +19,11 @@ float URoomNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
 	if (Orientation == EMazeOrientation::Horizontal)
 	{
-		return RoomWidth * 0.5;
+		return RoomWidth * 100.0 * 0.5;
 	}
 	else
 	{
-		return RoomHeight * 0.5;
+		return RoomHeight * 100.0 * 0.5;
 	}
 
 }

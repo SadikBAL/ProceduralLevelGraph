@@ -36,7 +36,7 @@ private:
     virtual void NotifyPostChange(const FPropertyChangedEvent& PropertyChangedEvent, FProperty* PropertyThatChanged) override;
     TSharedRef<SDockTab> SpawnTab_GraphCanvas(const FSpawnTabArgs& Args);
     TSharedRef<SDockTab> SpawnTab_Properties(const FSpawnTabArgs& Args);
-
+	 virtual void SaveAsset_Execute() override;
     void SaveGraphToRuntimeData();
     
     void OnGraphChanged(const FEdGraphEditAction& Action);

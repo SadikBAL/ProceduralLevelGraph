@@ -8,8 +8,8 @@
 
 URoomGraphNode::URoomGraphNode()
 {
-    RoomHeight = 3;
-    RoomWith = 3;
+    RoomHeight = 5;
+    RoomWith = 5;
 }
 
 FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const

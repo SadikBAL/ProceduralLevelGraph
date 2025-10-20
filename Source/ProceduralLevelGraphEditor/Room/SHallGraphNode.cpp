@@ -71,7 +71,7 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 			+ SOverlay::Slot()
 		   [
 			  SNew(SBox)
-			  .WidthOverride(80.f)
+			  .WidthOverride(100.0f)
 				 .HeightOverride(this, &SHallGraphNode::GetNodeHeight)
 			  [
 				 SNew(SBorder)

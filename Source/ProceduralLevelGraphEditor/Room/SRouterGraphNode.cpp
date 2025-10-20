@@ -42,8 +42,8 @@ void SRouterGraphNode::Construct(const FArguments& InArgs, URouterGraphNode* InN
 		+ SOverlay::Slot()
 	   [
 		  SNew(SBox)
-		  .WidthOverride(80.f)
-		  .HeightOverride(80.f)
+		  .WidthOverride(100.f)
+		  .HeightOverride(100.f)
 		  [
 			 SNew(SBorder)
 			 .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
