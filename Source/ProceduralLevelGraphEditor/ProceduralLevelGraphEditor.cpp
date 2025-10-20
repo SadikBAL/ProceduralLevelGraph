@@ -255,6 +255,8 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             if (URoomGraphNode* RoomEdNode = Cast<URoomGraphNode>(EdNode))
             {
                 URoomNode* RuntimeRoom = NewObject<URoomNode>(GraphAsset);
+                RuntimeRoom->RoomHeight = RoomEdNode->RoomHeight;
+                RuntimeRoom->RoomWidth = RoomEdNode->RoomWith;
                 NewRuntimeNode = RuntimeRoom;
             }
             else if (UHallGraphNode* HallEdNode = Cast<UHallGraphNode>(EdNode))
@@ -311,7 +313,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                         }
                     }
                 }
-                else if (LinkedPin->GetName() == FName("Up"))
+                else if (LinkedPin->GetName() == FName("Left"))
                 {
                     for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                     {
@@ -321,7 +323,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                         }
                     }
                 }
-                else if (LinkedPin->GetName() == FName("Down"))
+                else if (LinkedPin->GetName() == FName("Right"))
                 {
                     for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                     {
@@ -385,7 +387,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 }
             }
         }
-        else if (URouterGraphNode* MazeEdNode = Cast<URouterGraphNode>(EdGraph))
+        else if (URouterGraphNode* RouterEdNode = Cast<URouterGraphNode>(EdGraph))
         {
             for (UEdGraphPin* LinkedPin : EdGraph->Pins)
             {
@@ -431,7 +433,6 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 }
             }
         }
-        
         GraphAsset->AllNodes.Add(RuntimeNode);
     }
 }

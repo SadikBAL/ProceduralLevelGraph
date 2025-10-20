@@ -8,11 +8,13 @@ UCLASS(BlueprintType)
 class PROCEDURALLEVELGRAPHRUNTIME_API UHallNode : public UMazeNodeBase
 {
 	GENERATED_BODY()
-
+	UHallNode();
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	float HallLength;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	bool bIsHorizontal;
+
+	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
 };

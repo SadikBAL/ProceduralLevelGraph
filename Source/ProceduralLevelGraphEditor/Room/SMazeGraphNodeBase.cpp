@@ -18,8 +18,8 @@ void SMazeGraphNodeBase::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinW
 
 void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilter, bool bMarkDirty)
 {
-	SGraphNode::MoveTo(NewPosition, NodeFilter, bMarkDirty);
-	    UMazeGraphNodeBase* MovedNode = Cast<UMazeGraphNodeBase>(GraphNode);
+
+    UMazeGraphNodeBase* MovedNode = Cast<UMazeGraphNodeBase>(GraphNode);
     if (!MovedNode)
     {
         return;
@@ -36,8 +36,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilt
         for (UEdGraphPin* OtherPin : LinkedPins)
         {
             FVector2D OtherNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,OtherPin);
-            if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) > ConnectionThreshold
-                || MovedNodePin->bHidden || OtherPin->bHidden)
+            if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) > ConnectionThreshold)
             {
                  const FScopedTransaction Transaction(NSLOCTEXT("UnrealEd", "GraphEd_BreakPinLink", "Break Pin Link"));
                  MovedNodePin->BreakLinkTo(OtherPin);
@@ -58,7 +57,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilt
                 }
                 FVector2D MovedNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,MovedNodePin);;
                 FVector2D OtherNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,OtherNodePin);
-                if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) < ConnectionThreshold)
+                if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) <= ConnectionThreshold)
                 {
                     const UEdGraphSchema* Schema = Graph->GetSchema();
                     if (Schema && Schema->CanCreateConnection(MovedNodePin, OtherNodePin).Response == CONNECT_RESPONSE_MAKE)
@@ -70,6 +69,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilt
             }
         }
     }
+    SGraphNode::MoveTo(NewPosition, NodeFilter, bMarkDirty);
 }
 
 FVector2D SMazeGraphNodeBase::GetPinPositionInGraphSpace(const TSharedPtr<SGraphPanel>& GraphPanel, const UEdGraphPin* Pin)

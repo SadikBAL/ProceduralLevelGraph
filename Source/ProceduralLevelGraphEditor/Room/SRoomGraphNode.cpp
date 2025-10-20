@@ -1,4 +1,6 @@
 ﻿#include "SRoomGraphNode.h"
+
+#include "HallGraphNode.h"
 #include "ProceduralLevelGraphEditor/Room/RoomGraphNode.h"
 #include "Widgets/SBoxPanel.h"
 #include "Widgets/Layout/SBox.h"
@@ -42,8 +44,8 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 		+ SOverlay::Slot()
 	   [
 		  SNew(SBox)
-		  .WidthOverride(250.f)
-		  .HeightOverride(250.f)
+		  .WidthOverride(GetNodeWidth())
+		  .HeightOverride(GetNodeHeight())
 		  [
 			 SNew(SBorder)
 			 .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
@@ -106,5 +108,23 @@ void SRoomGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidge
 	if(LeftPin.IsValid()) OutPinWidgets.Add(LeftPin);
 	if(RightPin.IsValid()) OutPinWidgets.Add(RightPin);
 	SMazeGraphNodeBase::GetAllPinWidgets(OutPinWidgets);
+}
+
+FOptionalSize SRoomGraphNode::GetNodeHeight() const
+{
+	if (URoomGraphNode* RoomNode = Cast<URoomGraphNode>(GraphNode))
+	{
+		return FMath::Max(20.0f, RoomNode->RoomHeight * 100); 
+	}
+	return 300.0f;
+}
+
+FOptionalSize SRoomGraphNode::GetNodeWidth() const
+{
+	if (URoomGraphNode* RoomNode = Cast<URoomGraphNode>(GraphNode))
+	{
+		return FMath::Max(20.0f, RoomNode->RoomWith * 100); 
+	}
+	return 300.0f;
 }
 #undef LOCTEXT_NAMESPACE

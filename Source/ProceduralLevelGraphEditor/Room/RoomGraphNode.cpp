@@ -6,6 +6,12 @@
 
 #define LOCTEXT_NAMESPACE "RoomGraphNode"
 
+URoomGraphNode::URoomGraphNode()
+{
+    RoomHeight = 3;
+    RoomWith = 3;
+}
+
 FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
     return LOCTEXT("RoomNodeTitle", "Room");

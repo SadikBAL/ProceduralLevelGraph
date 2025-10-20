@@ -16,6 +16,8 @@ public:
 	virtual void AddPin(const TSharedRef<SGraphPin>& PinToAdd) override;
 	virtual TSharedPtr<SGraphPin> CreatePinWidget(UEdGraphPin* Pin) const override;
 	virtual void GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const override;
+	FOptionalSize GetNodeHeight() const;
+	FOptionalSize GetNodeWidth() const;
 
 protected:
 	TSharedPtr<SGraphPin> UpPin;
