@@ -16,7 +16,7 @@ void SMazeGraphNodeBase::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinW
 {
 }
 
-void SMazeGraphNodeBase::MoveTo(const FVector2D& NewPosition, FNodeSet& NodeFilter, bool bMarkDirty)
+void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilter, bool bMarkDirty)
 {
     SGraphNode::MoveTo(NewPosition, NodeFilter, bMarkDirty);
     UMazeGraphNodeBase* MovedNode = Cast<UMazeGraphNodeBase>(GraphNode);
