@@ -31,4 +31,5 @@ void UMazeGraphNodeBase::PinConnectionListChanged(UEdGraphPin* Pin)
 		Graph->GetOuter()->MarkPackageDirty();
 	}
 }
+#undef LOCTEXT_NAMESPACE
 

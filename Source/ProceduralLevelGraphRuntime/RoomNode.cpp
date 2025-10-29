@@ -4,6 +4,7 @@ URoomNode::URoomNode()
 {
 	static ConstructorHelpers::FClassFinder<AActor> BP_Room_ClassFinder(
 		TEXT("Blueprint'/Game/LevelPrototyping/BP_Room.BP_Room_C'")
+		
 	);
 	if (BP_Room_ClassFinder.Succeeded())
 	{
@@ -19,11 +20,11 @@ float URoomNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
 	if (Orientation == EMazeOrientation::Horizontal)
 	{
-		return RoomWidth * 100.0 * 0.5;
+		return RoomWidth * 400.0 * 0.5;
 	}
 	else
 	{
-		return RoomHeight * 100.0 * 0.5;
+		return RoomHeight * 400.0 * 0.5;
 	}
 
 }

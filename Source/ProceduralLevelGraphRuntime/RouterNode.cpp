@@ -19,5 +19,5 @@ URouterNode::URouterNode()
 
 float URouterNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
-	return 50.0f;
+	return 200.0f;
 }

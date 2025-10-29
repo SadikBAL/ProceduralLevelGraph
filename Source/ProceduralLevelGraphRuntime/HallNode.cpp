@@ -22,6 +22,6 @@ UHallNode::~UHallNode()
 
 float UHallNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
-	return 100 * HallLength * 0.5;
+	return 400 * HallLength * 0.5;
 }
 
