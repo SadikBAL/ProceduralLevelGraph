@@ -58,7 +58,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     }
    
     SGraphNode::MoveTo(SnipPosition, NodeFilter, bMarkDirty);
-    
+    FSlateApplication::Get().Tick();
     UMazeGraphNodeBase* MovedNode = Cast<UMazeGraphNodeBase>(GraphNode);
     if (!MovedNode)
     {
@@ -67,7 +67,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     TSharedPtr<SGraphPanel> OwnerPanel = GetOwnerPanel();
     if(!OwnerPanel.IsValid()) return;
 
-    constexpr float ConnectionThreshold = 12.0f;
+    constexpr float ConnectionThreshold = 15.0f;
     UEdGraph* Graph = MovedNode->GetGraph();
     for (UEdGraphPin* MovedNodePin : MovedNode->Pins)
     {
