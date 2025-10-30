@@ -16,9 +16,6 @@ public:
 	FVector2D GetPinPositionInGraphSpace(const TSharedPtr<SGraphPanel>& GraphPanel, const UEdGraphPin* Pin);
 	virtual FOptionalSize GetNodeHeight() const;
 	virtual FOptionalSize GetNodeWidth() const;
-	//virtual FReply OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
-	//virtual FReply OnMouseMove(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
-	//virtual void Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) override;
 protected:
 	int PinPadding = -4;
 	bool bOnDrag = false;

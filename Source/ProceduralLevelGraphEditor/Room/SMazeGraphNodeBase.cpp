@@ -80,7 +80,6 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
             {
                  const FScopedTransaction Transaction(NSLOCTEXT("UnrealEd", "GraphEd_BreakPinLink", "Break Pin Link"));
                  MovedNodePin->BreakLinkTo(OtherPin);
-                
             }
         }
     }
@@ -110,6 +109,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
             }
         }
     }
+    
 }
 
 FVector2D SMazeGraphNodeBase::GetPinPositionInGraphSpace(const TSharedPtr<SGraphPanel>& GraphPanel, const UEdGraphPin* Pin)
@@ -151,7 +151,5 @@ FOptionalSize SMazeGraphNodeBase::GetNodeWidth() const
 {
     return FOptionalSize(5.0f);   
 }
-
-
 
 #undef LOCTEXT_NAMESPACE
