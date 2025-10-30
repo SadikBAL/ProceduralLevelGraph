@@ -30,7 +30,6 @@ public:
     virtual FLinearColor GetWorldCentricTabColorScale() const override;
     virtual void PostInitAssetEditor() override;
     // End of FAssetEditorToolkit interface
-
 private:
     void OnSelectedNodesChanged(const TSet<UObject*>& Objects);
     virtual void NotifyPostChange(const FPropertyChangedEvent& PropertyChangedEvent, FProperty* PropertyThatChanged) override;
