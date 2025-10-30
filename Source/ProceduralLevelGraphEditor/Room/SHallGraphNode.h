@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "SGraphNode.h"
 #include "SMazeGraphNodeBase.h"
+#include "SRoomGraphNodePin.h"
 
 class UHallGraphNode;
 
@@ -16,9 +17,11 @@ public:
 	virtual void AddPin(const TSharedRef<SGraphPin>& PinToAdd) override;
 	virtual TSharedPtr<SGraphPin> CreatePinWidget(UEdGraphPin* Pin) const override;
 	virtual void GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const override;
-	FOptionalSize GetNodeHeight() const;
+	virtual FOptionalSize GetNodeHeight() const override;
+	virtual FOptionalSize GetNodeWidth() const override;
 
 protected:
-	TSharedPtr<SGraphPin> UpPin;
-	TSharedPtr<SGraphPin> DownPin;
+	TSharedPtr<SRoomGraphNodePin> UpPin;
+	TSharedPtr<SRoomGraphNodePin> DownPin;
+	UHallGraphNode* HallGraphNodeRef;
 };

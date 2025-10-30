@@ -14,8 +14,9 @@
 void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 {
     this->GraphNode = InNode;
+	this->HallGraphNodeRef = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 24;
+	TitleFont.Size = 16;
 	UpdateGraphNode();
 	if (InNode->bHorizentalMode)
 	{
@@ -23,35 +24,36 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 		.HAlign(HAlign_Center)
 		.VAlign(VAlign_Center)
 		[
-				
 			SNew(SOverlay)
 			+ SOverlay::Slot()
-			.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(-24, 0, 0, 0)
-			[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
-
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0, 0,-18, 0)
-			[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
-			+ SOverlay::Slot()
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
 		   [
 			  SNew(SBox)
-			  .HeightOverride(80.f)
-		   	  .WidthOverride(this, &SHallGraphNode::GetNodeHeight)
+			  .WidthOverride(GetNodeHeight())
+			  .HeightOverride(GetNodeWidth())
 			  [
 				 SNew(SBorder)
 				 .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
 				 .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
 				 .HAlign(HAlign_Center)
-				 .VAlign(VAlign_Center)
+				   .VAlign(VAlign_Center)
 				 [
 					SNew(STextBlock)
 					.Text(FText::FromString("HALL"))
 					 .Font(TitleFont)
-			 			
 				 ]
 			  ]
 		   ]
-		]; 
+			+ SOverlay::Slot()
+	.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(PinPadding-4,0,0,0)
+	[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
+
+	+ SOverlay::Slot()
+	.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0,0,PinPadding,0)
+	[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
+
+		];
 	}
 	else
 	{
@@ -59,26 +61,20 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 		.HAlign(HAlign_Center)
 		.VAlign(VAlign_Center)
 		[
-				
 			SNew(SOverlay)
 			+ SOverlay::Slot()
-			.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0, -18, 0, 0)
-			[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
-
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0, 0,0, -18)
-			[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
-			+ SOverlay::Slot()
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
 		   [
 			  SNew(SBox)
-			  .WidthOverride(100.0f)
-				 .HeightOverride(this, &SHallGraphNode::GetNodeHeight)
+			  .WidthOverride(GetNodeWidth())
+			  .HeightOverride(GetNodeHeight())
 			  [
 				 SNew(SBorder)
 				 .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
 				 .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
-				 .HAlign(HAlign_Center) // İçeriği (metni) yatayda ortala
-			  	 .VAlign(VAlign_Center)
+				 .HAlign(HAlign_Center)
+				   .VAlign(VAlign_Center)
 				 [
 					SNew(STextBlock)
 					.Text(FText::FromString("HALL"))
@@ -86,7 +82,14 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 				 ]
 			  ]
 		   ]
-		]; 
+			+ SOverlay::Slot()
+			.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0,PinPadding,0,0)
+			[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
+
+			+ SOverlay::Slot()
+			.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0,0,0,PinPadding)
+			[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
+		];
 	}
 
 }
@@ -94,14 +97,30 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
-
+	TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
 	if (PinName == FName("Up"))
 	{
-		UpPin = PinToAdd;
+		UpPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		if (HallGraphNodeRef->bHorizentalMode)
+		{
+			UpPin->PinLocation = EMazeDirection::Left;
+		}
+		else
+		{
+			UpPin->PinLocation = EMazeDirection::Up;
+		}
 	}
 	else if (PinName == FName("Down"))
 	{
-		DownPin = PinToAdd;
+		DownPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		if (HallGraphNodeRef->bHorizentalMode)
+		{
+			DownPin->PinLocation = EMazeDirection::Right;
+		}
+		else
+		{
+			DownPin->PinLocation = EMazeDirection::Down;
+		}
 	}
 	SGraphNode::AddPin(PinToAdd);
 }
@@ -135,6 +154,11 @@ FOptionalSize SHallGraphNode::GetNodeHeight() const
 		return FMath::Max(20.0f, HallNode->HallLength * 100); 
 	}
 	return 200.0f;
+}
+
+FOptionalSize SHallGraphNode::GetNodeWidth() const
+{
+	return FOptionalSize(100.0f);
 }
 
 #undef LOCTEXT_NAMESPACE

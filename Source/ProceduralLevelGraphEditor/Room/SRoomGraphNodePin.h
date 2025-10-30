@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "SGraphPin.h"
+#include "ProceduralLevelGraphRuntime/MazeNodeBase.h"
 
 class SRoomGraphNodePin : public SGraphPin
 {
@@ -10,9 +11,12 @@ public:
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs, UEdGraphPin* InPin);
-
+	EMazeDirection PinLocation;
+	
 protected:
 	virtual const FSlateBrush* GetPinIcon() const override;
 	virtual FSlateColor GetPinColor() const override;
-	TSharedPtr<FSlateBrush> PinBrush;
+	TSharedPtr<FSlateBrush> PinBrushVertical;
+	TSharedPtr<FSlateBrush> PinBrushHorizontal;
+
 };

@@ -15,71 +15,76 @@ void SRouterGraphNode::Construct(const FArguments& InArgs, URouterGraphNode* InN
 {
     this->GraphNode = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 24;
+	TitleFont.Size = 16;
 	UpdateGraphNode();
 	
 	GetOrAddSlot(ENodeZone::Center)
 	.HAlign(HAlign_Center)
 	.VAlign(VAlign_Center)
 	[
-		
 		SNew(SOverlay)
 		+ SOverlay::Slot()
-		.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0, -18, 0, 0)
-		[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
-
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0, 0, 0, -18)
-		[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
-
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(-24, 0, 0, 0)
-		[ LeftPin.IsValid() ? LeftPin.ToSharedRef() : SNullWidget::NullWidget ]
-
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0, 0, -18, 0)
-		[ RightPin.IsValid() ? RightPin.ToSharedRef() : SNullWidget::NullWidget ]
-		+ SOverlay::Slot()
+		.HAlign(HAlign_Center)
+		.VAlign(VAlign_Center)
 	   [
 		  SNew(SBox)
-		  .WidthOverride(100.f)
-		  .HeightOverride(100.f)
+		  .WidthOverride(GetNodeWidth())
+		  .HeightOverride(GetNodeHeight())
 		  [
 			 SNew(SBorder)
 			 .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
 			 .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
-			 .HAlign(HAlign_Center) // İçeriği (metni) yatayda ortala
-		  	 .VAlign(VAlign_Center)
+			 .HAlign(HAlign_Center)
+			   .VAlign(VAlign_Center)
 			 [
 				SNew(STextBlock)
-				.Text(FText::FromString("0"))
-			 	.Font(TitleFont)
-			 	
+				.Text(FText::FromString("ROUTER"))
+				 .Font(TitleFont)
 			 ]
 		  ]
 	   ]
-	]; 
+		
+		+ SOverlay::Slot()
+		.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0,PinPadding,0,0)
+		[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
+
+		+ SOverlay::Slot()
+		.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0,0,0,PinPadding)
+		[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
+
+		+ SOverlay::Slot()
+		.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(PinPadding-4,0,0,0)
+		[ LeftPin.IsValid() ? LeftPin.ToSharedRef() : SNullWidget::NullWidget ]
+
+		+ SOverlay::Slot()
+		.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0,0,PinPadding,0)
+		[ RightPin.IsValid() ? RightPin.ToSharedRef() : SNullWidget::NullWidget ]
+	];
 }
 
 void SRouterGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
-
+	TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
 	if (PinName == FName("Up"))
 	{
-		UpPin = PinToAdd;
+		UpPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		UpPin->PinLocation = EMazeDirection::Up;
 	}
 	else if (PinName == FName("Down"))
 	{
-		DownPin = PinToAdd;
+		DownPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		DownPin->PinLocation = EMazeDirection::Down;
 	}
 	else if (PinName == FName("Left"))
 	{
-		LeftPin = PinToAdd;
+		LeftPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		LeftPin->PinLocation = EMazeDirection::Left;
 	}
 	else if (PinName == FName("Right"))
 	{
-		RightPin = PinToAdd;
+		RightPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		RightPin->PinLocation = EMazeDirection::Right;
 	}
 	SGraphNode::AddPin(PinToAdd);
 }
@@ -106,5 +111,15 @@ void SRouterGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWid
 	if(LeftPin.IsValid()) OutPinWidgets.Add(LeftPin);
 	if(RightPin.IsValid()) OutPinWidgets.Add(RightPin);
 	SMazeGraphNodeBase::GetAllPinWidgets(OutPinWidgets);
+}
+
+FOptionalSize SRouterGraphNode::GetNodeHeight() const
+{
+	return FOptionalSize(100.0f);
+}
+
+FOptionalSize SRouterGraphNode::GetNodeWidth() const
+{
+	return FOptionalSize(100.0f);
 }
 #undef LOCTEXT_NAMESPACE

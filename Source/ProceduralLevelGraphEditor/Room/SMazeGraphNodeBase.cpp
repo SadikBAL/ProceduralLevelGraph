@@ -27,7 +27,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     TSharedPtr<SGraphPanel> OwnerPanel = GetOwnerPanel();
     if(!OwnerPanel.IsValid()) return;
 
-    constexpr float ConnectionThreshold = 40.0f;
+    constexpr float ConnectionThreshold = 12.0f;
     UEdGraph* Graph = MovedNode->GetGraph();
     for (UEdGraphPin* MovedNodePin : MovedNode->Pins)
     {
@@ -100,6 +100,16 @@ FVector2D SMazeGraphNodeBase::GetPinPositionInGraphSpace(const TSharedPtr<SGraph
         }
     }
     return FVector2D::ZeroVector;
+}
+
+FOptionalSize SMazeGraphNodeBase::GetNodeHeight() const
+{
+    return FOptionalSize(5.0f);
+}
+
+FOptionalSize SMazeGraphNodeBase::GetNodeWidth() const
+{
+    return FOptionalSize(5.0f);   
 }
 
 #undef LOCTEXT_NAMESPACE
