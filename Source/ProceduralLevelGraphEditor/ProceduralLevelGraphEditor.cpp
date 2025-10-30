@@ -1,6 +1,4 @@
 #include "ProceduralLevelGraphEditor.h"
-
-#include "BlueprintEditor.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphRuntime.h"
 #include "EdGraph/EdGraph.h"
 #include "Widgets/Docking/SDockTab.h"
@@ -11,8 +9,6 @@
 #include "EdGraph/EdGraphSchema.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "GraphEditorActions.h"
-#include "SProceduralGraphPanel.h"
-#include "Experimental/Graph/GraphConvert.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "ProceduralLevelGraphRuntime/HallNode.h"
 #include "ProceduralLevelGraphRuntime/RoomNode.h"
@@ -173,7 +169,7 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
     SGraphEditor::FGraphEditorEvents InEvents;
     InEvents.OnSelectionChanged = SGraphEditor::FOnSelectionChanged::CreateSP(this, &FProceduralLevelGraphEditor::OnSelectedNodesChanged);
     
-    GraphEditorWidget = SNew(SProceduralGraphPanel)
+    GraphEditorWidget = SNew(SGraphEditor)
         .AdditionalCommands(GetToolkitCommands())
         .GraphToEdit(GraphAsset->EdGraph)
         .GraphEvents(InEvents)
