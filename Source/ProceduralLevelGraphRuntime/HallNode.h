@@ -19,4 +19,5 @@ public:
 
 	
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
+	virtual AActor* SpawnMazeObject(UObject* WorldContextObject, FVector Position) override;
 };

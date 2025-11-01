@@ -40,9 +40,9 @@ FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
 	switch (Direction)
 	{
 	case EMazeDirection::Up:
-		return MazeObject->GetActorLocation() + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical), 1);
-	case EMazeDirection::Down:
 		return MazeObject->GetActorLocation() + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical) * -1, 1);
+	case EMazeDirection::Down:
+		return MazeObject->GetActorLocation() + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical), 1);
 	case EMazeDirection::Left:
 		return MazeObject->GetActorLocation() + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal) * -1, 0, 1);
 	case EMazeDirection::Right:
