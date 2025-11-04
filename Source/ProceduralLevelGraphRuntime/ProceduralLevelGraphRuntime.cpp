@@ -14,6 +14,7 @@ void UProceduralLevelGraphRuntime::SpawnMazeToEdtior()
 {
 	Nodes.Empty();
 	SpawnNode(GEditor->GetEditorWorldContext().World(),StartNode,EMazeDirection::None,FVector::ZeroVector);
+	Nodes.Empty();
 }
 
 void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location)

@@ -48,6 +48,7 @@ AActor* UHallNode::SpawnMazeObject(UWorld* World, FVector Position)
 		Rotator,
 		SpawnParams
 	);
+	MazeObject->SetActorScale3D(FVector(1 * HallLength,1,1));
 
 	if (MazeObject)
 	{
