@@ -44,4 +44,6 @@ private:
     TSharedPtr<SGraphEditor> GraphEditorWidget;
     TSharedPtr<class IDetailsView> PropertyWidget;
     TSharedPtr<FUICommandList> CommandList;
+    UPROPERTY(EditAnywhere)
+    FString GraphCanvasTabName;
 };

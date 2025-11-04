@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "SGraphNode.h"
+#include "SRoomGraphNodePin.h"
 
 class UHallGraphNode;
 
@@ -16,7 +17,12 @@ public:
 	FVector2D GetPinPositionInGraphSpace(const TSharedPtr<SGraphPanel>& GraphPanel, const UEdGraphPin* Pin);
 	virtual FOptionalSize GetNodeHeight() const;
 	virtual FOptionalSize GetNodeWidth() const;
+	virtual void UpdatePinTypes();
 protected:
 	int PinPadding = -4;
 	bool bOnDrag = false;
+	TSharedPtr<SRoomGraphNodePin> UpPin;
+	TSharedPtr<SRoomGraphNodePin> DownPin;
+	TSharedPtr<SRoomGraphNodePin> LeftPin;
+	TSharedPtr<SRoomGraphNodePin> RightPin;
 };

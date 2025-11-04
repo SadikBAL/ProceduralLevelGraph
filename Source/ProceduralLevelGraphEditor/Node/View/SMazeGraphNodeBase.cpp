@@ -1,7 +1,7 @@
 ﻿#include "SMazeGraphNodeBase.h"
 
 #include "SGraphPanel.h"
-#include "ProceduralLevelGraphEditor/Room/MazeGraphNodeBase.h"
+#include "ProceduralLevelGraphEditor/Node/Data/MazeGraphNodeBase.h"
 #include "Widgets/SBoxPanel.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Images/SImage.h"
@@ -150,6 +150,26 @@ FOptionalSize SMazeGraphNodeBase::GetNodeHeight() const
 FOptionalSize SMazeGraphNodeBase::GetNodeWidth() const
 {
     return FOptionalSize(5.0f);   
+}
+
+void SMazeGraphNodeBase::UpdatePinTypes()
+{
+    if (UpPin.IsValid())
+    {
+        UpPin->PinType = EMazePinType::Tier1;
+    }
+    if (DownPin.IsValid())
+    {
+        DownPin->PinType = EMazePinType::Tier1;
+    }
+    if (LeftPin.IsValid())
+    {
+        LeftPin->PinType = EMazePinType::Tier1;
+    }
+    if (RightPin.IsValid())
+    {
+        RightPin->PinType = EMazePinType::Tier1;
+    }
 }
 
 #undef LOCTEXT_NAMESPACE

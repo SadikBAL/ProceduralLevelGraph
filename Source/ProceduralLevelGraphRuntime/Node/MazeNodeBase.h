@@ -18,6 +18,12 @@ enum class EMazeOrientation : uint8
 	Vertical,
 	Horizontal
 };
+UENUM(BlueprintType)
+enum class EMazePinType : uint8
+{
+	Hidden,
+	Tier1
+};
 UCLASS(BlueprintType)
 class PROCEDURALLEVELGRAPHRUNTIME_API UMazeNodeBase : public UObject
 {
@@ -28,7 +34,8 @@ public:
 	FGameplayTagContainer GameplayTags;
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	FGuid NodeGuid;
-
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	int RoomRotation = 0;
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	TObjectPtr<UMazeNodeBase> DownNode;
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
@@ -47,7 +54,7 @@ public:
 	TSubclassOf<AActor> ActorToSpawnClass;
 
 	UFUNCTION(BlueprintCallable)
-	virtual  AActor* SpawnMazeObject(UObject* WorldContextObject, FVector Position);
+	virtual  AActor* SpawnMazeObject(UWorld* World,FVector Position);
 	UFUNCTION(BlueprintCallable)
 	virtual FVector GetEdgePosition(EMazeDirection Direction);
 	UFUNCTION(BlueprintCallable)

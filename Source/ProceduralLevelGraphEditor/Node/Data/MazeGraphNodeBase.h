@@ -18,4 +18,22 @@ public:
 	virtual bool CanUserDeleteNode() const override;
 	virtual void GetNodeContextMenuActions(class UToolMenu* Menu, class UGraphNodeContextMenuContext* Context) const override;
 	virtual void PinConnectionListChanged(UEdGraphPin* Pin) override;
+
+	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Right")
+	void RotateRoomToRight();
+	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Left")
+	void RotateRoomToLeft();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Node Process")
+	int RoomRotation = 0;
+protected:
+	UPROPERTY()
+	FText NodeTitle = FText::FromString("ROOM");
+	UPROPERTY()
+	FText DoorA = FText::FromString("A");
+	UPROPERTY()
+	FText DoorB = FText::FromString("B");
+	UPROPERTY()
+	FText DoorC = FText::FromString("C");
+	UPROPERTY()
+	FText DoorD = FText::FromString("D");
 };

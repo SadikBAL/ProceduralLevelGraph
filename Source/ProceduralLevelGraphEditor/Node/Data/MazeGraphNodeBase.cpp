@@ -31,5 +31,27 @@ void UMazeGraphNodeBase::PinConnectionListChanged(UEdGraphPin* Pin)
 		Graph->GetOuter()->MarkPackageDirty();
 	}
 }
+
+void UMazeGraphNodeBase::RotateRoomToLeft()
+{
+	RoomRotation -= 90;
+	if (RoomRotation < 0)
+		RoomRotation = 270;
+    
+	if (UEdGraph* MyGraph = GetGraph())
+	{
+		MyGraph->NotifyGraphChanged();
+	}
+}
+
+void UMazeGraphNodeBase::RotateRoomToRight()
+{
+	RoomRotation += 90;
+	RoomRotation = RoomRotation % 360;
+	if (UEdGraph* MyGraph = GetGraph())
+	{
+		MyGraph->NotifyGraphChanged();
+	}
+}
 #undef LOCTEXT_NAMESPACE
 

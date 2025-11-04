@@ -1,13 +1,13 @@
 ﻿#include "MazeNodeBase.h"
 
-AActor* UMazeNodeBase::SpawnMazeObject(UObject* WorldContextObject, FVector Position)
+AActor* UMazeNodeBase::SpawnMazeObject(UWorld* World,FVector Position)
 {
 	if (!ActorToSpawnClass)
 	{
 		return nullptr;
 	}
 
-	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	
 	if (!World)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
@@ -22,6 +22,7 @@ AActor* UMazeNodeBase::SpawnMazeObject(UObject* WorldContextObject, FVector Posi
 		FRotator::ZeroRotator,
 		SpawnParams
 	);
+	
 
 	if (MazeObject)
 	{
@@ -31,7 +32,6 @@ AActor* UMazeNodeBase::SpawnMazeObject(UObject* WorldContextObject, FVector Posi
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s spawn edilemedi"), *ActorToSpawnClass->GetName());
 	}
-
 	return MazeObject.Get();
 }
 

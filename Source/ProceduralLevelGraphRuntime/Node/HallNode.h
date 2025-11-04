@@ -13,11 +13,7 @@ class PROCEDURALLEVELGRAPHRUNTIME_API UHallNode : public UMazeNodeBase
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	float HallLength;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
-	bool bIsHorizontal;
-
 	
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
-	virtual AActor* SpawnMazeObject(UObject* WorldContextObject, FVector Position) override;
+	virtual AActor* SpawnMazeObject(UWorld* World, FVector Position) override;
 };

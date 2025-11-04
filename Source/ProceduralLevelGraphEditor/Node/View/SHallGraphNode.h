@@ -1,28 +1,25 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "SGraphNode.h"
 #include "SMazeGraphNodeBase.h"
 #include "SRoomGraphNodePin.h"
 
-class URouterGraphNode;
+class UHallGraphNode;
 
-class SRouterGraphNode : public SMazeGraphNodeBase
+class SHallGraphNode : public SMazeGraphNodeBase
 {
 public:
-	SLATE_BEGIN_ARGS(SRouterGraphNode) {}
+	SLATE_BEGIN_ARGS(SHallGraphNode) {}
 	SLATE_END_ARGS()
 
-	void Construct(const FArguments& InArgs, URouterGraphNode* InNode);
+	void Construct(const FArguments& InArgs, UHallGraphNode* InNode);
 	virtual void AddPin(const TSharedRef<SGraphPin>& PinToAdd) override;
 	virtual TSharedPtr<SGraphPin> CreatePinWidget(UEdGraphPin* Pin) const override;
 	virtual void GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const override;
 	virtual FOptionalSize GetNodeHeight() const override;
 	virtual FOptionalSize GetNodeWidth() const override;
+	virtual void UpdatePinTypes() override;
 
 protected:
-	TSharedPtr<SRoomGraphNodePin> UpPin;
-	TSharedPtr<SRoomGraphNodePin> DownPin;
-	TSharedPtr<SRoomGraphNodePin> LeftPin;
-	TSharedPtr<SRoomGraphNodePin> RightPin;
+	UHallGraphNode* HallGraphNodeRef = nullptr;
 };

@@ -1,10 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EdGraphUtilities.h"
 #include "Modules/ModuleManager.h"
 #include "IAssetTools.h"
-#include "Room/MazeNodesFactory.h"
+#include "Node/Data/MazeNodesFactory.h"
 
 class IAssetTypeActions;
 

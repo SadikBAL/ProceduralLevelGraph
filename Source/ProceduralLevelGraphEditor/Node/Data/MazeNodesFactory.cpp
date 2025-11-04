@@ -4,9 +4,9 @@
 #include "HallGraphNode.h"
 #include "RoomGraphNode.h"
 #include "RouterGraphNode.h"
-#include "SHallGraphNode.h"
-#include "SRoomGraphNode.h"
-#include "SRouterGraphNode.h"
+#include "ProceduralLevelGraphEditor/Node/View/SHallGraphNode.h"
+#include "ProceduralLevelGraphEditor/Node/View/SRoomGraphNode.h"
+#include "ProceduralLevelGraphEditor/Node/View/SRouterGraphNode.h"
 
 TSharedPtr<SGraphNode> FSRoomGraphNodeFactory::CreateNode(UEdGraphNode* Node) const
 {

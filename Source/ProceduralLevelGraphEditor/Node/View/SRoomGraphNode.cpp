@@ -1,5 +1,5 @@
-﻿#include "SRouterGraphNode.h"
-#include "ProceduralLevelGraphEditor/Room/RouterGraphNode.h"
+﻿#include "SRoomGraphNode.h"
+#include "ProceduralLevelGraphEditor/Node/Data/RoomGraphNode.h"
 #include "Widgets/SBoxPanel.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Images/SImage.h"
@@ -9,15 +9,15 @@
 #include "SGraphPin.h"
 #include "SRoomGraphNodePin.h"
 
-#define LOCTEXT_NAMESPACE "SRouterGraphNode"
+#define LOCTEXT_NAMESPACE "SRoomGraphNode"
 
-void SRouterGraphNode::Construct(const FArguments& InArgs, URouterGraphNode* InNode)
+void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 {
-    this->GraphNode = InNode;
+	this->GraphNode = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 16;
+	TitleFont.Size = 24;
 	UpdateGraphNode();
-	
+	UpdatePinTypes();
 	GetOrAddSlot(ENodeZone::Center)
 	.HAlign(HAlign_Center)
 	.VAlign(VAlign_Center)
@@ -38,7 +38,7 @@ void SRouterGraphNode::Construct(const FArguments& InArgs, URouterGraphNode* InN
 			   .VAlign(VAlign_Center)
 			 [
 				SNew(STextBlock)
-				.Text(FText::FromString("ROUTER"))
+				.Text(FText::FromString("ROOM"))
 				 .Font(TitleFont)
 			 ]
 		  ]
@@ -46,50 +46,67 @@ void SRouterGraphNode::Construct(const FArguments& InArgs, URouterGraphNode* InN
 		
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0,PinPadding,0,0)
-		[ UpPin.IsValid() ? UpPin.ToSharedRef() : SNullWidget::NullWidget ]
+		[
+			(UpPin.IsValid() && UpPin->PinType != EMazePinType::Hidden)
+			? UpPin.ToSharedRef()
+			: SNullWidget::NullWidget
+		]
 
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0,0,0,PinPadding)
-		[ DownPin.IsValid() ? DownPin.ToSharedRef() : SNullWidget::NullWidget ]
+		[
+			(DownPin.IsValid() && DownPin->PinType != EMazePinType::Hidden)
+			? DownPin.ToSharedRef()
+			: SNullWidget::NullWidget
+		]
 
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(PinPadding-4,0,0,0)
-		[ LeftPin.IsValid() ? LeftPin.ToSharedRef() : SNullWidget::NullWidget ]
+		[
+			(LeftPin.IsValid() && LeftPin->PinType != EMazePinType::Hidden)
+			? LeftPin.ToSharedRef()
+			: SNullWidget::NullWidget
+		]
 
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0,0,PinPadding,0)
-		[ RightPin.IsValid() ? RightPin.ToSharedRef() : SNullWidget::NullWidget ]
+		[
+			(RightPin.IsValid() && RightPin->PinType != EMazePinType::Hidden)
+			? RightPin.ToSharedRef()
+			: SNullWidget::NullWidget
+		]
 	];
 }
 
-void SRouterGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
+void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
 	TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
 	if (PinName == FName("Up"))
 	{
 		UpPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		UpPin->PinLocation = EMazeDirection::Up;
+		UpPin->PinDirection = EMazeOrientation::Vertical;
 	}
 	else if (PinName == FName("Down"))
 	{
 		DownPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		DownPin->PinLocation = EMazeDirection::Down;
+		DownPin->PinDirection = EMazeOrientation::Vertical;
 	}
 	else if (PinName == FName("Left"))
 	{
 		LeftPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		LeftPin->PinLocation = EMazeDirection::Left;
+		LeftPin->PinDirection = EMazeOrientation::Horizontal;
 	}
 	else if (PinName == FName("Right"))
 	{
 		RightPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		RightPin->PinLocation = EMazeDirection::Right;
+		RightPin->PinDirection = EMazeOrientation::Horizontal;
 	}
+	
 	SGraphNode::AddPin(PinToAdd);
 }
 
-TSharedPtr<SGraphPin> SRouterGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
+TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 {
 	if (Pin->Direction == EGPD_Input)
 	{
@@ -104,7 +121,7 @@ TSharedPtr<SGraphPin> SRouterGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 
 }
 
-void SRouterGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
+void SRoomGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
 {
 	if(UpPin.IsValid()) OutPinWidgets.Add(UpPin);
 	if(DownPin.IsValid()) OutPinWidgets.Add(DownPin);
@@ -113,13 +130,36 @@ void SRouterGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWid
 	SMazeGraphNodeBase::GetAllPinWidgets(OutPinWidgets);
 }
 
-FOptionalSize SRouterGraphNode::GetNodeHeight() const
+FOptionalSize SRoomGraphNode::GetNodeHeight() const
 {
-	return FOptionalSize(100.0f);
+	if (URoomGraphNode* RoomNode = Cast<URoomGraphNode>(GraphNode))
+	{
+		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		{
+			return RoomNode->RoomHeight * 100;
+		}
+		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		{
+			return RoomNode->RoomWith * 100;
+		}
+	}
+	return 5.0f;
 }
 
-FOptionalSize SRouterGraphNode::GetNodeWidth() const
+FOptionalSize SRoomGraphNode::GetNodeWidth() const
 {
-	return FOptionalSize(100.0f);
+	if (URoomGraphNode* RoomNode = Cast<URoomGraphNode>(GraphNode))
+	{
+		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		{
+			return RoomNode->RoomWith * 100;
+		}
+		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		{
+			return RoomNode->RoomHeight * 100;
+		}
+	}
+	return 5.0f;
 }
+
 #undef LOCTEXT_NAMESPACE

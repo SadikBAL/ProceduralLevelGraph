@@ -25,14 +25,12 @@ float UHallNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 	return 400 * HallLength * 0.5;
 }
 
-AActor* UHallNode::SpawnMazeObject(UObject* WorldContextObject, FVector Position)
+AActor* UHallNode::SpawnMazeObject(UWorld* World, FVector Position)
 {
 	if (!ActorToSpawnClass)
 	{
 		return nullptr;
 	}
-
-	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
 	if (!World)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
@@ -40,10 +38,8 @@ AActor* UHallNode::SpawnMazeObject(UObject* WorldContextObject, FVector Position
 	}
 
 	FRotator Rotator = FRotator::ZeroRotator;
-	if (bIsHorizontal)
-	{
-		Rotator.Yaw = 90.0f;
-	}
+	Rotator.Yaw = RoomRotation;
+
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	MazeObject = World->SpawnActor<AActor>(

@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "SGraphNode.h"
 #include "SMazeGraphNodeBase.h"
 #include "SRoomGraphNodePin.h"
 
@@ -19,10 +18,4 @@ public:
 	virtual void GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const override;
 	virtual FOptionalSize GetNodeHeight() const override;
 	virtual FOptionalSize GetNodeWidth() const override;
-
-protected:
-	TSharedPtr<SRoomGraphNodePin> UpPin;
-	TSharedPtr<SRoomGraphNodePin> DownPin;
-	TSharedPtr<SRoomGraphNodePin> LeftPin;
-	TSharedPtr<SRoomGraphNodePin> RightPin;
 };

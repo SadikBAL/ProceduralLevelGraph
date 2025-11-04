@@ -1,7 +1,6 @@
 ﻿#include "SRoomGraphNodePin.h"
 
 #include "ConnectionDrawingPolicy.h"
-#include "EditorStyleSet.h"
 #include "Interfaces/IPluginManager.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Images/SImage.h"
@@ -24,11 +23,11 @@ void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
 
 const FSlateBrush* SRoomGraphNodePin::GetPinIcon() const
 {
-	if (PinLocation == EMazeDirection::Down || PinLocation == EMazeDirection::Up)
+	if (PinDirection == EMazeOrientation::Vertical)
 	{
 		return PinBrushVertical.Get();
 	}
-	else if (PinLocation == EMazeDirection::Left || PinLocation == EMazeDirection::Right)
+	else if (PinDirection == EMazeOrientation::Horizontal)
 	{
 		return PinBrushHorizontal.Get();
 	}

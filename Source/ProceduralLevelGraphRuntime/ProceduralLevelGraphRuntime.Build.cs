@@ -21,6 +21,15 @@ public class ProceduralLevelGraphRuntime : ModuleRules
                 "GameplayTags"
             }
         );
-        
+        if (Target.bBuildEditor)
+        {
+            PrivateDependencyModuleNames.AddRange(
+                new string[]
+                {
+                    "UnrealEd",
+                    "LevelEditor",
+                }
+            );
+        }
     }
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MazeNodeBase.h"
+#include "Node/MazeNodeBase.h"
 #include "UObject/Object.h"
 #include "ProceduralLevelGraphRuntime.generated.h"
 
@@ -19,6 +19,15 @@ public:
 #if WITH_EDITORONLY_DATA
     UPROPERTY()
     TObjectPtr<UEdGraph> EdGraph;
+
+    UFUNCTION()
+    void SpawnMazeToEdtior();
+
+    UFUNCTION()
+    void SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location);
+
+    UFUNCTION(CallInEditor, Category = "Procedural Level Graph",DisplayName="Create Maze")
+    void CreateMaze();
 #endif
     
     UPROPERTY(BlueprintReadOnly, Category = "Procedural Level Graph")
@@ -26,4 +35,11 @@ public:
     
     UPROPERTY(BlueprintReadOnly, Category = "Procedural Level Graph")
     TObjectPtr<UMazeNodeBase> StartNode;
+
+    UPROPERTY()
+    TArray<UMazeNodeBase*> Nodes;
+
+    UFUNCTION(BlueprintCallable, Category = "Procedural Level Graph")
+    void SpawnMaze(UObject* WorldContextObject);
+
 };
