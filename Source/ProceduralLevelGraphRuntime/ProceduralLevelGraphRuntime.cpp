@@ -2,6 +2,7 @@
 
 #include "EngineUtils.h"
 #include "MazeTileActor.h"
+#include "Node/EntranceRoom.h"
 
 UProceduralLevelGraphRuntime::UProceduralLevelGraphRuntime()
 {
@@ -13,9 +14,12 @@ UProceduralLevelGraphRuntime::UProceduralLevelGraphRuntime()
 #if WITH_EDITOR
 void UProceduralLevelGraphRuntime::SpawnMazeToEdtior()
 {
-	Nodes.Empty();
-	SpawnNode(GEditor->GetEditorWorldContext().World(),StartNode,EMazeDirection::None,FVector::ZeroVector);
-	Nodes.Empty();
+	if (UEntranceNode* Entrance = Cast<UEntranceNode>(StartNode))
+	{
+		Nodes.Empty();
+		SpawnNode(GEditor->GetEditorWorldContext().World(),Entrance,EMazeDirection::None,Entrance->RoomPosition);
+		Nodes.Empty();
+	}
 }
 
 void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location)
@@ -117,8 +121,11 @@ void UProceduralLevelGraphRuntime::RecreateMaze()
 
 void UProceduralLevelGraphRuntime::SpawnMaze(UObject* WorldContextObject)
 {
-	UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
-	Nodes.Empty();
-	//UWorld* World = GEngine->GetWorldFromContextObject(Context, EGetWorldErrorMode::LogAndReturnNull);
-	SpawnNode(GEngine->GetWorldFromContextObject(World, EGetWorldErrorMode::LogAndReturnNull),StartNode,EMazeDirection::None,FVector::ZeroVector);
+	
+	if (UEntranceNode* Entrance = Cast<UEntranceNode>(StartNode))
+	{
+		UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+		Nodes.Empty();
+		SpawnNode(GEngine->GetWorldFromContextObject(World, EGetWorldErrorMode::LogAndReturnNull),Entrance,EMazeDirection::None,Entrance->RoomPosition);
+	}
 }
