@@ -28,6 +28,12 @@ public:
 
     UFUNCTION(CallInEditor, Category = "Procedural Level Graph",DisplayName="Create Maze")
     void CreateMaze();
+
+    UFUNCTION(CallInEditor, Category = "Procedural Level Graph",DisplayName="Delete Maze")
+    void DeleteMaze();
+
+    UFUNCTION(CallInEditor, Category = "Procedural Level Graph",DisplayName="Recreate Maze")
+    void RecreateMaze();
 #endif
     
     UPROPERTY(BlueprintReadOnly, Category = "Procedural Level Graph")

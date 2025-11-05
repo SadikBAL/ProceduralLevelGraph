@@ -10,12 +10,14 @@
 #include "Framework/Commands/GenericCommands.h"
 #include "GraphEditorActions.h"
 #include "Kismet2/BlueprintEditorUtils.h"
+#include "Node/Data/EntranceGraphNode.h"
 #include "ProceduralLevelGraphRuntime/Node/HallNode.h"
 #include "ProceduralLevelGraphRuntime/Node/RoomNode.h"
 #include "ProceduralLevelGraphRuntime/Node/RouterNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/HallGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RoomGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RouterGraphNode.h"
+#include "ProceduralLevelGraphRuntime/Node/EntranceRoom.h"
 
 #define LOCTEXT_NAMESPACE "ProceduralLevelGraphEditor"
 
@@ -208,6 +210,25 @@ void FProceduralLevelGraphEditor::SaveAsset_Execute()
     SaveGraphToRuntimeData();
 }
 
+bool FProceduralLevelGraphEditor::IsPinVisible(UEdGraphPin* Pin)
+{
+    if (!Pin) return false;
+    if (UHallGraphNode* HallEdNode = Cast<UHallGraphNode>(Pin->GetOwningNode()))
+    {
+        FName PinName = Pin->GetFName();
+        int32 Rotation = HallEdNode->RoomRotation;
+        if (PinName == FName("Up") || PinName == FName("Down"))
+        {
+            return (Rotation == 0 || Rotation == 180);
+        }
+        else if (PinName == FName("Left") || PinName == FName("Right"))
+        {
+            return (Rotation == 90 || Rotation == 270);
+        }
+    }
+    return true;
+}
+
 void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
 {
     if (GraphAsset == nullptr || GraphAsset->EdGraph == nullptr) return;
@@ -244,6 +265,15 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 RuntimeRouter->RoomRotation = RouterEdNode->RoomRotation;
                 NewRuntimeNode = RuntimeRouter;
             }
+            else if (UEntranceGraphNode* EntranceEdNode = Cast<UEntranceGraphNode>(EdNode))
+            {
+                UEntranceNode* RuntimeEntrance = NewObject<UEntranceNode>(GraphAsset);
+                RuntimeEntrance->RoomHeight = EntranceEdNode->RoomHeight;
+                RuntimeEntrance->RoomWidth = EntranceEdNode->RoomWith;
+                RuntimeEntrance->RoomRotation = EntranceEdNode->RoomRotation;
+                RuntimeEntrance->RoomPosition = EntranceEdNode->RoomPosition;
+                NewRuntimeNode = RuntimeEntrance;
+            }
             
             if (NewRuntimeNode)
             {
@@ -278,7 +308,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             {
                 for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                 {
-                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
                     {
                         RuntimeNode->UpNode = NodeMap[LinkedTo->GetOwningNode()];
                     }
@@ -288,7 +318,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             {
                 for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                 {
-                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
                     {
                         RuntimeNode->DownNode = NodeMap[LinkedTo->GetOwningNode()];
                     }
@@ -298,7 +328,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             {
                 for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                 {
-                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
                     {
                         RuntimeNode->LeftNode = NodeMap[LinkedTo->GetOwningNode()];
                     }
@@ -308,7 +338,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             {
                 for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                 {
-                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo)
+                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
                     {
                         RuntimeNode->RightNode = NodeMap[LinkedTo->GetOwningNode()];
                     }
@@ -332,10 +362,19 @@ void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Actio
 
 void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObject*>& NewSelection)
 {
-	if (PropertyWidget.IsValid())
-	{
-		PropertyWidget->SetObjects(NewSelection.Array());
-	}
+    if (PropertyWidget.IsValid())
+    {
+        if (NewSelection.Num() > 0)
+        {
+            PropertyWidget->SetObjects(NewSelection.Array());
+        }
+        else
+        {
+            TArray<UObject*> AssetArray;
+            AssetArray.Add(GraphAsset);
+            PropertyWidget->SetObjects(AssetArray);
+        }
+    }
 }
 
 void FProceduralLevelGraphEditor::NotifyPostChange(const FPropertyChangedEvent& PropertyChangedEvent, FProperty* PropertyThatChanged)

@@ -18,4 +18,5 @@ private:
     TSharedPtr<FSRoomGraphNodeFactory> SRoomGraphNodeFactory;
     TSharedPtr<FSHallGraphNodeFactory> SHallGraphNodeFactory;
     TSharedPtr<FSRouterGraphNodeFactory> SRouterGraphNodeFactory;
+    TSharedPtr<FSEntranceGraphNodeFactory> SEntranceGraphNodeFactory;
 };

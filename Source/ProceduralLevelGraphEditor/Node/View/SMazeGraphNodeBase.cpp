@@ -18,16 +18,17 @@ void SMazeGraphNodeBase::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinW
 
 void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilter, bool bMarkDirty)
 {
+    const int GridSnapValue = 50;
     bOnDrag = FSlateApplication::Get().GetPressedMouseButtons().Contains(EKeys::LeftMouseButton);
     float DirectionX = GraphNode->GetNodePosX() - NewPosition.X;
     float DirectionY = GraphNode->GetNodePosY() - NewPosition.Y;
     if (DirectionX > 15)
     {
-        DirectionX = 100;
+        DirectionX = GridSnapValue;
     }
     else if (DirectionX < -15)
     {
-        DirectionX = -100;
+        DirectionX = GridSnapValue * -1;
     }
     else
     {
@@ -35,11 +36,11 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     }
     if (DirectionY > 15)
     {
-        DirectionY = 100;
+        DirectionY = GridSnapValue;
     }
     else if (DirectionY < -15)
     {
-        DirectionY = -100;
+        DirectionY = GridSnapValue * -1;
     }
     else
     {
@@ -48,13 +49,13 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     FVector2f SnipPosition;
     if (bOnDrag)
     {
-        SnipPosition.X = FMath::GridSnap(NewPosition.X, 100.0f);
-        SnipPosition.Y = FMath::GridSnap(NewPosition.Y, 100.0f);
+        SnipPosition.X = FMath::GridSnap(NewPosition.X, GridSnapValue);
+        SnipPosition.Y = FMath::GridSnap(NewPosition.Y, GridSnapValue);
     }
     else
     {
-        SnipPosition.X = FMath::GridSnap(GraphNode->GetNodePosX() - DirectionX, 100.0f);
-        SnipPosition.Y = FMath::GridSnap(GraphNode->GetNodePosY() - DirectionY, 100.0f);
+        SnipPosition.X = FMath::GridSnap(GraphNode->GetNodePosX() - DirectionX, GridSnapValue);
+        SnipPosition.Y = FMath::GridSnap(GraphNode->GetNodePosY() - DirectionY, GridSnapValue);
     }
    
     SGraphNode::MoveTo(SnipPosition, NodeFilter, bMarkDirty);
