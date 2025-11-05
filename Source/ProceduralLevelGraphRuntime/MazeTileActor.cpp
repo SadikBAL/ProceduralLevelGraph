@@ -64,7 +64,11 @@ void AMazeTileActor::SetNodeData(UMazeNodeBase* BaseNode)
 
 void AMazeTileActor::UpdateMeshPartVisibilities(TArray<FName> SearchedTags, bool bVisibility)
 {
-	TArray<USceneComponent*> ChildComponents = GetRootComponent()->GetAttachChildren();
+	TArray<USceneComponent*> ChildComponents;
+	if (GetRootComponent())
+	{
+		GetRootComponent()->GetChildrenComponents(true, ChildComponents);
+	}
 	for (USceneComponent* Child : ChildComponents)
 	{
 		if (UStaticMeshComponent* MeshComp = Cast<UStaticMeshComponent>(Child))

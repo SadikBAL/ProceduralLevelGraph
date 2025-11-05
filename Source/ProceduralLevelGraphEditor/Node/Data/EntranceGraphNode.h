@@ -13,7 +13,7 @@ public:
     
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual void AllocateDefaultPins() override;
-    
+    virtual bool CanUserDeleteNode() const override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
 	int RoomWith;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))

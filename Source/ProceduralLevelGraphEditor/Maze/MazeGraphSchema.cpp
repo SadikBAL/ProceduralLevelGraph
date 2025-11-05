@@ -115,13 +115,14 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
        LOCTEXT("NewRoomNodeTooltip", "Adds a router node."), 0));
     NewNodeAction_Router->NodeTemplate = NewObject<URouterGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
     ContextMenuBuilder.AddAction(NewNodeAction_Router);
-
+    /* Its generetad on init one time. it coudnt doublcate or delete.
     TSharedPtr<FPLGGraphSchemaAction_NewNode> NewNodeAction_Entrance(new FPLGGraphSchemaAction_NewNode(
        LOCTEXT("NodeCategory", "Procedural"),
        LOCTEXT("NewRoomNode", "Add Entrance Node"),
        LOCTEXT("NewRoomNodeTooltip", "Adds a entrance node."), 0));
     NewNodeAction_Entrance->NodeTemplate = NewObject<UEntranceGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
     ContextMenuBuilder.AddAction(NewNodeAction_Entrance);
+    */
 }
 
  FEnumPinType UMazeGraphSchema::GetPinType(const UEdGraphPin* A) const

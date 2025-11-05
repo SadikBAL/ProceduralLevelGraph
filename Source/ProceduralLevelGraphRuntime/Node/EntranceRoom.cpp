@@ -22,11 +22,11 @@ float UEntranceNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
 	if (Orientation == EMazeOrientation::Horizontal)
 	{
-		return RoomWidth * 200.0 * 0.5;
+		return RoomWidth * 400.0 * 0.5;
 	}
 	else
 	{
-		return RoomHeight * 100.0 * 0.5;
+		return RoomHeight * 400.0 * 0.5;
 	}
 
 }

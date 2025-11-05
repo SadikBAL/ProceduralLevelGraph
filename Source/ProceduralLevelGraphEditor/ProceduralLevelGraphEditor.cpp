@@ -76,6 +76,25 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
         GraphAsset->EdGraph->Schema = UMazeGraphSchema::StaticClass();
         GraphAsset->EdGraph->bAllowDeletion = false;
     }
+
+    bool bHasEntranceNode = false;
+    for (UEdGraphNode* Node : GraphAsset->EdGraph->Nodes)
+    {
+        if (Cast<UEntranceGraphNode>(Node))
+        {
+            bHasEntranceNode = true;
+            break;
+        }
+    }
+    
+    if (!bHasEntranceNode)
+    {
+        FGraphNodeCreator<UEntranceGraphNode> NodeCreator(*GraphAsset->EdGraph);
+        UEntranceGraphNode* EntranceNode = NodeCreator.CreateNode();
+        EntranceNode->NodePosX = 0;
+        EntranceNode->NodePosY = 0;
+        NodeCreator.Finalize();
+    }
     
     OnGraphChangedDelegateHandle = GraphAsset->EdGraph->AddOnGraphChangedHandler(FOnGraphChanged::FDelegate::CreateRaw(this, &FProceduralLevelGraphEditor::OnGraphChanged));
     FGraphEditorCommands::Register();
@@ -273,17 +292,14 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 RuntimeEntrance->RoomRotation = EntranceEdNode->RoomRotation;
                 RuntimeEntrance->RoomPosition = EntranceEdNode->RoomPosition;
                 NewRuntimeNode = RuntimeEntrance;
+                // Start Location its special node.
+                GraphAsset->StartNode = NewRuntimeNode;
             }
-            
             if (NewRuntimeNode)
             {
                 NewRuntimeNode->GameplayTags = MazeEdNode->GameplayTags;
                 NewRuntimeNode->NodeGuid = MazeEdNode->NodeGuid;
                 NodeMap.Add(EdNode, NewRuntimeNode);
-                if (GraphAsset->StartNode == nullptr)
-                {
-                    GraphAsset->StartNode = NewRuntimeNode;
-                }
             }
         }
     }
@@ -346,6 +362,10 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             }
         }
         GraphAsset->AllNodes.Add(RuntimeNode);
+    }
+    if (!GraphAsset->StartNode)
+    {
+        UE_LOG(LogTemp, Error, TEXT("SaveGraphToRuntimeData Error : StartNode is null. Ist coudnt working on runtime."));
     }
 }
 
