@@ -14,7 +14,8 @@ public:
 	float RoomWidth;
 	UPROPERTY(BlueprintReadOnly, Category = "Room Node")
 	float RoomHeight;
-
+	UPROPERTY(BlueprintReadOnly, Category = "Room Tiles")
+	TArray<TSubclassOf<AMazeTileActor>> TileBlueprints;
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
-
+	virtual AActor* SpawnMazeObject(UWorld* World, FVector Position) override;
 };

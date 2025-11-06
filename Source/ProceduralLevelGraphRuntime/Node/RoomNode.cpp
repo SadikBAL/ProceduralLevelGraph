@@ -1,5 +1,7 @@
 ﻿#include "RoomNode.h"
 
+#include "ProceduralLevelGraphRuntime/MazeTileActor.h"
+
 URoomNode::URoomNode()
 {
 	static ConstructorHelpers::FClassFinder<AActor> BP_Room_ClassFinder(
@@ -27,4 +29,38 @@ float URoomNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 		return RoomHeight * 400.0 * 0.5;
 	}
 
+}
+
+AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
+{
+	int RandomIndex = FMath::RandRange(0, TileBlueprints.Num() - 1);
+	TSubclassOf<AMazeTileActor> RandomSpawnClass = TileBlueprints[RandomIndex];
+	if (!RandomSpawnClass)
+	{
+		return nullptr;
+	}
+	if (!World)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
+		return nullptr;
+	}
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	MazeObject = World->SpawnActor<AActor>(
+		RandomSpawnClass,
+		Position,
+		FRotator::ZeroRotator,
+		SpawnParams
+	);
+	
+
+	if (MazeObject)
+	{
+		UE_LOG(LogTemp, Log, TEXT("%s Spawn edildi."), *MazeObject->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s spawn edilemedi"), *ActorToSpawnClass->GetName());
+	}
+	return MazeObject.Get();
 }

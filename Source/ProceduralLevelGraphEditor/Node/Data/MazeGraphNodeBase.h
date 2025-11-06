@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "ProceduralLevelGraphRuntime/MazeTileActor.h"
 #include "MazeGraphNodeBase.generated.h"
 
 UCLASS()
@@ -13,7 +14,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	FGameplayTagContainer GameplayTags;
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Maze Tiles")
+	TArray<TSubclassOf<AMazeTileActor>> TileBlueprints;
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual bool CanUserDeleteNode() const override;
 	virtual void GetNodeContextMenuActions(class UToolMenu* Menu, class UGraphNodeContextMenuContext* Context) const override;
@@ -28,12 +30,4 @@ public:
 protected:
 	UPROPERTY()
 	FText NodeTitle = FText::FromString("ROOM");
-	UPROPERTY()
-	FText DoorA = FText::FromString("A");
-	UPROPERTY()
-	FText DoorB = FText::FromString("B");
-	UPROPERTY()
-	FText DoorC = FText::FromString("C");
-	UPROPERTY()
-	FText DoorD = FText::FromString("D");
 };

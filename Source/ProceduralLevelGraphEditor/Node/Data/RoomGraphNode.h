@@ -13,6 +13,8 @@ public:
     
     virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
     virtual void AllocateDefaultPins() override;
+    void OnTileBlueprintsChanged();
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
     int RoomWith;

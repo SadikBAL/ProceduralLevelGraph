@@ -32,6 +32,8 @@ void UMazeGraphNodeBase::PinConnectionListChanged(UEdGraphPin* Pin)
 	}
 }
 
+
+
 void UMazeGraphNodeBase::RotateRoomToLeft()
 {
 	RoomRotation -= 90;

@@ -268,6 +268,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 RuntimeRoom->RoomHeight = RoomEdNode->RoomHeight;
                 RuntimeRoom->RoomWidth = RoomEdNode->RoomWith;
                 RuntimeRoom->RoomRotation = RoomEdNode->RoomRotation;
+                RuntimeRoom->TileBlueprints = RoomEdNode->TileBlueprints;
                 NewRuntimeNode = RuntimeRoom;
             }
             else if (UHallGraphNode* HallEdNode = Cast<UHallGraphNode>(EdNode))
