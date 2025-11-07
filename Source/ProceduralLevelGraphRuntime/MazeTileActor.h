@@ -15,9 +15,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "30", ClampMin = "1", ClampMax = "30", MultipleOf = "1"))
 	int Height;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Tile", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UMazeNodeBase> NodeData;
-
 	UFUNCTION(BlueprintCallable, Category = "Tile")
 	void SetNodeData(UMazeNodeBase* BaseNode);
 	UFUNCTION()

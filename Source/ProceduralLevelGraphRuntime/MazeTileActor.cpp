@@ -8,10 +8,10 @@ AMazeTileActor::AMazeTileActor()
 
 void AMazeTileActor::SetNodeData(UMazeNodeBase* BaseNode)
 {
-	NodeData = BaseNode;
-	if (NodeData != nullptr)
+	//NodeData = BaseNode;
+	if (BaseNode != nullptr)
 	{
-		if (NodeData->UpNode)
+		if (BaseNode->UpNode)
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Up,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Door"));
@@ -23,7 +23,7 @@ void AMazeTileActor::SetNodeData(UMazeNodeBase* BaseNode)
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 		}
-		if (NodeData->DownNode)
+		if (BaseNode->DownNode)
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Down,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Door"));
@@ -35,7 +35,7 @@ void AMazeTileActor::SetNodeData(UMazeNodeBase* BaseNode)
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 		}
-		if (NodeData->LeftNode)
+		if (BaseNode->LeftNode)
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Left,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Door"));
@@ -47,7 +47,7 @@ void AMazeTileActor::SetNodeData(UMazeNodeBase* BaseNode)
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 		}
-		if (NodeData->RightNode)
+		if (BaseNode->RightNode)
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Right,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Door"));

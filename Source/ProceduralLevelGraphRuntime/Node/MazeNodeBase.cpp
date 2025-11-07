@@ -13,26 +13,26 @@ AActor* UMazeNodeBase::SpawnMazeObject(UWorld* World,FVector Position)
 		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
 		return nullptr;
 	}
-
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	MazeObject = World->SpawnActor<AActor>(
+	AActor* MazeObject = World->SpawnActor<AActor>(
 		ActorToSpawnClass,
 		Position,
 		FRotator::ZeroRotator,
 		SpawnParams
 	);
-	
 
 	if (MazeObject)
 	{
+		SpawnLocation = MazeObject->GetActorLocation();
 		UE_LOG(LogTemp, Log, TEXT("%s Spawn edildi."), *MazeObject->GetName());
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s spawn edilemedi"), *ActorToSpawnClass->GetName());
 	}
-	return MazeObject.Get();
+	return MazeObject;
 }
 
 FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
@@ -40,15 +40,15 @@ FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
 	switch (Direction)
 	{
 	case EMazeDirection::Up:
-		return MazeObject->GetActorLocation() + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical) * -1, 1);
+		return SpawnLocation + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical) * -1, 1);
 	case EMazeDirection::Down:
-		return MazeObject->GetActorLocation() + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical), 1);
+		return SpawnLocation + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical), 1);
 	case EMazeDirection::Left:
-		return MazeObject->GetActorLocation() + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal) * -1, 0, 1);
+		return SpawnLocation + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal) * -1, 0, 1);
 	case EMazeDirection::Right:
-		return MazeObject->GetActorLocation() + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal), 0, 1);
+		return SpawnLocation + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal), 0, 1);
 	default:
-		return MazeObject->GetActorLocation();
+		return SpawnLocation;
 		break;
 	}
 }

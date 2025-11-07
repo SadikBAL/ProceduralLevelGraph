@@ -47,7 +47,7 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 	}
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	MazeObject = World->SpawnActor<AActor>(
+	AActor* MazeObject = World->SpawnActor<AActor>(
 		RandomSpawnClass,
 		Position,
 		FRotator::ZeroRotator,
@@ -56,6 +56,7 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 	//MazeObject Spawned and Has Hall Bluprints.
 	if (MazeObject && HallBlueprints.Num() > 0)
 	{
+		SpawnLocation = MazeObject->GetActorLocation();
 		UE_LOG(LogTemp, Log, TEXT("%s Spawn edildi."), *MazeObject->GetName());
 		float LocalDeltaWidth = (RoomWidth - RandomTile->Width) * 0.5;
 		float LocalDeltaHeight = (RoomHeight - RandomTile->Height) * 0.5;
@@ -75,8 +76,6 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 					SpawnParams
 				);
 				TempActor->SetActorScale3D(FVector(1 * LocalDeltaHeight,1,1));
-				PartObjects.Add(TempActor);
-				
 			}
 			if (DownNode)
 			{
@@ -89,7 +88,6 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 					SpawnParams
 				);
 				TempActor->SetActorScale3D(FVector(1 * LocalDeltaHeight,1,1));
-				PartObjects.Add(TempActor);
 			}
 		}
 		if (LocalDeltaWidth > 0)
@@ -105,7 +103,6 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 					SpawnParams
 				);
 				TempActor->SetActorScale3D(FVector(1 * LocalDeltaWidth,1,1));
-				PartObjects.Add(TempActor);
 			}
 			if (RightNode)
 			{
@@ -118,7 +115,6 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 					SpawnParams
 				);
 				TempActor->SetActorScale3D(FVector(1 * LocalDeltaWidth,1,1));
-				PartObjects.Add(TempActor);
 			}
 		}
 	}
@@ -126,11 +122,5 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s spawn edilemedi"), *ActorToSpawnClass->GetName());
 	}
-	return MazeObject.Get();
-}
-
-AActor* URoomNode::SpawnMazeExtraPart(UWorld* World, FVector Position)
-{
-	
-	return nullptr;	
+	return MazeObject;
 }

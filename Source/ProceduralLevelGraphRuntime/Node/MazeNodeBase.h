@@ -31,8 +31,6 @@ class PROCEDURALLEVELGRAPHRUNTIME_API UMazeNodeBase : public UObject
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
-	FGameplayTagContainer GameplayTags;
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	FGuid NodeGuid;
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	int RoomRotation = 0;
@@ -47,12 +45,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	TArray<UMazeNodeBase*> Others;
 
-	UPROPERTY()
-	TObjectPtr<AActor> MazeObject;
-
-	UPROPERTY()
-	TArray<TObjectPtr<AActor>> PartObjects;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawnClass;
 
@@ -62,5 +54,10 @@ public:
 	virtual FVector GetEdgePosition(EMazeDirection Direction);
 	UFUNCTION(BlueprintCallable)
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation);
+
+	
+protected:
+	UPROPERTY()
+	FVector SpawnLocation = FVector::Zero();
 	
 };

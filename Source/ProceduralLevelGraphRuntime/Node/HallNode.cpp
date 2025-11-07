@@ -42,7 +42,7 @@ AActor* UHallNode::SpawnMazeObject(UWorld* World, FVector Position)
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	MazeObject = World->SpawnActor<AActor>(
+	AActor* MazeObject = World->SpawnActor<AActor>(
 		ActorToSpawnClass,
 		Position,
 		Rotator,
@@ -52,6 +52,7 @@ AActor* UHallNode::SpawnMazeObject(UWorld* World, FVector Position)
 
 	if (MazeObject)
 	{
+		SpawnLocation = MazeObject->GetActorLocation();
 		UE_LOG(LogTemp, Log, TEXT("%s Spawn edildi."), *MazeObject->GetName());
 	}
 	else
@@ -59,6 +60,6 @@ AActor* UHallNode::SpawnMazeObject(UWorld* World, FVector Position)
 		UE_LOG(LogTemp, Error, TEXT("%s spawn edilemedi"), *ActorToSpawnClass->GetName());
 	}
 
-	return MazeObject.Get();
+	return MazeObject;
 }
 

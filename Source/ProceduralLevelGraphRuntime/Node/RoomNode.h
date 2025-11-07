@@ -21,5 +21,4 @@ public:
 	TArray<TSubclassOf<AMazeTileActor>> HallBlueprints;
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
 	virtual AActor* SpawnMazeObject(UWorld* World, FVector Position) override;
-	AActor* SpawnMazeExtraPart(UWorld* World, FVector Position);
 };
