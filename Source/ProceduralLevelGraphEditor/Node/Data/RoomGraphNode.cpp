@@ -25,16 +25,16 @@ void URoomGraphNode::OnTileBlueprintsChanged()
     //Update Witdh and Heighht
     RoomWith = 0;
     RoomHeight = 0;
-    for (const TSubclassOf<AMazeTileActor>& TileClass : TileBlueprints)
+    for (const TSubclassOf<AMazeTileActor>& TileClass : RoomBlueprints)
     {
         if (TileClass)
         {
             const AMazeTileActor* DefaultTile = GetDefault<AMazeTileActor>(TileClass);
             if (DefaultTile)
             {
-                if (DefaultTile->With > RoomWith )
+                if (DefaultTile->Width > RoomWith )
                 {
-                    RoomWith = DefaultTile->With;
+                    RoomWith = DefaultTile->Width;
                 }
                 if (DefaultTile->Height > RoomHeight)
                 {
@@ -50,7 +50,7 @@ void URoomGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
     FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
                        ? PropertyChangedEvent.Property->GetFName() 
                        : NAME_None;
-    if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomGraphNode, TileBlueprints))
+    if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomGraphNode, RoomBlueprints))
     {
         OnTileBlueprintsChanged();
     }

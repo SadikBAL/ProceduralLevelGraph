@@ -12,10 +12,9 @@ class UMazeGraphNodeBase : public UEdGraphNode
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	FGameplayTagContainer GameplayTags;
-	UPROPERTY(EditDefaultsOnly, Category = "Maze Tiles")
-	TArray<TSubclassOf<AMazeTileActor>> TileBlueprints;
+	*/
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual bool CanUserDeleteNode() const override;
 	virtual void GetNodeContextMenuActions(class UToolMenu* Menu, class UGraphNodeContextMenuContext* Context) const override;

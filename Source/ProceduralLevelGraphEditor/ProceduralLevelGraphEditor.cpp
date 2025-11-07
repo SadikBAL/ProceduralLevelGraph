@@ -268,7 +268,8 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 RuntimeRoom->RoomHeight = RoomEdNode->RoomHeight;
                 RuntimeRoom->RoomWidth = RoomEdNode->RoomWith;
                 RuntimeRoom->RoomRotation = RoomEdNode->RoomRotation;
-                RuntimeRoom->TileBlueprints = RoomEdNode->TileBlueprints;
+                RuntimeRoom->RoomBlueprints = RoomEdNode->RoomBlueprints;
+                RuntimeRoom->HallBlueprints = RoomEdNode->HallBlueprints;
                 NewRuntimeNode = RuntimeRoom;
             }
             else if (UHallGraphNode* HallEdNode = Cast<UHallGraphNode>(EdNode))
@@ -298,7 +299,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             }
             if (NewRuntimeNode)
             {
-                NewRuntimeNode->GameplayTags = MazeEdNode->GameplayTags;
+                //NewRuntimeNode->GameplayTags = MazeEdNode->GameplayTags;
                 NewRuntimeNode->NodeGuid = MazeEdNode->NodeGuid;
                 NodeMap.Add(EdNode, NewRuntimeNode);
             }

@@ -22,6 +22,37 @@ void UProceduralLevelGraphRuntime::SpawnMazeToEdtior()
 	}
 }
 
+
+void UProceduralLevelGraphRuntime::CreateMaze()
+{
+	SpawnMazeToEdtior();
+}
+
+void UProceduralLevelGraphRuntime::DeleteMaze()
+{
+	UWorld* World = GEditor->GetEditorWorldContext().World();
+	if (!World)
+	{
+		return;
+	}
+	for (TActorIterator<AActor> It(World); It; ++It)
+	{
+		AActor* Actor = *It;
+		if (Actor && Actor->IsA(AMazeTileActor::StaticClass()))
+		{
+			Actor->Destroy();
+		}
+	}
+}
+
+void UProceduralLevelGraphRuntime::RecreateMaze()
+{
+	DeleteMaze();
+	CreateMaze();
+}
+
+#endif
+
 void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location)
 {
 	if (Nodes.Find(MazeNodeBase) < 0)
@@ -87,36 +118,6 @@ void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeN
 		}
 	}
 }
-
-void UProceduralLevelGraphRuntime::CreateMaze()
-{
-	SpawnMazeToEdtior();
-}
-
-void UProceduralLevelGraphRuntime::DeleteMaze()
-{
-	UWorld* World = GEditor->GetEditorWorldContext().World();
-	if (!World)
-	{
-		return;
-	}
-	for (TActorIterator<AActor> It(World); It; ++It)
-	{
-		AActor* Actor = *It;
-		if (Actor && Actor->IsA(AMazeTileActor::StaticClass()))
-		{
-			Actor->Destroy();
-		}
-	}
-}
-
-void UProceduralLevelGraphRuntime::RecreateMaze()
-{
-	DeleteMaze();
-	CreateMaze();
-}
-
-#endif
 
 
 void UProceduralLevelGraphRuntime::SpawnMaze(UObject* WorldContextObject)

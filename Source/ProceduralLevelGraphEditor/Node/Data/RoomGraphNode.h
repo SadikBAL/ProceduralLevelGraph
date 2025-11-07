@@ -16,8 +16,12 @@ public:
     void OnTileBlueprintsChanged();
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomWith;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomHeight;
+    UPROPERTY(EditDefaultsOnly, Category = "Room")
+    TArray<TSubclassOf<AMazeTileActor>> RoomBlueprints;
+    UPROPERTY(EditDefaultsOnly, Category = "Room")
+    TArray<TSubclassOf<AMazeTileActor>> HallBlueprints;
 };

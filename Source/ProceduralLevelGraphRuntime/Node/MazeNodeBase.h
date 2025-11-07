@@ -50,6 +50,9 @@ public:
 	UPROPERTY()
 	TObjectPtr<AActor> MazeObject;
 
+	UPROPERTY()
+	TArray<TObjectPtr<AActor>> PartObjects;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawnClass;
 

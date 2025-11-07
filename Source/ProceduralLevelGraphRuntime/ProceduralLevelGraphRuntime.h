@@ -19,13 +19,11 @@ public:
 #if WITH_EDITORONLY_DATA
     UPROPERTY()
     TObjectPtr<UEdGraph> EdGraph;
-
+#endif
+#if WITH_EDITOR
     UFUNCTION()
     void SpawnMazeToEdtior();
-
-    UFUNCTION()
-    void SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location);
-
+    
     UFUNCTION(CallInEditor, Category = "Procedural Level Graph",DisplayName="Create Maze")
     void CreateMaze();
 
@@ -36,6 +34,9 @@ public:
     void RecreateMaze();
 #endif
     
+    UFUNCTION()
+    void SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location);
+
     UPROPERTY(BlueprintReadOnly, Category = "Procedural Level Graph")
     TArray<TObjectPtr<UMazeNodeBase>> AllNodes;
     
