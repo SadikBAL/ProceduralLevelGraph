@@ -198,12 +198,29 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
     return SNew(SDockTab)
         .Label(LOCTEXT("GraphCanvasTitle", "Graph"))
         [
-            GraphEditorWidget.ToSharedRef()
+            SNew(SOverlay)
+            + SOverlay::Slot()
+            [
+                GraphEditorWidget.ToSharedRef()
+            ]
+            + SOverlay::Slot()
+            [
+                SNew(SGraphPathOverlay)
+                .GraphEditor(GraphEditorWidget) // Graph Editor'e referans ver
+                .PathToDraw(TAttribute<TArray<UMazeGraphNodeBase*>>::CreateLambda([this]() 
+                { 
+                    return ShortestPath; 
+                }))
+                .Visibility(EVisibility::HitTestInvisible)
+            ]
         ];
 }
 
 TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_Properties(const FSpawnTabArgs& Args)
 {
+    SGraphEditor::FGraphEditorEvents InEvents;
+    InEvents.OnSelectionChanged = SGraphEditor::FOnSelectionChanged::CreateSP(this, &FProceduralLevelGraphEditor::OnSelectedNodesChanged); // <-- BAĞLANTI BURADA
+    
     FPropertyEditorModule& PropertyEditorModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
     FDetailsViewArgs DetailsViewArgs;
     DetailsViewArgs.bUpdatesFromSelection = true;
@@ -371,6 +388,88 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
     }
 }
 
+TArray<UMazeGraphNodeBase*> FProceduralLevelGraphEditor::FindShortestPathToEntrance(UMazeGraphNodeBase* StartNode)
+{
+    TArray<UMazeGraphNodeBase*> Path;
+    if (!StartNode || !GraphAsset || !GraphAsset->EdGraph)
+    {
+        return Path;
+    }
+    UEntranceGraphNode* TargetNode = nullptr;
+    for (UEdGraphNode* Node : GraphAsset->EdGraph->Nodes)
+    {
+        if (UEntranceGraphNode* EntranceNode = Cast<UEntranceGraphNode>(Node))
+        {
+            TargetNode = EntranceNode;
+            break;
+        }
+    }
+
+    if (!TargetNode)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Grafikte Entrance Node bulunamadı!"));
+        return Path;
+    }
+
+    if (StartNode == TargetNode)
+    {
+        Path.Add(StartNode);
+        return Path;
+    }
+
+    TQueue<UMazeGraphNodeBase*> Queue;
+    TSet<UMazeGraphNodeBase*> VisitedNodes;
+    TMap<UMazeGraphNodeBase*, UMazeGraphNodeBase*> PathParentMap; 
+    Queue.Enqueue(StartNode);
+    VisitedNodes.Add(StartNode);
+    PathParentMap.Add(StartNode, nullptr);
+
+    UMazeGraphNodeBase* CurrentNode = nullptr;
+    bool bPathFound = false;
+
+    while (!Queue.IsEmpty())
+    {
+        Queue.Dequeue(CurrentNode);
+        if (CurrentNode == TargetNode)
+        {
+            bPathFound = true;
+            break;
+        }
+        for (UEdGraphPin* Pin : CurrentNode->Pins)
+        {
+            if (Pin->LinkedTo.Num() > 0)
+            {
+                for (UEdGraphPin* OtherPin : Pin->LinkedTo)
+                {
+                    UMazeGraphNodeBase* NeighborNode = Cast<UMazeGraphNodeBase>(OtherPin->GetOwningNode());
+                    if (NeighborNode && !VisitedNodes.Contains(NeighborNode))
+                    {
+                        VisitedNodes.Add(NeighborNode);
+                        PathParentMap.Add(NeighborNode, CurrentNode); 
+                        Queue.Enqueue(NeighborNode);
+                    }
+                }
+            }
+        }
+    }
+    if (bPathFound)
+    {
+        UMazeGraphNodeBase* PathNode = TargetNode;
+        while (PathNode != nullptr)
+        {
+            Path.Add(PathNode);
+            PathNode = PathParentMap.FindRef(PathNode); 
+        }
+        Algo::Reverse(Path);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Yol bulunamadı!"));
+    }
+
+    return Path;
+}
+
 void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Action)
 {
     if (Action.Action == GRAPHACTION_AddNode ||
@@ -388,6 +487,36 @@ void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObjec
     {
         if (NewSelection.Num() > 0)
         {
+            if (NewSelection.Num() == 1)
+            {
+                if (UMazeGraphNodeBase* BaseGraph = Cast<UMazeGraphNodeBase>(NewSelection.Array()[0]))
+                {
+                    if (UMazeGraphNodeBase* SelectedNode = Cast<UMazeGraphNodeBase>(NewSelection.Array()[0]))
+                    {
+                        ShortestPath.Empty();
+                        ShortestPath = FindShortestPathToEntrance(SelectedNode);
+                        if (ShortestPath.Num() > 0)
+                        {
+                            UE_LOG(LogTemp, Warning, TEXT("Entrance'a giden en kısa yol (%d adım):"), ShortestPath.Num() - 1);
+                            FString PathString;
+                            for (UMazeGraphNodeBase* NodeInPath : ShortestPath)
+                            {
+                                PathString += NodeInPath->GetNodeTitle(ENodeTitleType::FullTitle).ToString();
+                                if (NodeInPath != ShortestPath.Last())
+                                {
+                                    PathString += TEXT(" -> ");
+                                }
+                            }
+                            UE_LOG(LogTemp, Warning, TEXT("%s"), *PathString);
+                            
+                        }
+                        else if (SelectedNode != nullptr && !Cast<UEntranceGraphNode>(SelectedNode))
+                        {
+                            UE_LOG(LogTemp, Warning, TEXT("%s node'undan Entrance'a bir yol bulunamadı."), *SelectedNode->GetNodeTitle(ENodeTitleType::FullTitle).ToString());
+                        }
+                    }
+                }
+            }
             PropertyWidget->SetObjects(NewSelection.Array());
         }
         else

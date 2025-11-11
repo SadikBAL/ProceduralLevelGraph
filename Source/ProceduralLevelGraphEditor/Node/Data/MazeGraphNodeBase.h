@@ -29,4 +29,6 @@ public:
 protected:
 	UPROPERTY()
 	FText NodeTitle = FText::FromString("ROOM");
+	UPROPERTY()
+	bool bIsOnHighlightedPath;
 };
