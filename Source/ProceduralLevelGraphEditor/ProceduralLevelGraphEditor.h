@@ -94,10 +94,10 @@ public:
     virtual FLinearColor GetWorldCentricTabColorScale() const override;
     virtual void PostInitAssetEditor() override;
     // End of FAssetEditorToolkit interface
-    UPROPERTY()
-    TArray<UMazeGraphNodeBase*> ShortestPath;
 
+    TArray<UMazeGraphNodeBase*> ShortestPath;
     TArray<UMazeGraphNodeBase*> FindShortestPathToEntrance(UMazeGraphNodeBase* StartNode);
+    
 private:
     void OnSelectedNodesChanged(const TSet<UObject*>& Objects);
     virtual void NotifyPostChange(const FPropertyChangedEvent& PropertyChangedEvent, FProperty* PropertyThatChanged) override;
@@ -114,6 +114,5 @@ private:
     TSharedPtr<SGraphEditor> GraphEditorWidget;
     TSharedPtr<class IDetailsView> PropertyWidget;
     TSharedPtr<FUICommandList> CommandList;
-    UPROPERTY(EditAnywhere)
     FString GraphCanvasTabName;
 };

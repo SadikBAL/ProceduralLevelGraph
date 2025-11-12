@@ -172,6 +172,7 @@ void SHallGraphNode::UpdatePinTypes()
 	{
 		UpPin->PinType = EMazePinType::Hidden;
 	}
+	
 	if (DownPin.IsValid() && (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180))
 	{
 		DownPin->PinType = EMazePinType::Tier1;

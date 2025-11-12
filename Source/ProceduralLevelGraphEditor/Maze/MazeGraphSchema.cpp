@@ -11,7 +11,7 @@
 
 #define LOCTEXT_NAMESPACE "MazeGraphSchema"
 
-UEdGraphNode* FPLGGraphSchemaAction_NewNode::PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin, const FVector2D Location, bool bSelectNewNode)
+UEdGraphNode* FPLGGraphSchemaAction_NewNode::PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin, const FVector2f& Location, bool bSelectNewNode)
 {
     UEdGraphNode* ResultNode = nullptr;
 
@@ -53,7 +53,7 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
     Params.WireColor = FLinearColor::Gray;
  }
 
- void FPLGConnectionDrawingPolicy::DrawSplineWithArrow(const FVector2D& StartPoint, const FVector2D& EndPoint,
+ void FPLGConnectionDrawingPolicy::DrawSplineWithArrow(const FVector2f& StartPoint, const FVector2f& EndPoint,
      const FConnectionParams& Params)
  {
     DrawConnection(
@@ -67,13 +67,13 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
  void FPLGConnectionDrawingPolicy::DrawSplineWithArrow(const FGeometry& StartGeom, const FGeometry& EndGeom,
      const FConnectionParams& Params)
  {
-    const FVector2D StartPoint = FGeometryHelper::CenterOf(StartGeom);
-    const FVector2D EndPoint = FGeometryHelper::CenterOf(EndGeom);
+    const FVector2f StartPoint = FGeometryHelper::CenterOf(StartGeom);
+    const FVector2f EndPoint = FGeometryHelper::CenterOf(EndGeom);
     DrawSplineWithArrow(StartPoint, EndPoint, Params);
  }
 
 
- void FPLGConnectionDrawingPolicy::DrawConnection(int32 LayerId, const FVector2D& Start, const FVector2D& End,
+ void FPLGConnectionDrawingPolicy::DrawConnection(int32 LayerId, const FVector2f& Start, const FVector2f& End,
                                                   const FConnectionParams& Params)
  {
     FPinPair Connection(Params.AssociatedPin1, Params.AssociatedPin2);
@@ -164,7 +164,40 @@ const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGrap
     
     FEnumPinType AType = GetPinType(A);
     FEnumPinType BType = GetPinType(B);
-    
+    if (UHallGraphNode* HallNodeA = Cast<UHallGraphNode>(A->GetOwningNode()))
+    {
+        if (HallNodeA->RoomRotation == 0 || HallNodeA->RoomRotation == 180)
+        {
+            if (AType == FEnumPinType::Left || AType == FEnumPinType::Right)
+            {
+                return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+            }
+        }
+        else
+        {
+            if (AType == FEnumPinType::Up || AType == FEnumPinType::Down)
+            {
+                return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+            }
+        }
+    }
+    if (UHallGraphNode* HallNodeB = Cast<UHallGraphNode>(A->GetOwningNode()))
+    {
+        if (HallNodeB->RoomRotation == 0 || HallNodeB->RoomRotation == 180)
+        {
+            if (BType == FEnumPinType::Left || BType == FEnumPinType::Right)
+            {
+                return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+            }
+        }
+        else
+        {
+            if (BType == FEnumPinType::Up || BType == FEnumPinType::Down)
+            {
+                return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+            }
+        }
+    }
     if (AType == FEnumPinType::None || BType == FEnumPinType::None)
     {
         return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
