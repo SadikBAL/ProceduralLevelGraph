@@ -26,6 +26,8 @@ public:
 	void RotateRoomToLeft();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Node Process")
 	int RoomRotation = 0;
+	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Right")
+	virtual EMazePinType GetPinType();
 protected:
 	UPROPERTY()
 	FText NodeTitle = FText::FromString("ROOM");

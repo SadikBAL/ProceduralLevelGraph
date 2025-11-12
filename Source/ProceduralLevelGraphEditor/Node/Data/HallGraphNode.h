@@ -14,6 +14,7 @@ public:
     
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual void AllocateDefaultPins() override;
+	virtual EMazePinType GetPinType() override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hall", meta = (UIMin = "1", UIMax = "20", ClampMin = "1", ClampMax = "20", MultipleOf = "1"))
 	int HallLength;
 };

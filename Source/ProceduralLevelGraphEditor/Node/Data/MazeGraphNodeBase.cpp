@@ -46,6 +46,11 @@ void UMazeGraphNodeBase::RotateRoomToLeft()
 	}
 }
 
+EMazePinType UMazeGraphNodeBase::GetPinType()
+{
+	return EMazePinType::Tier1;
+}
+
 void UMazeGraphNodeBase::RotateRoomToRight()
 {
 	RoomRotation += 90;

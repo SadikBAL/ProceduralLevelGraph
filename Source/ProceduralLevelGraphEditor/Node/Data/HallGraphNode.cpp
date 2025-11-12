@@ -18,4 +18,9 @@ void UHallGraphNode::AllocateDefaultPins()
 	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Left"));
 	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Right"));
 }
+
+EMazePinType UHallGraphNode::GetPinType()
+{
+	return Super::GetPinType();
+}
 #undef LOCTEXT_NAMESPACE

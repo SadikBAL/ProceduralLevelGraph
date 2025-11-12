@@ -33,19 +33,24 @@ class SGraphPathOverlay : public SCompoundWidget
         const TArray<UMazeGraphNodeBase*>& Path = PathToDraw.Get();
         if (Path.Num() < 2) return LayerId;
         TArray<FVector2f> Points;
-        for (int32 i = 0; i < Path.Num() - 1; ++i)
+        for (int32 i = 0; i < Path.Num(); ++i)
         {
-            UMazeGraphNodeBase* NodeA = Path[i];
-            UMazeGraphNodeBase* NodeB = Path[i + 1];
-            TSharedPtr<SGraphNode> WidgetA = GraphPanel->GetNodeWidgetFromGuid(NodeA->NodeGuid);
-            TSharedPtr<SGraphNode> WidgetB = GraphPanel->GetNodeWidgetFromGuid(NodeB->NodeGuid);
+            UMazeGraphNodeBase* Node = Path[i];
+            TSharedPtr<SGraphNode> Widget = GraphPanel->GetNodeWidgetFromGuid(Node->NodeGuid);
 
-            if (WidgetA.IsValid() && WidgetB.IsValid())
+            if (Widget.IsValid())
             {
-                FVector2f PosA = WidgetA->GetPosition2f();
-                FVector2f PosB = WidgetB->GetPosition2f();
-                Points.Add(PosA);
-                Points.Add(PosB);
+                FVector2f PosA = Widget->GetPosition2f();
+                FVector2f SizeA = Widget->GetDesiredSize();
+                FVector2f CenterA_GraphSpace = PosA + SizeA * 0.5f;
+                const FVector2f ViewOffset = GraphPanel->GetViewOffset();
+                const float Zoom = GraphPanel->GetZoomAmount();
+                FVector2f CenterA_LocalSpace = (CenterA_GraphSpace - ViewOffset) * Zoom;
+                Points.Add(CenterA_LocalSpace);
+            }
+            else
+            {
+                break;
             }
         }
         FSlateDrawElement::MakeLines(
@@ -53,12 +58,12 @@ class SGraphPathOverlay : public SCompoundWidget
                    LayerId + 1,
                    AllottedGeometry.ToPaintGeometry(),
                    Points,
-                   ESlateDrawEffect::None,
+                   ESlateDrawEffect::DisabledEffect,
                    FLinearColor::Red,
                    true,
                    5.0f
-               );
-        return LayerId + 1; // Bir sonraki katmana bildir
+                   );
+        return LayerId + 1;
     }
 
 private:
