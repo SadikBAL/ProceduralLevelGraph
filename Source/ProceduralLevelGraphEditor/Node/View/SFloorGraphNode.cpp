@@ -32,7 +32,7 @@ TSharedRef<SWidget> SFloorGraphNode::CreateNodeContentArea()
 }
 FOptionalSize SFloorGraphNode::GetNodeWidth() const
 {
-	if (SFloorGraphNode* Node = Cast<SFloorGraphNode>(GraphNode))
+	if (UFloorGraphNode* Node = Cast<UFloorGraphNode>(GraphNode))
 	{
 		return Node->NodeWidth;
 	}
@@ -41,7 +41,7 @@ FOptionalSize SFloorGraphNode::GetNodeWidth() const
 
 FOptionalSize SFloorGraphNode::GetNodeHeight() const
 {
-	if (SFloorGraphNode* Node = Cast<SFloorGraphNode>(GraphNode))
+	if (UFloorGraphNode* Node = Cast<UFloorGraphNode>(GraphNode))
 	{
 		return Node->NodeHeight;
 	}
