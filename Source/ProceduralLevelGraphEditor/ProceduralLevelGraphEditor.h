@@ -32,10 +32,17 @@ public:
     virtual FLinearColor GetWorldCentricTabColorScale() const override;
     virtual void PostInitAssetEditor() override;
     // End of FAssetEditorToolkit interface
-
-    TArray<UMazeGraphNodeBase*> ShortestPath;
+    
     TMap<ERouteType, TArray<UMazeGraphNodeBase*>> Routes;
     TArray<UMazeGraphNodeBase*> FindRoutes(UMazeGraphNodeBase* StartNode);
+    void FindAllRoutes(UMazeGraphNodeBase* SelectedNode);
+    void FindAllPaths(UMazeGraphNodeBase* StartNode, UMazeGraphNodeBase* TargetNode, TArray<TArray<UMazeGraphNodeBase*>>& OutAllPaths);
+    void FindAllPathsRecursive(
+    UMazeGraphNodeBase* CurrentNode,
+    UMazeGraphNodeBase* TargetNode,
+    TArray<UMazeGraphNodeBase*>& CurrentPath,
+    TSet<UMazeGraphNodeBase*>& VisitedNodesOnPath,
+    TArray<TArray<UMazeGraphNodeBase*>>& OutAllPaths);
     
 private:
     void OnSelectedNodesChanged(const TSet<UObject*>& Objects);

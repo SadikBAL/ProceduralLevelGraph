@@ -207,10 +207,10 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
             + SOverlay::Slot()
             [
                 SNew(SRouteOverlay)
-                .GraphEditor(GraphEditorWidget) // Graph Editor'e referans ver
-                .PathToDraw(TAttribute<TArray<UMazeGraphNodeBase*>>::CreateLambda([this]() 
+                .GraphEditor(GraphEditorWidget)
+                .PathToDraw(FRoutePathMap::CreateLambda([this]() 
                 { 
-                    return ShortestPath; 
+                    return Routes; 
                 }))
                 .Visibility(EVisibility::HitTestInvisible)
             ]
@@ -471,6 +471,113 @@ TArray<UMazeGraphNodeBase*> FProceduralLevelGraphEditor::FindRoutes(UMazeGraphNo
     return Path;
 }
 
+void FProceduralLevelGraphEditor::FindAllRoutes(UMazeGraphNodeBase* SelectedNode)
+{
+    Routes.Empty();
+    if (!SelectedNode || !GraphAsset || !GraphAsset->EdGraph)
+    {
+        return;
+    }
+    UEntranceGraphNode* TargetNode = nullptr;
+    for (UEdGraphNode* Node : GraphAsset->EdGraph->Nodes)
+    {
+        if (UEntranceGraphNode* EntranceNode = Cast<UEntranceGraphNode>(Node))
+        {
+            TargetNode = EntranceNode;
+            break;
+        }
+    }
+    if (!TargetNode)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("UpdateAllPathsFromNode: Grafikte Entrance Node bulunamadı!"));
+        return;
+    }
+
+    if (SelectedNode == TargetNode)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("UpdateAllPathsFromNode: Grafikte Entrance Node bulunamadı!"));
+    }
+    else
+    {
+        TArray<TArray<UMazeGraphNodeBase*>> AllPaths;
+        FindAllPaths(SelectedNode, TargetNode, AllPaths);
+        AllPaths.Sort([](const TArray<UMazeGraphNodeBase*>& A, const TArray<UMazeGraphNodeBase*>& B)
+        {
+            return A.Num() < B.Num();
+        });
+        if (AllPaths.Num() > 0)
+        {
+            Routes.Add(ERouteType::RouteA, AllPaths[0]);
+        }
+        if (AllPaths.Num() > 1)
+        {
+            Routes.Add(ERouteType::RouteB, AllPaths[1]);
+        }
+        if (AllPaths.Num() > 2)
+        {
+            Routes.Add(ERouteType::RouteC, AllPaths[2]);
+        }
+        if (AllPaths.Num() > 3)
+        {
+            Routes.Add(ERouteType::RouteD, AllPaths[3]);
+        }
+        UE_LOG(LogTemp, Log, TEXT("Toplam %d adet alternatif yol bulundu."), AllPaths.Num());
+    }
+}
+
+void FProceduralLevelGraphEditor::FindAllPaths(UMazeGraphNodeBase* StartNode, UMazeGraphNodeBase* TargetNode,
+    TArray<TArray<UMazeGraphNodeBase*>>& OutAllPaths)
+{
+    OutAllPaths.Empty();
+    if (!StartNode || !TargetNode)
+    {
+        return;
+    }
+    TArray<UMazeGraphNodeBase*> CurrentPath;
+    TSet<UMazeGraphNodeBase*> VisitedNodesOnPath;
+    FindAllPathsRecursive(StartNode, TargetNode, CurrentPath, VisitedNodesOnPath, OutAllPaths);
+}
+
+void FProceduralLevelGraphEditor::FindAllPathsRecursive(UMazeGraphNodeBase* CurrentNode, UMazeGraphNodeBase* TargetNode,
+    TArray<UMazeGraphNodeBase*>& CurrentPath, TSet<UMazeGraphNodeBase*>& VisitedNodesOnPath,
+    TArray<TArray<UMazeGraphNodeBase*>>& OutAllPaths)
+{
+    CurrentPath.Add(CurrentNode);
+    VisitedNodesOnPath.Add(CurrentNode);
+    if (CurrentNode == TargetNode)
+    {
+        OutAllPaths.Add(CurrentPath);
+    }
+    else
+    {
+        TArray<UMazeGraphNodeBase*> Neighbors;
+        for (UEdGraphPin* Pin : CurrentNode->Pins)
+        {
+            if (!IsPinVisible(Pin))
+            {
+                continue;
+            }
+
+            for (UEdGraphPin* OtherPin : Pin->LinkedTo)
+            {
+                if (UMazeGraphNodeBase* NeighborNode = Cast<UMazeGraphNodeBase>(OtherPin->GetOwningNode()))
+                {
+                    Neighbors.AddUnique(NeighborNode);
+                }
+            }
+        }
+        for (UMazeGraphNodeBase* Neighbor : Neighbors)
+        {
+            if (Neighbor && !VisitedNodesOnPath.Contains(Neighbor))
+            {
+                FindAllPathsRecursive(Neighbor, TargetNode, CurrentPath, VisitedNodesOnPath, OutAllPaths);
+            }
+        }
+    }
+    VisitedNodesOnPath.Remove(CurrentNode);
+    CurrentPath.RemoveAt(CurrentPath.Num() - 1);
+}
+
 void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Action)
 {
     if (Action.Action == GRAPHACTION_AddNode ||
@@ -484,6 +591,7 @@ void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Actio
 
 void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObject*>& NewSelection)
 {
+    Routes.Empty();
     if (PropertyWidget.IsValid())
     {
         if (NewSelection.Num() > 0)
@@ -494,27 +602,7 @@ void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObjec
                 {
                     if (UMazeGraphNodeBase* SelectedNode = Cast<UMazeGraphNodeBase>(NewSelection.Array()[0]))
                     {
-                        ShortestPath.Empty();
-                        ShortestPath = FindRoutes(SelectedNode);
-                        if (ShortestPath.Num() > 0)
-                        {
-                            UE_LOG(LogTemp, Warning, TEXT("Entrance'a giden en kısa yol (%d adım):"), ShortestPath.Num() - 1);
-                            FString PathString;
-                            for (UMazeGraphNodeBase* NodeInPath : ShortestPath)
-                            {
-                                PathString += NodeInPath->GetNodeTitle(ENodeTitleType::FullTitle).ToString();
-                                if (NodeInPath != ShortestPath.Last())
-                                {
-                                    PathString += TEXT(" -> ");
-                                }
-                            }
-                            UE_LOG(LogTemp, Warning, TEXT("%s"), *PathString);
-                            
-                        }
-                        else if (SelectedNode != nullptr && !Cast<UEntranceGraphNode>(SelectedNode))
-                        {
-                            UE_LOG(LogTemp, Warning, TEXT("%s node'undan Entrance'a bir yol bulunamadı."), *SelectedNode->GetNodeTitle(ENodeTitleType::FullTitle).ToString());
-                        }
+                        FindAllRoutes(SelectedNode);
                     }
                 }
             }
