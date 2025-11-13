@@ -17,5 +17,6 @@ private:
     TAttribute<TSharedPtr<SGraphEditor>> GraphEditor;
     TAttribute<TMap<ERouteType, TArray<UMazeGraphNodeBase*>>> PathToDraw;
 	FLinearColor GetRouteColor(ERouteType Type) const;
+	float GetRouteOffset(ERouteType Type) const;
 	
 };

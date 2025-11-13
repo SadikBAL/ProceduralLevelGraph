@@ -24,6 +24,7 @@
 
 const FName FProceduralLevelGraphEditor::GraphCanvasTabId(TEXT("ProceduralLevelGraphEditor_GraphCanvas"));
 const FName FProceduralLevelGraphEditor::PropertiesTabId(TEXT("ProceduralLevelGraphEditor_Properties"));
+
 FDelegateHandle OnGraphChangedDelegateHandle;
 
 void FProceduralLevelGraphEditor::HandleDelete()
@@ -208,7 +209,7 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
             [
                 SNew(SRouteOverlay)
                 .GraphEditor(GraphEditorWidget)
-                .PathToDraw(FRoutePathMap::CreateLambda([this]() 
+                .PathToDraw(TAttribute<FRoutePathMap>::CreateLambda([this]()
                 { 
                     return Routes; 
                 }))
@@ -220,7 +221,7 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
 TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_Properties(const FSpawnTabArgs& Args)
 {
     SGraphEditor::FGraphEditorEvents InEvents;
-    InEvents.OnSelectionChanged = SGraphEditor::FOnSelectionChanged::CreateSP(this, &FProceduralLevelGraphEditor::OnSelectedNodesChanged); // <-- BAĞLANTI BURADA
+    InEvents.OnSelectionChanged = SGraphEditor::FOnSelectionChanged::CreateSP(this, &FProceduralLevelGraphEditor::OnSelectedNodesChanged);
     
     FPropertyEditorModule& PropertyEditorModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
     FDetailsViewArgs DetailsViewArgs;

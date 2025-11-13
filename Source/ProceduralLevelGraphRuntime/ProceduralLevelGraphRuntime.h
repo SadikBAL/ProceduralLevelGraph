@@ -17,6 +17,9 @@ public:
     UProceduralLevelGraphRuntime();
 
 #if WITH_EDITORONLY_DATA
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug Settings")
+    bool bShowRoutes = false;
+    
     UPROPERTY()
     TObjectPtr<UEdGraph> EdGraph;
 #endif
