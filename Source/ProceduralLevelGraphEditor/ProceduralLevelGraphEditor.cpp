@@ -11,6 +11,7 @@
 #include "GraphEditorActions.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "Node/Data/EntranceGraphNode.h"
+#include "Node/View/CustomCompoundWidget.h"
 #include "ProceduralLevelGraphRuntime/Node/HallNode.h"
 #include "ProceduralLevelGraphRuntime/Node/RoomNode.h"
 #include "ProceduralLevelGraphRuntime/Node/RouterNode.h"
@@ -205,7 +206,7 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
             ]
             + SOverlay::Slot()
             [
-                SNew(SGraphPathOverlay)
+                SNew(SRouteOverlay)
                 .GraphEditor(GraphEditorWidget) // Graph Editor'e referans ver
                 .PathToDraw(TAttribute<TArray<UMazeGraphNodeBase*>>::CreateLambda([this]() 
                 { 
@@ -388,7 +389,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
     }
 }
 
-TArray<UMazeGraphNodeBase*> FProceduralLevelGraphEditor::FindShortestPathToEntrance(UMazeGraphNodeBase* StartNode)
+TArray<UMazeGraphNodeBase*> FProceduralLevelGraphEditor::FindRoutes(UMazeGraphNodeBase* StartNode)
 {
     TArray<UMazeGraphNodeBase*> Path;
     if (!StartNode || !GraphAsset || !GraphAsset->EdGraph)
@@ -494,7 +495,7 @@ void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObjec
                     if (UMazeGraphNodeBase* SelectedNode = Cast<UMazeGraphNodeBase>(NewSelection.Array()[0]))
                     {
                         ShortestPath.Empty();
-                        ShortestPath = FindShortestPathToEntrance(SelectedNode);
+                        ShortestPath = FindRoutes(SelectedNode);
                         if (ShortestPath.Num() > 0)
                         {
                             UE_LOG(LogTemp, Warning, TEXT("Entrance'a giden en kısa yol (%d adım):"), ShortestPath.Num() - 1);

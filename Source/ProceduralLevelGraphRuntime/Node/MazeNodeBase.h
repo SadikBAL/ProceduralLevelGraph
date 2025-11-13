@@ -24,6 +24,14 @@ enum class EMazePinType : uint8
 	Hidden,
 	Tier1
 };
+UENUM(BlueprintType)
+enum class ERouteType : uint8
+{
+	RouteA,
+	RouteB,
+	RouteC,
+	RouteD
+};
 UCLASS(BlueprintType)
 class PROCEDURALLEVELGRAPHRUNTIME_API UMazeNodeBase : public UObject
 {
