@@ -1,5 +1,6 @@
 ﻿#include "CustomCompoundWidget.h"
 #include "SGraphPanel.h"
+#include "Interfaces/IPluginManager.h"
 
 void SRouteOverlay::Construct(const FArguments& InArgs)
 {
@@ -92,4 +93,53 @@ float SRouteOverlay::GetRouteOffset(ERouteType Type) const
 		return 7.5f;
 	}
 	return 0.0f;
+}
+
+void SGraphBackground::Construct(const FArguments& InArgs)
+{
+    GraphEditor = InArgs._GraphEditor;
+    const FString PluginBaseDir = IPluginManager::Get().FindPlugin("ProceduralLevelGraph")->GetBaseDir();
+    const FString IconPath = FPaths::Combine(*PluginBaseDir, TEXT("Content/Icons/ship_layout.jpg")); 
+    const FVector2D ImageSize = FVector2D(847.0f, 2767.0f); 
+    BackgroundBrush = MakeShareable(new FSlateImageBrush(IconPath, ImageSize));
+}
+
+int32 SGraphBackground::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
+{
+    SCompoundWidget::OnPaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
+
+    TSharedPtr<SGraphEditor> GraphEditorPtr = GraphEditor.Get();
+    if (!GraphEditorPtr.IsValid() || !BackgroundBrush.IsValid()) return LayerId;
+    SGraphPanel* GraphPanel = GraphEditorPtr->GetGraphPanel();
+    if (GraphPanel == nullptr) return LayerId;
+
+    const FVector2f ViewOffset = GraphPanel->GetViewOffset();
+    const float Zoom = GraphPanel->GetZoomAmount();
+
+    const FVector2f ImageSizeInGraphSpace = BackgroundBrush->ImageSize;
+
+    const FVector2f ImagePositionInGraphSpace = FVector2f(
+        -ImageSizeInGraphSpace.X * 0.5f, 
+        -ImageSizeInGraphSpace.Y * 0.5f
+    ); 
+	
+    const FVector2f TopLeft_LocalSpace = (ImagePositionInGraphSpace - ViewOffset) * Zoom;
+    const FVector2f BottomRight_LocalSpace = ((ImagePositionInGraphSpace + ImageSizeInGraphSpace) - ViewOffset) * Zoom;
+    const FVector2f ImageSize_LocalSpace = BottomRight_LocalSpace - TopLeft_LocalSpace;
+	
+	const FSlateLayoutTransform LayoutTransform(1.0f, TopLeft_LocalSpace);
+    
+	FPaintGeometry PaintGeometry = AllottedGeometry.ToPaintGeometry(
+		ImageSize_LocalSpace,
+		LayoutTransform
+	);
+    FSlateDrawElement::MakeBox(
+        OutDrawElements,
+        LayerId,
+        PaintGeometry,
+        BackgroundBrush.Get(),
+        ESlateDrawEffect::None,
+        FLinearColor(1.0f, 1.0f, 1.0f, 1.0f)
+    );
+    return LayerId; 
 }

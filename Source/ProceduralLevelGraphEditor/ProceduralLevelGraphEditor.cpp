@@ -202,6 +202,14 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
         [
             SNew(SOverlay)
             + SOverlay::Slot()
+            .HAlign(HAlign_Fill)
+            .VAlign(VAlign_Fill)
+            [
+                SNew(SGraphBackground)
+                .GraphEditor(GraphEditorWidget)
+                .Visibility(EVisibility::HitTestInvisible)
+            ]
+            + SOverlay::Slot()
             [
                 GraphEditorWidget.ToSharedRef()
             ]
