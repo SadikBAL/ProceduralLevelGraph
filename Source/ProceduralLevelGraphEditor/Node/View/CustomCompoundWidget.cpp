@@ -141,5 +141,5 @@ int32 SGraphBackground::OnPaint(const FPaintArgs& Args, const FGeometry& Allotte
         ESlateDrawEffect::None,
         FLinearColor(1.0f, 1.0f, 1.0f, 1.0f)
     );
-    return LayerId; 
+    return LayerId + 1; 
 }

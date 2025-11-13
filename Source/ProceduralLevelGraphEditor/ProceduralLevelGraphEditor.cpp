@@ -9,6 +9,7 @@
 #include "EdGraph/EdGraphSchema.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "GraphEditorActions.h"
+#include "GraphEditorModule.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "Node/Data/EntranceGraphNode.h"
 #include "Node/View/CustomCompoundWidget.h"
@@ -196,6 +197,7 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
         .GraphToEdit(GraphAsset->EdGraph)
         .GraphEvents(InEvents)
         .AdditionalCommands(CommandList);
+    
 
     return SNew(SDockTab)
         .Label(LOCTEXT("GraphCanvasTitle", "Graph"))

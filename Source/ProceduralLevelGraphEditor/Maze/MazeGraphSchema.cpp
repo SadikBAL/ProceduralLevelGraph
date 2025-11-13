@@ -5,6 +5,7 @@
 #include "GraphEditor.h"
 #include "Framework/Commands/UIAction.h"
 #include "ProceduralLevelGraphEditor/Node/Data/EntranceGraphNode.h"
+#include "ProceduralLevelGraphEditor/Node/Data/FloorGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/HallGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RoomGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RouterGraphNode.h"
@@ -123,6 +124,12 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
     NewNodeAction_Entrance->NodeTemplate = NewObject<UEntranceGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
     ContextMenuBuilder.AddAction(NewNodeAction_Entrance);
     */
+    TSharedPtr<FPLGGraphSchemaAction_NewNode> NewNodeAction_Boundary(new FPLGGraphSchemaAction_NewNode(
+       LOCTEXT("NodeCategory", "Procedural"),
+       LOCTEXT("NewFloorNode", "Add New Floor Node"),
+       LOCTEXT("NewBoundaryNodeTooltip", "Adds a node to act as a boundary for rooms."), 0));
+    NewNodeAction_Boundary->NodeTemplate = NewObject<UFloorGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
+    ContextMenuBuilder.AddAction(NewNodeAction_Boundary);
 }
 
  FEnumPinType UMazeGraphSchema::GetPinType(const UEdGraphPin* A) const
