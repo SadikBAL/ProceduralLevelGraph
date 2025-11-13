@@ -213,6 +213,9 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
                 { 
                     return Routes; 
                 }))
+                .bShowRoutes(TAttribute<bool>::CreateLambda([this]() {
+                    return GraphAsset ? GraphAsset->bShowRoutes : false;
+                }))
                 .Visibility(EVisibility::HitTestInvisible)
             ]
         ];

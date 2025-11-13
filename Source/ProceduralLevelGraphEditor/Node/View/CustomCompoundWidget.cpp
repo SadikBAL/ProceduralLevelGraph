@@ -5,6 +5,7 @@ void SRouteOverlay::Construct(const FArguments& InArgs)
 {
     GraphEditor = InArgs._GraphEditor;
     PathToDraw = InArgs._PathToDraw;
+	bShowRoutes = InArgs._bShowRoutes;
 }
 
 int32 SRouteOverlay::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect,
@@ -12,6 +13,10 @@ int32 SRouteOverlay::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGe
                              bool bParentEnabled) const
 {
     SCompoundWidget::OnPaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
+	if (!bShowRoutes.Get())
+	{
+		return LayerId;
+	}
     TSharedPtr<SGraphEditor> GraphEditorPtr = GraphEditor.Get();
     if (!GraphEditorPtr.IsValid()) return LayerId;
     SGraphPanel* GraphPanel = GraphEditorPtr->GetGraphPanel();
