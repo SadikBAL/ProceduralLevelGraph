@@ -61,4 +61,7 @@ private:
     TSharedPtr<class IDetailsView> PropertyWidget;
     TSharedPtr<FUICommandList> CommandList;
     FString GraphCanvasTabName;
+
+    void UpdateBackgroundBrush();
+    TSharedPtr<FSlateImageBrush> BackgroundBrush;
 };

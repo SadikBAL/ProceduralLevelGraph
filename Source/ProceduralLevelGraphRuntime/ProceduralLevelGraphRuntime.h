@@ -19,6 +19,8 @@ public:
 #if WITH_EDITORONLY_DATA
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug Settings")
     bool bShowRoutes = false;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Display", meta = (DisplayName = "Background Image"))
+    TObjectPtr<UTexture2D> BackgroundImage;
     UPROPERTY()
     TObjectPtr<UEdGraph> EdGraph;
 #endif

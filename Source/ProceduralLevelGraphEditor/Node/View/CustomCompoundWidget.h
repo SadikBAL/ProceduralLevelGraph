@@ -37,4 +37,5 @@ void Construct(const FArguments& InArgs);
 
 private:
 	TAttribute<TSharedPtr<SGraphEditor>> GraphEditor;
+	TAttribute<TSharedPtr<FSlateImageBrush>> BackgroundBrush;
 };
