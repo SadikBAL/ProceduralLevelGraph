@@ -1,12 +1,10 @@
 ﻿
 #include "MazeNodesFactory.h"
 
-#include "FloorGraphNode.h"
 #include "HallGraphNode.h"
 #include "RoomGraphNode.h"
 #include "RouterGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/View/SEntranceGraphNode.h"
-#include "ProceduralLevelGraphEditor/Node/View/SFloorGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/View/SHallGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/View/SRoomGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/View/SRouterGraphNode.h"
@@ -45,11 +43,3 @@ TSharedPtr<SGraphNode> FSEntranceGraphNodeFactory::CreateNode(UEdGraphNode* Node
 	return nullptr;
 }
 
-TSharedPtr<SGraphNode> FSFloorGraphNodeFactory::CreateNode(UEdGraphNode* Node) const
-{
-	if (UFloorGraphNode* FloorNode = Cast<UFloorGraphNode>(Node))
-	{
-		return SNew(SFloorGraphNode, FloorNode);
-	}
-	return nullptr;
-}
