@@ -198,21 +198,12 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
         .GraphToEdit(GraphAsset->EdGraph)
         .GraphEvents(InEvents)
         .AdditionalCommands(CommandList);
-    
 
     return SNew(SDockTab)
         .Label(LOCTEXT("GraphCanvasTitle", "Graph"))
         [
             SNew(SOverlay)
-            + SOverlay::Slot()
-            .HAlign(HAlign_Fill)
-            .VAlign(VAlign_Fill)
-            [
-                SNew(SGraphBackground)
-                .GraphEditor(GraphEditorWidget)
-                .BackgroundBrush_Lambda([this]() { return BackgroundBrush; })
-                .Visibility(EVisibility::HitTestInvisible)
-            ]
+          
             + SOverlay::Slot()
             [
                 GraphEditorWidget.ToSharedRef()
@@ -230,6 +221,15 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
                 }))
                 .Visibility(EVisibility::HitTestInvisible)
             ]
+            + SOverlay::Slot()
+          .HAlign(HAlign_Fill)
+          .VAlign(VAlign_Fill)
+          [
+              SNew(SGraphBackground)
+              .GraphEditor(GraphEditorWidget)
+              .BackgroundBrush_Lambda([this]() { return BackgroundBrush; })
+              .Visibility(EVisibility::HitTestInvisible)
+          ]
         ];
 }
 
@@ -620,6 +620,13 @@ void FProceduralLevelGraphEditor::UpdateBackgroundBrush()
         {
             BackgroundBrush->SetResourceObject(GraphAsset->BackgroundImage);
             BackgroundBrush->ImageSize = FVector2D(GraphAsset->BackgroundImage->GetSizeX(), GraphAsset->BackgroundImage->GetSizeY());
+        }
+    }
+    else
+    {
+        if (BackgroundBrush.IsValid())
+        {
+            BackgroundBrush.Reset();
         }
     }
 }

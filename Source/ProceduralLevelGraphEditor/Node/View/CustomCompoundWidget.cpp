@@ -114,7 +114,7 @@ int32 SGraphBackground::OnPaint(const FPaintArgs& Args, const FGeometry& Allotte
 		const FVector2f ViewOffset = GraphPanel->GetViewOffset();
 		const float Zoom = GraphPanel->GetZoomAmount();
         
-		const FVector2f ImageSize = Brush->ImageSize;
+		const FVector2f ImageSize = Brush->ImageSize * 100;
 		const FVector2f LocalZero = (FVector2f::ZeroVector - ViewOffset) * Zoom;
 		FPaintGeometry PaintGeometry = AllottedGeometry.ToPaintGeometry(
 			ImageSize * Zoom,
