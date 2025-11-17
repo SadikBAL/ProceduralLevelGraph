@@ -9,7 +9,6 @@
 #include "EdGraph/EdGraphSchema.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "GraphEditorActions.h"
-#include "GraphEditorModule.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "Node/Data/EntranceGraphNode.h"
 #include "Node/View/CustomCompoundWidget.h"
@@ -185,7 +184,6 @@ void FProceduralLevelGraphEditor::PostInitAssetEditor()
 {
     FAssetEditorToolkit::PostInitAssetEditor();
     SaveGraphToRuntimeData();
-    UpdateBackgroundBrush();
 }
 
 TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSpawnTabArgs& Args)
@@ -203,7 +201,6 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
         .Label(LOCTEXT("GraphCanvasTitle", "Graph"))
         [
             SNew(SOverlay)
-          
             + SOverlay::Slot()
             [
                 GraphEditorWidget.ToSharedRef()
@@ -221,15 +218,6 @@ TSharedRef<SDockTab> FProceduralLevelGraphEditor::SpawnTab_GraphCanvas(const FSp
                 }))
                 .Visibility(EVisibility::HitTestInvisible)
             ]
-            + SOverlay::Slot()
-          .HAlign(HAlign_Fill)
-          .VAlign(VAlign_Fill)
-          [
-              SNew(SGraphBackground)
-              .GraphEditor(GraphEditorWidget)
-              .BackgroundBrush_Lambda([this]() { return BackgroundBrush; })
-              .Visibility(EVisibility::HitTestInvisible)
-          ]
         ];
 }
 
@@ -605,32 +593,6 @@ void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Actio
     SaveGraphToRuntimeData();
 }
 
-void FProceduralLevelGraphEditor::UpdateBackgroundBrush()
-{
-    if (GraphAsset && GraphAsset->BackgroundImage)
-    {
-        if (!BackgroundBrush.IsValid())
-        {
-            BackgroundBrush = MakeShareable(new FSlateImageBrush(
-                GraphAsset->BackgroundImage,
-                FVector2D(GraphAsset->BackgroundImage->GetSizeX(), GraphAsset->BackgroundImage->GetSizeY())
-            ));
-        }
-        else
-        {
-            BackgroundBrush->SetResourceObject(GraphAsset->BackgroundImage);
-            BackgroundBrush->ImageSize = FVector2D(GraphAsset->BackgroundImage->GetSizeX(), GraphAsset->BackgroundImage->GetSizeY());
-        }
-    }
-    else
-    {
-        if (BackgroundBrush.IsValid())
-        {
-            BackgroundBrush.Reset();
-        }
-    }
-}
-
 void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObject*>& NewSelection)
 {
     Routes.Empty();
@@ -638,14 +600,11 @@ void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObjec
     {
         if (NewSelection.Num() > 0)
         {
-            if (NewSelection.Num() == 1)
+            if (NewSelection.Num() == 1 && GraphAsset->bShowRoutes)
             {
-                if (UMazeGraphNodeBase* BaseGraph = Cast<UMazeGraphNodeBase>(NewSelection.Array()[0]))
+                if (UMazeGraphNodeBase* SelectedNode = Cast<UMazeGraphNodeBase>(NewSelection.Array()[0]))
                 {
-                    if (UMazeGraphNodeBase* SelectedNode = Cast<UMazeGraphNodeBase>(NewSelection.Array()[0]))
-                    {
-                        FindAllRoutes(SelectedNode);
-                    }
+                    FindAllRoutes(SelectedNode);
                 }
             }
             PropertyWidget->SetObjects(NewSelection.Array());
@@ -665,10 +624,6 @@ void FProceduralLevelGraphEditor::NotifyPostChange(const FPropertyChangedEvent& 
 	{
 		GraphEditorWidget->NotifyGraphChanged();
 	}
-    if (PropertyThatChanged && PropertyThatChanged->GetFName() == GET_MEMBER_NAME_CHECKED(UProceduralLevelGraphRuntime, BackgroundImage))
-    {
-        UpdateBackgroundBrush();
-    }
 }
 
 #undef LOCTEXT_NAMESPACE

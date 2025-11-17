@@ -123,7 +123,6 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
     NewNodeAction_Entrance->NodeTemplate = NewObject<UEntranceGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
     ContextMenuBuilder.AddAction(NewNodeAction_Entrance);
     */
-
 }
 
  FEnumPinType UMazeGraphSchema::GetPinType(const UEdGraphPin* A) const

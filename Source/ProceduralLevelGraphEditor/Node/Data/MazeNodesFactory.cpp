@@ -42,4 +42,3 @@ TSharedPtr<SGraphNode> FSEntranceGraphNodeFactory::CreateNode(UEdGraphNode* Node
 	}
 	return nullptr;
 }
-

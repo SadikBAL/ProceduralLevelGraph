@@ -18,7 +18,6 @@ void FProceduralLevelGraphEditorModule::StartupModule()
     SHallGraphNodeFactory = MakeShareable(new FSHallGraphNodeFactory());
     SRouterGraphNodeFactory = MakeShareable(new FSRouterGraphNodeFactory());
     SEntranceGraphNodeFactory = MakeShareable(new FSEntranceGraphNodeFactory());
-    
     FEdGraphUtilities::RegisterVisualNodeFactory(SRoomGraphNodeFactory);
     FEdGraphUtilities::RegisterVisualNodeFactory(SHallGraphNodeFactory);
     FEdGraphUtilities::RegisterVisualNodeFactory(SRouterGraphNodeFactory);

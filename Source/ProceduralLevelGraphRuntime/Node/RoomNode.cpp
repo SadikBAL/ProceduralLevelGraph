@@ -20,19 +20,39 @@ URoomNode::URoomNode()
 
 float URoomNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
-	if (Orientation == EMazeOrientation::Horizontal)
+	if (RoomRotation == 90 || RoomRotation == 270)
 	{
-		return RoomWidth * 400.0 * 0.5;
+		if (Orientation == EMazeOrientation::Vertical)
+		{
+			return RoomWidth * 400.0 * 0.5;
+		}
+		else
+		{
+			return RoomHeight * 400.0 * 0.5;
+		}
 	}
 	else
 	{
-		return RoomHeight * 400.0 * 0.5;
+		if (Orientation == EMazeOrientation::Horizontal)
+		{
+			return RoomWidth * 400.0 * 0.5;
+		}
+		else
+		{
+			return RoomHeight * 400.0 * 0.5;
+		}
 	}
+
 
 }
 
 AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 {
+	if (RoomBlueprints.Num() <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SpawnMazeObject: RoomBlueprints array empty."));
+		return nullptr;
+	}
 	int RandomIndex = FMath::RandRange(0, RoomBlueprints.Num() - 1);
 	TSubclassOf<AMazeTileActor> RandomSpawnClass = RoomBlueprints[RandomIndex];
 	const AMazeTileActor* RandomTile = GetDefault<AMazeTileActor>(RandomSpawnClass);
@@ -45,18 +65,22 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
 		return nullptr;
 	}
+	
+	FRotator RoomRotator = FRotator::ZeroRotator;
+	RoomRotator.Yaw = RoomRotation;
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AActor* MazeObject = World->SpawnActor<AActor>(
 		RandomSpawnClass,
 		Position,
-		FRotator::ZeroRotator,
+		RoomRotator,
 		SpawnParams
 	);
+	SpawnLocation = MazeObject->GetActorLocation();
 	//MazeObject Spawned and Has Hall Bluprints.
 	if (MazeObject && HallBlueprints.Num() > 0)
 	{
-		SpawnLocation = MazeObject->GetActorLocation();
 		UE_LOG(LogTemp, Log, TEXT("%s Spawn edildi."), *MazeObject->GetName());
 		float LocalDeltaWidth = (RoomWidth - RandomTile->Width) * 0.5;
 		float LocalDeltaHeight = (RoomHeight - RandomTile->Height) * 0.5;

@@ -2,21 +2,19 @@ using UnrealBuildTool;
 
 public class ProceduralLevelGraphEditor : ModuleRules
 {
-    public ProceduralLevelGraphEditor(ReadOnlyTargetRules Target) : base(Target)
+    public ProceduralLevelGraphEditor(ReadOnlyTargetRules target) : base(target)
     {
-        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
         PublicDependencyModuleNames.AddRange(
-            new string[]
-            {
+            [
                 "Core",
                 "ProceduralLevelGraphRuntime"
-            }
+            ]
         );
 
         PrivateDependencyModuleNames.AddRange(
-            new string[]
-            {
+            [
                 "CoreUObject",
                 "Engine",
                 "Slate",
@@ -33,7 +31,7 @@ public class ProceduralLevelGraphEditor : ModuleRules
                 "GameplayTagsEditor",
                 "BlueprintGraph",
                 "InputCore"
-            }
+            ]
         );
     }
 }

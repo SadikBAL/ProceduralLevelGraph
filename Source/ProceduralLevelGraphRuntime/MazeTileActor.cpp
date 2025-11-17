@@ -101,7 +101,7 @@ TArray<FName> AMazeTileActor::GetMeshPartNames(EMazeDirection LocalDirection, in
 	int Counter = LocalRotation / 90;
 	CurrentRotationIndex += Counter;
 	CurrentRotationIndex %= 4;
-	const EMazeDirection* CurrentDirection = DirectionRotationMap.FindKey(CurrentRotationIndex);
+	//const EMazeDirection* CurrentDirection = DirectionRotationMap.FindKey(CurrentRotationIndex);
 	TArray<FName> AddTags;
 	for (auto Value : DirectionRotationMap)
 	{
@@ -120,6 +120,8 @@ TArray<FName> AMazeTileActor::GetMeshPartNames(EMazeDirection LocalDirection, in
 				break;
 			case EMazeDirection::Left:
 				AddTags.Add(FName("Left"));
+				break;
+			default:
 				break;
 			}
 		}

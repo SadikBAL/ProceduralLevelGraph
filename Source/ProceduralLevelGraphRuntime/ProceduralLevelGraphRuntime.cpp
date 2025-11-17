@@ -55,7 +55,7 @@ void UProceduralLevelGraphRuntime::RecreateMaze()
 
 void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location)
 {
-	if (Nodes.Find(MazeNodeBase) < 0)
+	if (Nodes.Find(MazeNodeBase) == INDEX_NONE)
 	{
 		Nodes.Add(MazeNodeBase);
 		switch (Direction)

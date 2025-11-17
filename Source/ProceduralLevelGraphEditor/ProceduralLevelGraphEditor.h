@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SGraphPanel.h"
 #include "Node/Data/MazeGraphNodeBase.h"
 #include "Toolkits/AssetEditorToolkit.h"
 
@@ -61,7 +60,4 @@ private:
     TSharedPtr<class IDetailsView> PropertyWidget;
     TSharedPtr<FUICommandList> CommandList;
     FString GraphCanvasTabName;
-
-    void UpdateBackgroundBrush();
-    TSharedPtr<FSlateImageBrush> BackgroundBrush;
 };

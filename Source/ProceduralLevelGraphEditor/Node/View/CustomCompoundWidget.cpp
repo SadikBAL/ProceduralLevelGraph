@@ -1,6 +1,5 @@
 ﻿#include "CustomCompoundWidget.h"
 #include "SGraphPanel.h"
-#include "Interfaces/IPluginManager.h"
 
 void SRouteOverlay::Construct(const FArguments& InArgs)
 {
@@ -93,42 +92,4 @@ float SRouteOverlay::GetRouteOffset(ERouteType Type) const
 		return 7.5f;
 	}
 	return 0.0f;
-}
-
-void SGraphBackground::Construct(const FArguments& InArgs)
-{
-    GraphEditor = InArgs._GraphEditor;
-	BackgroundBrush = InArgs._BackgroundBrush;
-}
-
-int32 SGraphBackground::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
-{
-    SCompoundWidget::OnPaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
-	
-	TSharedPtr<FSlateImageBrush> Brush = BackgroundBrush.Get();
-	TSharedPtr<SGraphEditor> GraphEditorPtr = GraphEditor.Get();
-	if (Brush.IsValid() && Brush->GetResourceObject() != nullptr && GraphEditorPtr.IsValid())
-	{
-		SGraphPanel* GraphPanel = GraphEditorPtr->GetGraphPanel();
-		if (GraphPanel == nullptr) return LayerId;
-		const FVector2f ViewOffset = GraphPanel->GetViewOffset();
-		const float Zoom = GraphPanel->GetZoomAmount();
-        
-		const FVector2f ImageSize = Brush->ImageSize * 100;
-		const FVector2f LocalZero = (FVector2f::ZeroVector - ViewOffset) * Zoom;
-		FPaintGeometry PaintGeometry = AllottedGeometry.ToPaintGeometry(
-			ImageSize * Zoom,
-			FSlateLayoutTransform(Zoom, LocalZero)
-		);
-		const FLinearColor TintColor = FLinearColor(1.0f, 1.0f, 1.0f, 0.8f);
-		FSlateDrawElement::MakeBox(
-			OutDrawElements,
-			LayerId + 1,
-			PaintGeometry,
-			Brush.Get(),
-			ESlateDrawEffect::None,
-			TintColor
-		);
-	}
-	return LayerId + 1;
 }
