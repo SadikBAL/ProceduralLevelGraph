@@ -1,38 +1,58 @@
 ﻿#include "MazeNodeBase.h"
 
-AActor* UMazeNodeBase::SpawnMazeObject(UWorld* World,FVector Position)
+#include "ProceduralLevelGraphRuntime/MazeTileActor.h"
+
+void UMazeNodeBase::SpawnMazeObject(UWorld* World,FVector Position, EMazeDirection Direction)
 {
 	if (!ActorToSpawnClass)
 	{
-		return nullptr;
+		return;
 	}
 
 	
 	if (!World)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
-		return nullptr;
+		return;
+	}
+	
+	switch (Direction)
+	{
+		case EMazeDirection::Up:
+			SpawnLocation = Position - FVector(0,GetHalfDistanceOfRoom(EMazeOrientation::Vertical),0);
+			break;
+		case EMazeDirection::Down:
+			SpawnLocation = Position + FVector(0,GetHalfDistanceOfRoom(EMazeOrientation::Vertical),0);
+			break;
+		case EMazeDirection::Left:
+			SpawnLocation = Position - FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal),0,0);
+			break;
+		case EMazeDirection::Right:
+			SpawnLocation = Position + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal),0,0);
+			break;
+		default:
+			break;
 	}
 	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AActor* MazeObject = World->SpawnActor<AActor>(
 		ActorToSpawnClass,
-		Position,
+		SpawnLocation,
 		FRotator::ZeroRotator,
 		SpawnParams
 	);
 
 	if (MazeObject)
 	{
-		SpawnLocation = MazeObject->GetActorLocation();
+		AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(MazeObject);
+		SpawnedMazeTileActor->SetNodeData(this);
 		UE_LOG(LogTemp, Log, TEXT("%s Spawn edildi."), *MazeObject->GetName());
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s spawn edilemedi"), *ActorToSpawnClass->GetName());
 	}
-	return MazeObject;
 }
 
 FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
@@ -49,7 +69,6 @@ FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
 		return SpawnLocation + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal), 0, 1);
 	default:
 		return SpawnLocation;
-		break;
 	}
 }
 

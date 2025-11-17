@@ -20,5 +20,5 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Room Node")
 	TArray<TSubclassOf<AMazeTileActor>> HallBlueprints;
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
-	virtual AActor* SpawnMazeObject(UWorld* World, FVector Position) override;
+	virtual void SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction) override;
 };

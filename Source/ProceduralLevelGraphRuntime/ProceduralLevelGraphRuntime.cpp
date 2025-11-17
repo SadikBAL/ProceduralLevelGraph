@@ -58,48 +58,9 @@ void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeN
 	if (Nodes.Find(MazeNodeBase) == INDEX_NONE)
 	{
 		Nodes.Add(MazeNodeBase);
-		switch (Direction)
-		{
-			case EMazeDirection::Up:
-			{
-				AActor* Spawned = MazeNodeBase->SpawnMazeObject(World,Location
-					- FVector(0,MazeNodeBase->GetHalfDistanceOfRoom(EMazeOrientation::Vertical),0));
-				AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(Spawned);
-				SpawnedMazeTileActor->SetNodeData(MazeNodeBase);
-			}
-			break;
-			case EMazeDirection::Down:
-			{
-				AActor* Spawned = MazeNodeBase->SpawnMazeObject(World,Location
-					+ FVector(0,MazeNodeBase->GetHalfDistanceOfRoom(EMazeOrientation::Vertical),0));
-				AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(Spawned);
-				SpawnedMazeTileActor->SetNodeData(MazeNodeBase);
-			}
-			break;
-			case EMazeDirection::Left:
-			{
-				AActor* Spawned = MazeNodeBase->SpawnMazeObject(World,Location
-					- FVector(MazeNodeBase->GetHalfDistanceOfRoom(EMazeOrientation::Horizontal),0,0));
-				AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(Spawned);
-				SpawnedMazeTileActor->SetNodeData(MazeNodeBase);
-			}
-			break;
-			case EMazeDirection::Right:
-			{
-				AActor* Spawned = MazeNodeBase->SpawnMazeObject(World,Location
-					+ FVector(MazeNodeBase->GetHalfDistanceOfRoom(EMazeOrientation::Horizontal),0,0));
-				AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(Spawned);
-				SpawnedMazeTileActor->SetNodeData(MazeNodeBase);
-			}
-			break;
-			case EMazeDirection::None:
-			{
-				AActor* Spawned = MazeNodeBase->SpawnMazeObject(World,Location);
-				AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(Spawned);
-				SpawnedMazeTileActor->SetNodeData(MazeNodeBase);
-			}
-			break;;
-		}
+		
+		MazeNodeBase->SpawnMazeObject(World,Location,Direction);
+		
 		if (MazeNodeBase->UpNode)
 		{
 			SpawnNode(World,MazeNodeBase->UpNode,EMazeDirection::Up,MazeNodeBase->GetEdgePosition(EMazeDirection::Up));

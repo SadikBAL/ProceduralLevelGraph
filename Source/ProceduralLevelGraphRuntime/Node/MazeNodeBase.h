@@ -16,7 +16,8 @@ UENUM(BlueprintType)
 enum class EMazeOrientation : uint8
 {
 	Vertical,
-	Horizontal
+	Horizontal,
+	None
 };
 UENUM(BlueprintType)
 enum class EMazePinType : uint8
@@ -57,7 +58,7 @@ public:
 	TSubclassOf<AActor> ActorToSpawnClass;
 
 	UFUNCTION(BlueprintCallable)
-	virtual  AActor* SpawnMazeObject(UWorld* World,FVector Position);
+	virtual  void SpawnMazeObject(UWorld* World,FVector Position, EMazeDirection Direction);
 	UFUNCTION(BlueprintCallable)
 	virtual FVector GetEdgePosition(EMazeDirection Direction);
 	UFUNCTION(BlueprintCallable)

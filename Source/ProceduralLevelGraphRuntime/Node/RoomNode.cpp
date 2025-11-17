@@ -46,24 +46,41 @@ float URoomNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 
 }
 
-AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
+void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction)
 {
 	if (RoomBlueprints.Num() <= 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SpawnMazeObject: RoomBlueprints array empty."));
-		return nullptr;
+		return;
 	}
 	int RandomIndex = FMath::RandRange(0, RoomBlueprints.Num() - 1);
 	TSubclassOf<AMazeTileActor> RandomSpawnClass = RoomBlueprints[RandomIndex];
 	const AMazeTileActor* RandomTile = GetDefault<AMazeTileActor>(RandomSpawnClass);
 	if (!RandomSpawnClass)
 	{
-		return nullptr;
+		return;
 	}
 	if (!World)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
-		return nullptr;
+		return;
+	}
+	switch (Direction)
+	{
+	case EMazeDirection::Up:
+		SpawnLocation = Position - FVector(0,GetHalfDistanceOfRoom(EMazeOrientation::Vertical),0);
+		break;
+	case EMazeDirection::Down:
+		SpawnLocation = Position + FVector(0,GetHalfDistanceOfRoom(EMazeOrientation::Vertical),0);
+		break;
+	case EMazeDirection::Left:
+		SpawnLocation = Position - FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal),0,0);
+		break;
+	case EMazeDirection::Right:
+		SpawnLocation = Position + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal),0,0);
+		break;
+	default:
+		break;
 	}
 	
 	FRotator RoomRotator = FRotator::ZeroRotator;
@@ -73,11 +90,15 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AActor* MazeObject = World->SpawnActor<AActor>(
 		RandomSpawnClass,
-		Position,
+		SpawnLocation,
 		RoomRotator,
 		SpawnParams
 	);
-	SpawnLocation = MazeObject->GetActorLocation();
+	if (MazeObject)
+	{
+		AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(MazeObject);
+		SpawnedMazeTileActor->SetNodeData(this);
+	}
 	//MazeObject Spawned and Has Hall Bluprints.
 	if (MazeObject && HallBlueprints.Num() > 0)
 	{
@@ -89,62 +110,75 @@ AActor* URoomNode::SpawnMazeObject(UWorld* World, FVector Position)
 		const AMazeTileActor* RandomPartTile = GetDefault<AMazeTileActor>(RandomPartSpawnClass);
 		if (LocalDeltaHeight > 0)
 		{
-			if (UpNode)
+			int HallPartCount = LocalDeltaHeight;
+			if (UpNode && HallPartCount > 0)
 			{
-				FRotator Rotator = FRotator::ZeroRotator;
-				Rotator.Yaw = 0;
-				AActor* TempActor = World->SpawnActor<AActor>(
-					RandomPartSpawnClass,
-					GetEdgePosition(EMazeDirection::Up) + FVector(0,LocalDeltaHeight * 400 * 0.5,0),
-					Rotator,
-					SpawnParams
-				);
-				TempActor->SetActorScale3D(FVector(1 * LocalDeltaHeight,1,1));
+				for (int i = 0; i < HallPartCount; ++i)
+				{
+					FRotator Rotator = FRotator::ZeroRotator;
+					Rotator.Yaw = 0;
+					AActor* TempActor = World->SpawnActor<AActor>(
+						RandomPartSpawnClass,
+						GetEdgePosition(EMazeDirection::Up) + FVector(0,200.0f + (400.0f * i),0),
+						Rotator,
+						SpawnParams
+					);
+					AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(TempActor);
+					SpawnedMazeTileActor->SetNodeData(this);
+				}
 			}
-			if (DownNode)
+			if (DownNode && HallPartCount > 0)
 			{
-				FRotator Rotator = FRotator::ZeroRotator;
-				Rotator.Yaw = 0;
-				AActor* TempActor = World->SpawnActor<AActor>(
-					RandomPartSpawnClass,
-					GetEdgePosition(EMazeDirection::Down) - FVector(0,LocalDeltaHeight * 400 * 0.5,0),
-					Rotator,
-					SpawnParams
-				);
-				TempActor->SetActorScale3D(FVector(1 * LocalDeltaHeight,1,1));
+				for (int i = 0; i < HallPartCount; ++i)
+				{
+					FRotator Rotator = FRotator::ZeroRotator;
+					Rotator.Yaw = 0;
+					AActor* TempActor = World->SpawnActor<AActor>(
+						RandomPartSpawnClass,
+						GetEdgePosition(EMazeDirection::Down) - FVector(0,200.0f + (400.0f * i),0),
+						Rotator,
+						SpawnParams
+					);
+					AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(TempActor);
+					SpawnedMazeTileActor->SetNodeData(this);
+				}
 			}
 		}
 		if (LocalDeltaWidth > 0)
 		{
-			if (LeftNode)
+			int HallPartCount = LocalDeltaWidth;
+			if (LeftNode && HallPartCount > 0)
 			{
-				FRotator Rotator = FRotator::ZeroRotator;
-				Rotator.Yaw = 90;
-				AActor* TempActor = World->SpawnActor<AActor>(
-					RandomPartSpawnClass,
-					GetEdgePosition(EMazeDirection::Left) + FVector(LocalDeltaWidth * 400 * 0.5,0,0),
-					Rotator,
-					SpawnParams
-				);
-				TempActor->SetActorScale3D(FVector(1 * LocalDeltaWidth,1,1));
+				for (int i = 0; i < HallPartCount; ++i)
+				{
+					FRotator Rotator = FRotator::ZeroRotator;
+					Rotator.Yaw = 90;
+					AActor* TempActor = World->SpawnActor<AActor>(
+						RandomPartSpawnClass,
+						GetEdgePosition(EMazeDirection::Left) + FVector(200.0f + (400.0f * i),0,0),
+						Rotator,
+						SpawnParams
+					);
+					AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(TempActor);
+					SpawnedMazeTileActor->SetNodeData(this);
+				}
 			}
-			if (RightNode)
+			if (RightNode && HallPartCount > 0)
 			{
-				FRotator Rotator = FRotator::ZeroRotator;
-				Rotator.Yaw = 90;
-				AActor* TempActor = World->SpawnActor<AActor>(
-					RandomPartSpawnClass,
-					GetEdgePosition(EMazeDirection::Right) - FVector(LocalDeltaWidth * 400 * 0.5,0,0),
-					Rotator,
-					SpawnParams
-				);
-				TempActor->SetActorScale3D(FVector(1 * LocalDeltaWidth,1,1));
+				for (int i = 0; i < HallPartCount; ++i)
+				{
+					FRotator Rotator = FRotator::ZeroRotator;
+					Rotator.Yaw = 90;
+					AActor* TempActor = World->SpawnActor<AActor>(
+						RandomPartSpawnClass,
+						GetEdgePosition(EMazeDirection::Right) - FVector(200.0f + (400.0f * i),0,0),
+						Rotator,
+						SpawnParams
+					);
+					AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(TempActor);
+					SpawnedMazeTileActor->SetNodeData(this);
+				}
 			}
 		}
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s spawn edilemedi"), *ActorToSpawnClass->GetName());
-	}
-	return MazeObject;
 }
