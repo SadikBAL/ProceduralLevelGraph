@@ -11,53 +11,87 @@ void AMazeTileActor::SetNodeData(UMazeNodeBase* BaseNode)
 	//NodeData = BaseNode;
 	if (BaseNode != nullptr)
 	{
+		
 		if (BaseNode->UpNode)
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Up,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
+
+			SearchedTags = GetMeshPartNames(EMazeDirection::Up,BaseNode->RoomRotation);
+			SearchedTags.Add(FName("Wall"));
+			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 		else
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Up,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
+			
+			SearchedTags = GetMeshPartNames(EMazeDirection::Up,BaseNode->RoomRotation);
+			SearchedTags.Add(FName("Door"));
+			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 		if (BaseNode->DownNode)
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Down,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
+			
+			SearchedTags = GetMeshPartNames(EMazeDirection::Down,BaseNode->RoomRotation);
+			SearchedTags.Add(FName("Wall"));
+			UpdateMeshPartVisibilities(SearchedTags, false);
+			
 		}
 		else
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Down,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
+			
+			SearchedTags = GetMeshPartNames(EMazeDirection::Down,BaseNode->RoomRotation);
+			SearchedTags.Add(FName("Door"));
+			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 		if (BaseNode->LeftNode)
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Left,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
+			
+			SearchedTags = GetMeshPartNames(EMazeDirection::Left,BaseNode->RoomRotation);
+			SearchedTags.Add(FName("Wall"));
+			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 		else
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Left,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
+			
+			SearchedTags = GetMeshPartNames(EMazeDirection::Left,BaseNode->RoomRotation);
+			SearchedTags.Add(FName("Door"));
+			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 		if (BaseNode->RightNode)
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Right,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
+			
+			SearchedTags = GetMeshPartNames(EMazeDirection::Right,BaseNode->RoomRotation);
+			SearchedTags.Add(FName("Wall"));
+			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 		else
 		{
 			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Right,BaseNode->RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
+			
+			SearchedTags = GetMeshPartNames(EMazeDirection::Right,BaseNode->RoomRotation);
+			SearchedTags.Add(FName("Door"));
+			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 	}
 }
@@ -84,7 +118,15 @@ void AMazeTileActor::UpdateMeshPartVisibilities(TArray<FName> SearchedTags, bool
 			}
 			if (bMatched)
 			{
-				MeshComp->SetVisibility(bVisibility);	
+				MeshComp->SetVisibility(bVisibility);
+				if (!bVisibility)
+				{
+					MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				}
+				else
+				{
+					MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				}
 			}
 		}
 	}

@@ -60,13 +60,13 @@ FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
 	switch (Direction)
 	{
 	case EMazeDirection::Up:
-		return SpawnLocation + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical) * -1, 1);
+		return SpawnLocation + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical) * -1, 0);
 	case EMazeDirection::Down:
-		return SpawnLocation + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical), 1);
+		return SpawnLocation + FVector(0, GetHalfDistanceOfRoom(EMazeOrientation::Vertical), 0);
 	case EMazeDirection::Left:
-		return SpawnLocation + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal) * -1, 0, 1);
+		return SpawnLocation + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal) * -1, 0, 0);
 	case EMazeDirection::Right:
-		return SpawnLocation + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal), 0, 1);
+		return SpawnLocation + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal), 0, 0);
 	default:
 		return SpawnLocation;
 	}
