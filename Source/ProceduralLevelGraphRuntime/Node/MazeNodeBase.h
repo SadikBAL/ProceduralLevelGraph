@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "ProceduralLevelGraphRuntime/CommonTypes.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "MazeNodeBase.generated.h"
 UCLASS(BlueprintType)
 class PROCEDURALLEVELGRAPHRUNTIME_API UMazeNodeBase : public UObject
