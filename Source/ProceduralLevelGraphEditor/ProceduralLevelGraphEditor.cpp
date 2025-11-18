@@ -1,4 +1,6 @@
 #include "ProceduralLevelGraphEditor.h"
+
+#include "EdGraphUtilities.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphRuntime.h"
 #include "EdGraph/EdGraph.h"
 #include "Widgets/Docking/SDockTab.h"
@@ -19,6 +21,7 @@
 #include "ProceduralLevelGraphEditor/Node/Data/RoomGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RouterGraphNode.h"
 #include "ProceduralLevelGraphRuntime/Node/EntranceRoom.h"
+#include "Windows/WindowsPlatformApplicationMisc.h"
 
 #define LOCTEXT_NAMESPACE "ProceduralLevelGraphEditor"
 
@@ -131,6 +134,24 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
         FGenericCommands::Get().Delete,
         FExecuteAction::CreateSP(this, &FProceduralLevelGraphEditor::HandleDelete),
         FCanExecuteAction::CreateSP(this, &FProceduralLevelGraphEditor::CanDelete)
+    );
+
+    // Copy
+    CommandList->MapAction(
+        FGenericCommands::Get().Copy,
+        FExecuteAction::CreateSP(this, &FProceduralLevelGraphEditor::CopySelectedNodes)
+    );
+
+    // Paste
+    CommandList->MapAction(
+        FGenericCommands::Get().Paste,
+        FExecuteAction::CreateSP(this, &FProceduralLevelGraphEditor::PasteSelectedNodes)
+    );
+
+    // Duplicate
+    CommandList->MapAction(
+        FGenericCommands::Get().Duplicate,
+        FExecuteAction::CreateSP(this, &FProceduralLevelGraphEditor::DuplicateSelectedNodes)
     );
     FAssetEditorToolkit::InitAssetEditor(Mode, InitToolkitHost, FName("ProceduralLevelGraphEditorApp"), StandaloneDefaultLayout, bCreateDefaultStandaloneMenu, bCreateDefaultToolbar, GraphAsset);
 }
@@ -509,6 +530,79 @@ void FProceduralLevelGraphEditor::OnGraphChanged(const FEdGraphEditAction& Actio
         GraphAsset->MarkPackageDirty();
     }
     SaveGraphToRuntimeData();
+}
+
+void FProceduralLevelGraphEditor::CopySelectedNodes()
+{
+    const FGraphPanelSelectionSet SelectedNodes = GraphEditorWidget->GetSelectedNodes();
+    FGraphPanelSelectionSet NodesToCopy;
+    for (UObject* Obj : SelectedNodes)
+    {
+        if (UMazeGraphNodeBase* Node = Cast<UMazeGraphNodeBase>(Obj))
+        {
+            if (Node->CanUserCopyNode())
+            {
+                NodesToCopy.Add(Node);
+            }
+        }
+    }
+    if (NodesToCopy.Num() > 0)
+    {
+        FString ExportedText;
+        FEdGraphUtilities::ExportNodesToText(NodesToCopy, ExportedText);
+        FPlatformApplicationMisc::ClipboardCopy(*ExportedText);
+    }
+}
+
+void FProceduralLevelGraphEditor::PasteSelectedNodes()
+{
+    if (GraphEditorWidget.IsValid())
+    {
+        FString TextToImport;
+        FPlatformApplicationMisc::ClipboardPaste(TextToImport);
+        const FScopedTransaction Transaction(NSLOCTEXT("ProceduralLevelGraphEditor", "PasteNode", "Paste Node"));
+        
+        GraphAsset->EdGraph->Modify();
+        const FVector2f PasteLocation = GraphEditorWidget->GetPasteLocation2f();
+        TSet<UEdGraphNode*> PastedNodes;
+        FEdGraphUtilities::ImportNodesFromText(GraphAsset->EdGraph, TextToImport, PastedNodes);
+
+        FVector2D AvgNodePosition(0.0f, 0.0f);
+        for (UEdGraphNode* Node : PastedNodes)
+        {
+            AvgNodePosition.X += Node->NodePosX;
+            AvgNodePosition.Y += Node->NodePosY;
+        }
+
+        if (PastedNodes.Num() > 0)
+        {
+            const float InvNumNodes = 1.0f / float(PastedNodes.Num());
+            AvgNodePosition.X *= InvNumNodes;
+            AvgNodePosition.Y *= InvNumNodes;
+        }
+
+        for (UEdGraphNode* Node : PastedNodes)
+        {
+            Node->CreateNewGuid();
+            Node->NodePosX = (Node->NodePosX - AvgNodePosition.X) + PasteLocation.X;
+            Node->NodePosY = (Node->NodePosY - AvgNodePosition.Y) + PasteLocation.Y;
+            Node->SnapToGrid(50);
+            Node->AllocateDefaultPins();
+        }
+        GraphEditorWidget->ClearSelectionSet();
+        for (UEdGraphNode* Node : PastedNodes)
+        {
+            GraphEditorWidget->SetNodeSelection(Node, true);
+        }
+        GraphEditorWidget->NotifyGraphChanged();
+        SaveGraphToRuntimeData();
+    }
+}
+
+void FProceduralLevelGraphEditor::DuplicateSelectedNodes()
+{
+    CopySelectedNodes();
+    PasteSelectedNodes();
 }
 
 void FProceduralLevelGraphEditor::OnSelectedNodesChanged(const TSet<class UObject*>& NewSelection)

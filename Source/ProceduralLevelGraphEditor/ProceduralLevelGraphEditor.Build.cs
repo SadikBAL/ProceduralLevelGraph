@@ -30,7 +30,8 @@ public class ProceduralLevelGraphEditor : ModuleRules
                 "GameplayTags",
                 "GameplayTagsEditor",
                 "BlueprintGraph",
-                "InputCore"
+                "InputCore",
+                "EditorFramework"
             ]
         );
     }

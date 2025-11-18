@@ -12,6 +12,11 @@ bool UMazeGraphNodeBase::CanUserDeleteNode() const
 	return true;
 }
 
+bool UMazeGraphNodeBase::CanUserCopyNode() const
+{
+	return true;
+}
+
 void UMazeGraphNodeBase::GetNodeContextMenuActions(class UToolMenu* Menu,
                                                    class UGraphNodeContextMenuContext* Context) const
 {
@@ -19,6 +24,8 @@ void UMazeGraphNodeBase::GetNodeContextMenuActions(class UToolMenu* Menu,
 	{
 		FToolMenuSection& Section = Menu->AddSection("PLGSchemaNodeActions", NSLOCTEXT("ContextMenu", "NodeActionsMenuHeader", "Node Actions"));
 		Section.AddMenuEntry(FGenericCommands::Get().Delete);
+		Section.AddMenuEntry(FGenericCommands::Get().Copy);
+		Section.AddMenuEntry(FGenericCommands::Get().Duplicate);
 	}
 	Super::GetNodeContextMenuActions(Menu, Context);
 }

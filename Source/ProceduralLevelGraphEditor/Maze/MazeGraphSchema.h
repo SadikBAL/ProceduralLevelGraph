@@ -64,6 +64,19 @@ struct FPLGGraphSchemaAction_NewNode : public FEdGraphSchemaAction
     TObjectPtr<UEdGraphNode> NodeTemplate;
 };
 
+USTRUCT()
+struct FPLGGraphSchemaAction_Paste : public FEdGraphSchemaAction
+{
+    GENERATED_BODY();
+
+    FPLGGraphSchemaAction_Paste() {}
+
+    FPLGGraphSchemaAction_Paste(FText InNodeCategory, FText InMenuDesc, FText InToolTip, const int32 InGrouping)
+        : FEdGraphSchemaAction(InNodeCategory, InMenuDesc, InToolTip, InGrouping) {}
+
+    virtual UEdGraphNode* PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin, const FVector2f& Location, bool bSelectNewNode = true) override;
+};
+
 class FPLGConnectionDrawingPolicy : public FConnectionDrawingPolicy
 {
 public:

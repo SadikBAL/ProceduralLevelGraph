@@ -41,6 +41,10 @@ public:
     TArray<UMazeGraphNodeBase*>& CurrentPath,
     TSet<UMazeGraphNodeBase*>& VisitedNodesOnPath,
     TArray<TArray<UMazeGraphNodeBase*>>& OutAllPaths);
+
+    void CopySelectedNodes();
+    void PasteSelectedNodes();
+    void DuplicateSelectedNodes();
     
 private:
     void OnSelectedNodesChanged(const TSet<UObject*>& Objects);
@@ -59,4 +63,5 @@ private:
     TSharedPtr<class IDetailsView> PropertyWidget;
     TSharedPtr<FUICommandList> CommandList;
     FString GraphCanvasTabName;
+
 };

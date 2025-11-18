@@ -25,4 +25,9 @@ bool UEntranceGraphNode::CanUserDeleteNode() const
 {
 	return false;
 }
+
+bool UEntranceGraphNode::CanUserCopyNode() const
+{
+	return false;
+}
 #undef LOCTEXT_NAMESPACE

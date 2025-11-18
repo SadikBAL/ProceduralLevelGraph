@@ -1,4 +1,6 @@
  #include "MazeGraphSchema.h"
+
+#include "EdGraphUtilities.h"
 #include "EdGraph/EdGraph.h"
 #include "Framework/MultiBox/MultiBoxBuilder.h"
 #include "ToolMenus.h"
@@ -8,6 +10,10 @@
 #include "ProceduralLevelGraphEditor/Node/Data/HallGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RoomGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RouterGraphNode.h"
+#include "Framework/Commands/GenericCommands.h"
+#include "ProceduralLevelGraphEditor/ProceduralLevelGraphEditor.h"
+#include "Windows/WindowsPlatformApplicationMisc.h"
+#include "Toolkits/ToolkitManager.h"
 
 #define LOCTEXT_NAMESPACE "MazeGraphSchema"
 
@@ -37,6 +43,24 @@ UEdGraphNode* FPLGGraphSchemaAction_NewNode::PerformAction(class UEdGraph* Paren
     }
     return ResultNode;
 }
+
+ UEdGraphNode* FPLGGraphSchemaAction_Paste::PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin,
+     const FVector2f& Location, bool bSelectNewNode)
+ {
+    if (UObject* GraphOwner = ParentGraph->GetOuter())
+    {
+        TSharedPtr<IToolkit> FoundToolkit = FToolkitManager::Get().FindEditorForAsset(GraphOwner);
+        if (FoundToolkit.IsValid())
+        {
+            TSharedPtr<FProceduralLevelGraphEditor> GraphEditor = StaticCastSharedPtr<FProceduralLevelGraphEditor>(FoundToolkit);
+            if (GraphEditor.IsValid())
+            {
+                GraphEditor->PasteSelectedNodes();
+            }
+        }
+    }
+    return nullptr;
+ }
 
 FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, int32 InFrontLayerID, float InZoomFactor, const FSlateRect& InClippingRect, FSlateWindowElementList& InDrawElements, UEdGraph* InGraphObj)
     : FConnectionDrawingPolicy(InBackLayerID, InFrontLayerID, InZoomFactor, InClippingRect, InDrawElements)
@@ -123,6 +147,22 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
     NewNodeAction_Entrance->NodeTemplate = NewObject<UEntranceGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
     ContextMenuBuilder.AddAction(NewNodeAction_Entrance);
     */
+    if (!ContextMenuBuilder.FromPin)
+    {
+        FString TextToImport;
+        FPlatformApplicationMisc::ClipboardPaste(TextToImport);
+        if (FEdGraphUtilities::CanImportNodesFromText(ContextMenuBuilder.CurrentGraph, TextToImport))
+        {
+            TSharedPtr<FPLGGraphSchemaAction_Paste> PasteAction = MakeShareable(new FPLGGraphSchemaAction_Paste(
+                FText::FromString(TEXT("Edit")),
+                NSLOCTEXT("MazeGraphSchema", "Paste", "Paste Here"),
+                NSLOCTEXT("MazeGraphSchema", "PasteTooltip", "Pastes nodes from clipboard here"),
+                0 
+            ));
+            
+            ContextMenuBuilder.AddAction(PasteAction);
+        }
+    }
 }
 
  FEnumPinType UMazeGraphSchema::GetPinType(const UEdGraphPin* A) const
