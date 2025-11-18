@@ -137,11 +137,11 @@ FOptionalSize SEntranceGraphNode::GetNodeHeight() const
 	{
 		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
 		{
-			return RoomNode->RoomHeight * 100;
+			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
 		}
 		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
 		{
-			return RoomNode->RoomWith * 100;
+			return RoomNode->RoomWith * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;
@@ -153,11 +153,11 @@ FOptionalSize SEntranceGraphNode::GetNodeWidth() const
 	{
 		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
 		{
-			return RoomNode->RoomWith * 100;
+			return RoomNode->RoomWith * TILE_EDITOR_SCALE;
 		}
 		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
 		{
-			return RoomNode->RoomHeight * 100;
+			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;

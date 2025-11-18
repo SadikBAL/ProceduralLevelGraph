@@ -25,8 +25,6 @@ struct FPinPair
 
     FPinPair(UEdGraphPin* InPin1, UEdGraphPin* InPin2)
     {
-        // Pinleri her zaman aynı sırada sakla (adreslerine göre)
-        // Bu, (A,B) ile (B,A)'nın TSet içinde aynı olmasını sağlar.
         if (InPin1 < InPin2)
         {
             Pin1 = InPin1;

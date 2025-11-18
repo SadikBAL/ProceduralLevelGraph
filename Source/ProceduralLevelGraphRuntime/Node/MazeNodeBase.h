@@ -1,38 +1,8 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include "ProceduralLevelGraphRuntime/CommonTypes.h"
 #include "MazeNodeBase.generated.h"
-UENUM(BlueprintType)
-enum class EMazeDirection : uint8
-{
-	Up,
-	Down,
-	Left,
-	Right,
-	None
-};
-UENUM(BlueprintType)
-enum class EMazeOrientation : uint8
-{
-	Vertical,
-	Horizontal,
-	None
-};
-UENUM(BlueprintType)
-enum class EMazePinType : uint8
-{
-	Hidden,
-	Tier1
-};
-UENUM(BlueprintType)
-enum class ERouteType : uint8
-{
-	RouteA,
-	RouteB,
-	RouteC,
-	RouteD
-};
 UCLASS(BlueprintType)
 class PROCEDURALLEVELGRAPHRUNTIME_API UMazeNodeBase : public UObject
 {

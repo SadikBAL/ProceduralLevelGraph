@@ -24,22 +24,22 @@ float URoomNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 	{
 		if (Orientation == EMazeOrientation::Vertical)
 		{
-			return RoomWidth * 400.0 * 0.5;
+			return RoomWidth * TILE_SCALE * 0.5;
 		}
 		else
 		{
-			return RoomHeight * 400.0 * 0.5;
+			return RoomHeight * TILE_SCALE * 0.5;
 		}
 	}
 	else
 	{
 		if (Orientation == EMazeOrientation::Horizontal)
 		{
-			return RoomWidth * 400.0 * 0.5;
+			return RoomWidth * TILE_SCALE * 0.5;
 		}
 		else
 		{
-			return RoomHeight * 400.0 * 0.5;
+			return RoomHeight * TILE_SCALE * 0.5;
 		}
 	}
 
@@ -87,7 +87,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 	RoomRotator.Yaw = RoomRotation;
 	
 	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AActor* MazeObject = World->SpawnActor<AActor>(
 		RandomSpawnClass,
 		SpawnLocation,
@@ -119,7 +119,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 					Rotator.Yaw = 0;
 					AActor* TempActor = World->SpawnActor<AActor>(
 						RandomPartSpawnClass,
-						GetEdgePosition(EMazeDirection::Up) + FVector(0,200.0f + (400.0f * i),0),
+						GetEdgePosition(EMazeDirection::Up) + FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * i),0),
 						Rotator,
 						SpawnParams
 					);
@@ -135,7 +135,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 					Rotator.Yaw = 0;
 					AActor* TempActor = World->SpawnActor<AActor>(
 						RandomPartSpawnClass,
-						GetEdgePosition(EMazeDirection::Down) - FVector(0,200.0f + (400.0f * i),0),
+						GetEdgePosition(EMazeDirection::Down) - FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * i),0),
 						Rotator,
 						SpawnParams
 					);
@@ -155,7 +155,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 					Rotator.Yaw = 90;
 					AActor* TempActor = World->SpawnActor<AActor>(
 						RandomPartSpawnClass,
-						GetEdgePosition(EMazeDirection::Left) + FVector(200.0f + (400.0f * i),0,0),
+						GetEdgePosition(EMazeDirection::Left) + FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,0),
 						Rotator,
 						SpawnParams
 					);
@@ -171,7 +171,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 					Rotator.Yaw = 90;
 					AActor* TempActor = World->SpawnActor<AActor>(
 						RandomPartSpawnClass,
-						GetEdgePosition(EMazeDirection::Right) - FVector(200.0f + (400.0f * i),0,0),
+						GetEdgePosition(EMazeDirection::Right) - FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,0),
 						Rotator,
 						SpawnParams
 					);

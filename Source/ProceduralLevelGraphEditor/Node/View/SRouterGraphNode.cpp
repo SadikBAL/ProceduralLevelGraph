@@ -131,11 +131,11 @@ void SRouterGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWid
 
 FOptionalSize SRouterGraphNode::GetNodeHeight() const
 {
-	return FOptionalSize(100.0f);
+	return FOptionalSize(TILE_EDITOR_SCALE);
 }
 
 FOptionalSize SRouterGraphNode::GetNodeWidth() const
 {
-	return FOptionalSize(100.0f);
+	return FOptionalSize(TILE_EDITOR_SCALE);
 }
 #undef LOCTEXT_NAMESPACE

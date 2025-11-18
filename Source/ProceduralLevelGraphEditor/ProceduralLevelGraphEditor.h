@@ -33,7 +33,6 @@ public:
     // End of FAssetEditorToolkit interface
     
     TMap<ERouteType, TArray<UMazeGraphNodeBase*>> Routes;
-    TArray<UMazeGraphNodeBase*> FindRoutes(UMazeGraphNodeBase* StartNode);
     void FindAllRoutes(UMazeGraphNodeBase* SelectedNode);
     void FindAllPaths(UMazeGraphNodeBase* StartNode, UMazeGraphNodeBase* TargetNode, TArray<TArray<UMazeGraphNodeBase*>>& OutAllPaths);
     void FindAllPathsRecursive(

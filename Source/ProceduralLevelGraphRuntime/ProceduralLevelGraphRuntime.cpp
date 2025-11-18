@@ -12,7 +12,7 @@ UProceduralLevelGraphRuntime::UProceduralLevelGraphRuntime()
 
 
 #if WITH_EDITOR
-void UProceduralLevelGraphRuntime::SpawnMazeToEdtior()
+void UProceduralLevelGraphRuntime::SpawnMazeToEditor()
 {
 	if (UEntranceNode* Entrance = Cast<UEntranceNode>(StartNode))
 	{
@@ -25,7 +25,7 @@ void UProceduralLevelGraphRuntime::SpawnMazeToEdtior()
 
 void UProceduralLevelGraphRuntime::CreateMaze()
 {
-	SpawnMazeToEdtior();
+	SpawnMazeToEditor();
 }
 
 void UProceduralLevelGraphRuntime::DeleteMaze()

@@ -25,7 +25,7 @@ public:
 #endif
 #if WITH_EDITOR
     UFUNCTION()
-    void SpawnMazeToEdtior();
+    void SpawnMazeToEditor();
     
     UFUNCTION(CallInEditor, Category = "Procedural Level Graph",DisplayName="Create Maze")
     void CreateMaze();

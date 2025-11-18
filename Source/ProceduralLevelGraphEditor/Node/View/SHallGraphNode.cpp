@@ -136,11 +136,11 @@ FOptionalSize SHallGraphNode::GetNodeHeight() const
 	{
 		if (HallNode->RoomRotation == 0 || HallNode->RoomRotation == 180)
 		{
-			return HallNode->HallLength * 100;
+			return HallNode->HallLength * TILE_EDITOR_SCALE;
 		}
 		else
 		{
-			return 100.0f;
+			return TILE_EDITOR_SCALE;
 		}
 	}
 	return 0.0f;
@@ -152,11 +152,11 @@ FOptionalSize SHallGraphNode::GetNodeWidth() const
 	{
 		if (HallNode->RoomRotation == 0 || HallNode->RoomRotation == 180)
 		{
-			return 100.0f;
+			return TILE_EDITOR_SCALE;
 		}
 		else
 		{
-			return HallNode->HallLength * 100;
+			return HallNode->HallLength * TILE_EDITOR_SCALE;
 		}
 	}
 	return 0.0f;

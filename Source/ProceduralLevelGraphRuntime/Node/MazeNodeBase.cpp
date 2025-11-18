@@ -35,7 +35,7 @@ void UMazeNodeBase::SpawnMazeObject(UWorld* World,FVector Position, EMazeDirecti
 	}
 	
 	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AActor* MazeObject = World->SpawnActor<AActor>(
 		ActorToSpawnClass,
 		SpawnLocation,
