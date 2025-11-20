@@ -7,7 +7,7 @@ ULayoutGraphNode::ULayoutGraphNode()
 	NodeWidth = 400;
 	NodeHeight = 400;
 	bCanRenameNode = true;
-	NodeComment = TEXT("Layout Graph Node");
+	TitleText = FText::FromString("Layout Graph Node");
 }
 
 void ULayoutGraphNode::AllocateDefaultPins()
@@ -44,14 +44,10 @@ void ULayoutGraphNode::ResizeNode(const FVector2f& NewSize)
 
 FText ULayoutGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	if (NodeComment.IsEmpty())
-	{
-		return FText::FromString("Layout Graph Node");
-	}
-	return FText::FromString(NodeComment);
+	return TitleText;
 }
 
-void ULayoutGraphNode::OnRenameNode(const FString& NewName)
+FText ULayoutGraphNode::GetTooltipText() const
 {
-	Super::OnRenameNode(NewName);
+	return TitleText;
 }

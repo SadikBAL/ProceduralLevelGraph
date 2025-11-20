@@ -15,11 +15,13 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category = "Background Display", meta = (ClampMin = "0.0", ClampMax = "1.0"))
 	float ImageOpacity = 0.5f;
-	
+
+	UPROPERTY(EditAnywhere, Category = "Background Display")
+	FText TitleText;
 	virtual void AllocateDefaultPins() override;
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 	virtual void ResizeNode(const FVector2f& NewSize) override;
 
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
-	virtual void OnRenameNode(const FString& NewName) override;
+	virtual FText GetTooltipText() const override;
 };
