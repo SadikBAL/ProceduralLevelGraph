@@ -7,16 +7,11 @@ ULayoutGraphNode::ULayoutGraphNode()
 	NodeWidth = 400;
 	NodeHeight = 400;
 	bCanRenameNode = true;
-	TitleText = FText::FromString("Layout Graph Node");
+	NodeComment = TEXT("Layout Graph Node");
 }
 
 void ULayoutGraphNode::AllocateDefaultPins()
 {
-}
-
-FText ULayoutGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
-{
-	return TitleText;
 }
 
 void ULayoutGraphNode::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
@@ -45,10 +40,4 @@ void ULayoutGraphNode::ResizeNode(const FVector2f& NewSize)
 	{
 		Super::ResizeNode(NewSize);
 	}
-}
-
-void ULayoutGraphNode::OnRenameNode(const FString& NewName)
-{
-	TitleText = FText::FromString(NewName);
-	Super::OnRenameNode(NewName);
 }
