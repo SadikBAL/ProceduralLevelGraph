@@ -41,3 +41,17 @@ void ULayoutGraphNode::ResizeNode(const FVector2f& NewSize)
 		Super::ResizeNode(NewSize);
 	}
 }
+
+FText ULayoutGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
+{
+	if (NodeComment.IsEmpty())
+	{
+		return FText::FromString("Layout Graph Node");
+	}
+	return FText::FromString(NodeComment);
+}
+
+void ULayoutGraphNode::OnRenameNode(const FString& NewName)
+{
+	Super::OnRenameNode(NewName);
+}
