@@ -12,6 +12,7 @@
 #include "ProceduralLevelGraphEditor/Node/Data/RouterGraphNode.h"
 #include "Framework/Commands/GenericCommands.h"
 #include "ProceduralLevelGraphEditor/ProceduralLevelGraphEditor.h"
+#include "ProceduralLevelGraphEditor/Node/Data/LayoutGraphNode.h"
 #include "Windows/WindowsPlatformApplicationMisc.h"
 #include "Toolkits/ToolkitManager.h"
 
@@ -147,6 +148,13 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
     NewNodeAction_Entrance->NodeTemplate = NewObject<UEntranceGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
     ContextMenuBuilder.AddAction(NewNodeAction_Entrance);
     */
+    TSharedPtr<FPLGGraphSchemaAction_NewNode> NewNodeAction_ImgComment(new FPLGGraphSchemaAction_NewNode(
+    LOCTEXT("NodeCategory", "Procedural"),
+    LOCTEXT("NewImgComment", "Add Layout Node"),
+    LOCTEXT("NewImgCommentTooltip", "Adds a resizable background image region."), 0));
+    NewNodeAction_ImgComment->NodeTemplate = NewObject<ULayoutGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
+    ContextMenuBuilder.AddAction(NewNodeAction_ImgComment);
+    
     if (!ContextMenuBuilder.FromPin)
     {
         FString TextToImport;

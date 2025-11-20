@@ -21,6 +21,11 @@ void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
 	SGraphPin::Construct(SGraphPin::FArguments(), InPin);
 }
 
+FReply SRoomGraphNodePin::OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+{
+	return FReply::Handled();
+}
+
 const FSlateBrush* SRoomGraphNodePin::GetPinIcon() const
 {
 	if (PinDirection == EMazeOrientation::Vertical)

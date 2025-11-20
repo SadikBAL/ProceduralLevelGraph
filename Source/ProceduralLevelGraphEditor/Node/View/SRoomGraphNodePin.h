@@ -13,7 +13,7 @@ public:
 	void Construct(const FArguments& InArgs, UEdGraphPin* InPin);
 	EMazeOrientation PinDirection;
 	EMazePinType PinType;
-	
+	virtual FReply OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	
 protected:
 	virtual const FSlateBrush* GetPinIcon() const override;

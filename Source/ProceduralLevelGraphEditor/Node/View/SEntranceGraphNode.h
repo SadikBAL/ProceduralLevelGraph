@@ -6,7 +6,6 @@
 class SEntranceGraphNode : public SRoomGraphNode
 {
 public:
-public:
 	SLATE_BEGIN_ARGS(SEntranceGraphNode) {}
 	SLATE_END_ARGS()
 
