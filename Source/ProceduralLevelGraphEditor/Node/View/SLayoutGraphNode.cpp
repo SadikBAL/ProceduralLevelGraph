@@ -15,7 +15,7 @@ int32 SLayoutGraphNode::OnPaint(const FPaintArgs& Args, const FGeometry& Allotte
 	{
 		if (ImageNode->BackgroundImage)
 		{
-			FVector2D DrawSize = AllottedGeometry.GetLocalSize();
+			FVector2D DrawSize(ImageNode->NodeWidth,ImageNode->NodeHeight);
 			
 			FSlateDrawElement::MakeBox(
 				OutDrawElements,
