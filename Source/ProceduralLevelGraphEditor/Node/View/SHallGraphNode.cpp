@@ -11,6 +11,11 @@
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNode"
 
+FReply SHallGraphNode::OnMinusBrushClicked()
+{
+	return FReply::Handled();
+}
+
 void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 {
     this->GraphNode = InNode;
@@ -19,6 +24,17 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	TitleFont.Size = 16;
 	UpdateGraphNode();
 	UpdatePinTypes();
+	UTexture2D* TexturePath = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Minus.T_Icon_Minus"));
+	UTexture2D* Tex2 = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Plus.T_Icon_Plus"));
+	UTexture2D* Tex3 = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Refresh.T_Icon_Refresh"));
+	const FVector2D IconSize(32.0f, 32.0f);
+	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Minus.T_Icon_Minus")))
+		ButtonMinusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
+	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Plus.T_Icon_Plus")))
+		ButtonPlusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
+	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Refresh.T_Icon_Refresh")))
+		ButtonRotateBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
+
 	GetOrAddSlot(ENodeZone::Center)
 		.HAlign(HAlign_Center)
 		.VAlign(VAlign_Center)
@@ -75,6 +91,20 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 				? RightPin.ToSharedRef()
 				: SNullWidget::NullWidget
 			]
+			
+			+ SOverlay::Slot()
+			.HAlign(HAlign_Center).VAlign(VAlign_Center).Padding(0,0,0,0)
+			[
+				SNew(SButton)
+				.ButtonStyle(FAppStyle::Get(), "SimpleButton")
+				.OnClicked(this, &SHallGraphNode::OnMinusBrushClicked)
+				.ToolTipText(FText::FromString("Action 1"))
+				[
+					SNew(SImage)
+					.Image(ButtonMinusBrush.IsValid() ? ButtonMinusBrush.Get() : FAppStyle::GetBrush("Icons.Error"))
+				]
+			]
+			
 		];
 }
 

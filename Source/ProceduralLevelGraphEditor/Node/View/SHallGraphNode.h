@@ -12,6 +12,7 @@ public:
 	SLATE_BEGIN_ARGS(SHallGraphNode) {}
 	SLATE_END_ARGS()
 
+	FReply OnMinusBrushClicked();
 	void Construct(const FArguments& InArgs, UHallGraphNode* InNode);
 	virtual void AddPin(const TSharedRef<SGraphPin>& PinToAdd) override;
 	virtual TSharedPtr<SGraphPin> CreatePinWidget(UEdGraphPin* Pin) const override;
@@ -22,4 +23,8 @@ public:
 
 protected:
 	UHallGraphNode* HallGraphNodeRef = nullptr;
+	
+	TSharedPtr<FSlateImageBrush> ButtonMinusBrush;
+	TSharedPtr<FSlateImageBrush> ButtonPlusBrush;
+	TSharedPtr<FSlateImageBrush> ButtonRotateBrush;
 };

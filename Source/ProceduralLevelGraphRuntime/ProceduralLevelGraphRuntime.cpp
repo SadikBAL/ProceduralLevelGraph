@@ -2,14 +2,15 @@
 
 #include "EngineUtils.h"
 #include "MazeTileActor.h"
+#include "NavigationSystem.h"
+#include "Components/BrushComponent.h"
+#include "NavMesh/NavMeshBoundsVolume.h"
 #include "Node/EntranceRoom.h"
 
 UProceduralLevelGraphRuntime::UProceduralLevelGraphRuntime()
 {
 	
 }
-
-
 
 #if WITH_EDITOR
 void UProceduralLevelGraphRuntime::SpawnMazeToEditor()
@@ -21,7 +22,6 @@ void UProceduralLevelGraphRuntime::SpawnMazeToEditor()
 		Nodes.Empty();
 	}
 }
-
 
 void UProceduralLevelGraphRuntime::CreateMaze()
 {
@@ -39,6 +39,10 @@ void UProceduralLevelGraphRuntime::DeleteMaze()
 	{
 		AActor* Actor = *It;
 		if (Actor && Actor->IsA(AMazeTileActor::StaticClass()))
+		{
+			Actor->Destroy();
+		}
+		else if (Actor && Actor->IsA(ANavMeshBoundsVolume::StaticClass()))
 		{
 			Actor->Destroy();
 		}
@@ -80,7 +84,6 @@ void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeN
 	}
 }
 
-
 void UProceduralLevelGraphRuntime::SpawnMaze(UObject* WorldContextObject)
 {
 	
@@ -88,6 +91,32 @@ void UProceduralLevelGraphRuntime::SpawnMaze(UObject* WorldContextObject)
 	{
 		UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
 		Nodes.Empty();
+		//Its Recursive and Create all Maze of Parts
 		SpawnNode(GEngine->GetWorldFromContextObject(World, EGetWorldErrorMode::LogAndReturnNull),Entrance,EMazeDirection::None,Entrance->RoomPosition);
+		//Spawn Navmesh
+		if (World)
+	    {
+	        FActorSpawnParameters SpawnParams;
+	        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	        if (ANavMeshBoundsVolume* NavVolume = World->SpawnActor<ANavMeshBoundsVolume>(ANavMeshBoundsVolume::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams))
+	        {
+	            FVector MazeCenterLocation = FVector(0.f, 0.f, 0.f);
+	            FVector MazeExtent = FVector(10000.f, 50000.f, 1000.f);
+
+	            NavVolume->SetActorLocation(MazeCenterLocation);
+	            if (UBrushComponent* BrushComp = NavVolume->GetBrushComponent())
+	            {
+	                FVector MinBounds = MazeCenterLocation - MazeExtent;
+	                FVector MaxBounds = MazeCenterLocation + MazeExtent;
+	                BrushComp->Bounds = FBox(MinBounds, MaxBounds);
+	            }
+	            if (UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World))
+	            {
+	                NavSys->OnNavigationBoundsUpdated(NavVolume);
+	                NavSys->Build();
+	            }
+	        }
+	    }
 	}
 }

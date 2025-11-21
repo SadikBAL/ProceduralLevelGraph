@@ -8,7 +8,8 @@ public class ProceduralLevelGraphRuntime : ModuleRules
 
         PublicDependencyModuleNames.AddRange(
             [
-                "Core"
+                "Core",
+                "NavigationSystem"
             ]
         );
 
