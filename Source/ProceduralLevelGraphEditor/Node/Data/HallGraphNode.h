@@ -17,4 +17,6 @@ public:
 	virtual EMazePinType GetPinType() override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hall", meta = (UIMin = "1", UIMax = "20", ClampMin = "1", ClampMax = "20", MultipleOf = "1"))
 	int HallLength;
+	UFUNCTION()
+	void UpdateHallLength(int Value);
 };

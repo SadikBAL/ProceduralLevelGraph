@@ -23,4 +23,13 @@ EMazePinType UHallGraphNode::GetPinType()
 {
 	return Super::GetPinType();
 }
+
+void UHallGraphNode::UpdateHallLength(int Value)
+{
+	HallLength = Value;
+	if (UEdGraph* MyGraph = GetGraph())
+	{
+		MyGraph->NotifyGraphChanged();
+	}
+}
 #undef LOCTEXT_NAMESPACE

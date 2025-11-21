@@ -11,8 +11,64 @@
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNode"
 
-FReply SHallGraphNode::OnMinusBrushClicked()
+FReply SHallGraphNode::OnRotateBrushClicked(EMazeDirection ButtonLocation)
 {
+	if (HallGraphNodeRef)
+	{
+		HallGraphNodeRef->RotateRoomToRight();
+	}
+	return FReply::Handled();
+}
+
+FReply SHallGraphNode::OnMinusBrushClicked(EMazeDirection ButtonLocation)
+{
+	if (HallGraphNodeRef)
+	{
+		FVector2f LocalPosition = GetPosition2f();
+		switch (ButtonLocation)
+		{
+			case EMazeDirection::Up:
+				LocalPosition.Y += TILE_EDITOR_SCALE;
+			break;
+			case EMazeDirection::Down:
+			break;
+			case EMazeDirection::Left:
+				LocalPosition.X += TILE_EDITOR_SCALE;
+			break;
+			case EMazeDirection::Right:
+			break;
+			default:
+			break;
+		}
+		GraphNode->SetPosition(LocalPosition);
+		HallGraphNodeRef->UpdateHallLength(HallGraphNodeRef->HallLength - 1);
+	}
+	return FReply::Handled();
+}
+
+FReply SHallGraphNode::OnPlusBrushClicked(EMazeDirection ButtonLocation)
+{
+	if (HallGraphNodeRef)
+	{
+		FVector2f LocalPosition = GetPosition2f();
+		switch (ButtonLocation)
+		{
+			case EMazeDirection::Up:
+				LocalPosition.Y -= TILE_EDITOR_SCALE;
+				break;
+			case EMazeDirection::Down:
+				break;
+			case EMazeDirection::Left:
+				LocalPosition.X -= TILE_EDITOR_SCALE;
+				break;
+			case EMazeDirection::Right:
+				break;
+			default:
+				break;
+		}
+		GraphNode->SetPosition(LocalPosition);
+		HallGraphNodeRef->UpdateHallLength(HallGraphNodeRef->HallLength + 1);
+	}
 	return FReply::Handled();
 }
 
@@ -27,14 +83,15 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	UTexture2D* TexturePath = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Minus.T_Icon_Minus"));
 	UTexture2D* Tex2 = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Plus.T_Icon_Plus"));
 	UTexture2D* Tex3 = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Refresh.T_Icon_Refresh"));
-	const FVector2D IconSize(32.0f, 32.0f);
-	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Minus.T_Icon_Minus")))
+	const FVector2D IconSize(16.0f, 16.0f);
+	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Minus.T_Button_Icon_Minus")))
 		ButtonMinusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
-	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Plus.T_Icon_Plus")))
+	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Plus.T_Button_Icon_Plus")))
 		ButtonPlusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
-	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Refresh.T_Icon_Refresh")))
+	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Rotate.T_Button_Icon_Rotate")))
 		ButtonRotateBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
-
+	const float EdgePadding = 10.0f;
+	const bool bIsVertical = (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180);
 	GetOrAddSlot(ENodeZone::Center)
 		.HAlign(HAlign_Center)
 		.VAlign(VAlign_Center)
@@ -93,16 +150,19 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 			]
 			
 			+ SOverlay::Slot()
-			.HAlign(HAlign_Center).VAlign(VAlign_Center).Padding(0,0,0,0)
+			.HAlign(bIsVertical ? HAlign_Center : HAlign_Left)
+			.VAlign(bIsVertical ? VAlign_Top : VAlign_Center)
+			.Padding(bIsVertical ? FMargin(0, EdgePadding, 0, 0) : FMargin(EdgePadding, 0, 0, 0))
 			[
-				SNew(SButton)
-				.ButtonStyle(FAppStyle::Get(), "SimpleButton")
-				.OnClicked(this, &SHallGraphNode::OnMinusBrushClicked)
-				.ToolTipText(FText::FromString("Action 1"))
-				[
-					SNew(SImage)
-					.Image(ButtonMinusBrush.IsValid() ? ButtonMinusBrush.Get() : FAppStyle::GetBrush("Icons.Error"))
-				]
+				CreateButtonGroup(bIsVertical,true)
+			]
+
+			+ SOverlay::Slot()
+			.HAlign(bIsVertical ? HAlign_Center : HAlign_Right)
+			.VAlign(bIsVertical ? VAlign_Bottom : VAlign_Center)
+			.Padding(bIsVertical ? FMargin(0, 0, 0, EdgePadding) : FMargin(0, 0, EdgePadding, 0))
+			[
+				CreateButtonGroup(bIsVertical,false)
 			]
 			
 		];
@@ -227,6 +287,127 @@ void SHallGraphNode::UpdatePinTypes()
 	{
 		RightPin->PinType = EMazePinType::Hidden;
 	}
+}
+
+TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, bool bIsUpOrLeft)
+{
+const FButtonStyle* ButtonStyle = &FAppStyle::Get().GetWidgetStyle<FButtonStyle>("SimpleButton");
+    if (bForVerticalNode)
+    {
+        return SNew(SHorizontalBox)
+        	+ SHorizontalBox::Slot()
+			.AutoWidth()
+			.Padding(1)
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SButton)
+				.ButtonStyle(ButtonStyle)
+				.OnClicked(FOnClicked::CreateLambda([this,bIsUpOrLeft]() -> FReply
+					{
+						return OnPlusBrushClicked(bIsUpOrLeft ? EMazeDirection::Up : EMazeDirection::Down);
+					}))
+				.ToolTipText(FText::FromString("Increase Length"))
+				[
+					SNew(SImage)
+					.Image(ButtonPlusBrush.IsValid() ? ButtonPlusBrush.Get() : FAppStyle::GetBrush("Icons.Error"))
+				]
+			]
+        	+ SHorizontalBox::Slot()
+			.AutoWidth()
+			.Padding(1)
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SButton)
+				.ButtonStyle(ButtonStyle)
+				.OnClicked(FOnClicked::CreateLambda([this,bIsUpOrLeft]() -> FReply
+					{
+						return OnRotateBrushClicked(bIsUpOrLeft ? EMazeDirection::Up : EMazeDirection::Down);
+					}))
+				.ToolTipText(FText::FromString("Rotate Hall"))
+				[
+					SNew(SImage)
+					.Image(ButtonRotateBrush.IsValid() ? ButtonRotateBrush.Get() : FAppStyle::GetBrush("Icons.Error"))
+				]
+			]
+            + SHorizontalBox::Slot()
+            .AutoWidth()
+            .Padding(1)
+            .HAlign(HAlign_Center)
+            .VAlign(VAlign_Center)
+            [
+                SNew(SButton)
+                .ButtonStyle(ButtonStyle)
+            	.OnClicked(FOnClicked::CreateLambda([this,bIsUpOrLeft]() -> FReply
+					{
+						return OnMinusBrushClicked(bIsUpOrLeft ? EMazeDirection::Up : EMazeDirection::Down);
+					}))
+                .ToolTipText(FText::FromString("Decrease Length"))
+                [
+                    SNew(SImage)
+                    .Image(ButtonMinusBrush.IsValid() ? ButtonMinusBrush.Get() : FAppStyle::GetBrush("Icons.Error"))
+                ]
+            ];
+    }
+    else
+    {
+        return SNew(SVerticalBox)
+        	+ SVerticalBox::Slot()
+			.AutoHeight()
+			.Padding(1)
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SButton)
+				.ButtonStyle(ButtonStyle)
+				.OnClicked(FOnClicked::CreateLambda([this,bIsUpOrLeft]() -> FReply
+					{
+						return OnPlusBrushClicked(bIsUpOrLeft ? EMazeDirection::Left : EMazeDirection::Right);
+					}))
+				.ToolTipText(FText::FromString("Increase Length"))
+				[
+					SNew(SImage)
+					.Image(ButtonPlusBrush.IsValid() ? ButtonPlusBrush.Get() : FAppStyle::GetBrush("Icons.Error"))
+				]
+			]
+        	+ SVerticalBox::Slot()
+			.AutoHeight()
+			.Padding(1)
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SButton)
+				.ButtonStyle(ButtonStyle)
+				.OnClicked(FOnClicked::CreateLambda([this,bIsUpOrLeft]() -> FReply
+					{
+						return OnRotateBrushClicked(bIsUpOrLeft ? EMazeDirection::Left : EMazeDirection::Right);
+					}))
+				.ToolTipText(FText::FromString("Rotate Hall"))
+				[
+					SNew(SImage)
+					.Image(ButtonRotateBrush.IsValid() ? ButtonRotateBrush.Get() : FAppStyle::GetBrush("Icons.Error"))
+				]
+			]
+            + SVerticalBox::Slot()
+            .AutoHeight()
+            .Padding(1)
+            .HAlign(HAlign_Center)
+            .VAlign(VAlign_Center)
+            [
+                SNew(SButton)
+                .ButtonStyle(ButtonStyle)
+            	.OnClicked(FOnClicked::CreateLambda([this,bIsUpOrLeft]() -> FReply
+					 {
+						 return OnMinusBrushClicked(bIsUpOrLeft ? EMazeDirection::Left : EMazeDirection::Right);
+					 }))
+                .ToolTipText(FText::FromString("Decrease Length"))
+                [
+                    SNew(SImage)
+                    .Image(ButtonMinusBrush.IsValid() ? ButtonMinusBrush.Get() : FAppStyle::GetBrush("Icons.Error"))
+                ]
+            ];
+    }
 }
 
 #undef LOCTEXT_NAMESPACE
