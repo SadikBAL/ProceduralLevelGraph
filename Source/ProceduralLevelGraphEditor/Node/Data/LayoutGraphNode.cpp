@@ -1,5 +1,7 @@
 ﻿#include "LayoutGraphNode.h"
 
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
+
 ULayoutGraphNode::ULayoutGraphNode()
 {
 	CommentColor = FLinearColor::White;
@@ -23,8 +25,8 @@ void ULayoutGraphNode::PostEditChangeProperty(struct FPropertyChangedEvent& Prop
 	{
 		if (BackgroundImage)
 		{
-			NodeWidth = BackgroundImage->GetSizeX();
-			NodeHeight = BackgroundImage->GetSizeY();
+			NodeWidth = BackgroundImage->GetSizeX() * TILE_EDITOR_SCALE * 0.1f;
+			NodeHeight = BackgroundImage->GetSizeY() * TILE_EDITOR_SCALE * 0.1f;
 		}
 	}
 }
@@ -33,8 +35,8 @@ void ULayoutGraphNode::ResizeNode(const FVector2f& NewSize)
 {
 	if (BackgroundImage)
 	{
-		NodeWidth = BackgroundImage->GetSizeX();
-		NodeHeight = BackgroundImage->GetSizeY();
+		NodeWidth = BackgroundImage->GetSizeX() * TILE_EDITOR_SCALE * 0.1f;
+		NodeHeight = BackgroundImage->GetSizeY() * TILE_EDITOR_SCALE * 0.1f;
 	}
 	else
 	{

@@ -8,6 +8,8 @@
 
 #include "SGraphPin.h"
 #include "SRoomGraphNodePin.h"
+#include "ProceduralLevelGraphEditor/ProceduralLevelGraphEditor.h"
+#include "Toolkits/ToolkitManager.h"
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNode"
 
@@ -77,13 +79,10 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
     this->GraphNode = InNode;
 	this->HallGraphNodeRef = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 16;
+	TitleFont.Size = 12;
 	UpdateGraphNode();
 	UpdatePinTypes();
-	UTexture2D* TexturePath = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Minus.T_Icon_Minus"));
-	UTexture2D* Tex2 = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Plus.T_Icon_Plus"));
-	UTexture2D* Tex3 = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Icon_Refresh.T_Icon_Refresh"));
-	const FVector2D IconSize(16.0f, 16.0f);
+	const FVector2D IconSize(16.0f * (TILE_EDITOR_SCALE / 100.0f), 16.0f * (TILE_EDITOR_SCALE / 100.0f));
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Minus.T_Button_Icon_Minus")))
 		ButtonMinusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Plus.T_Button_Icon_Plus")))
@@ -291,7 +290,7 @@ void SHallGraphNode::UpdatePinTypes()
 
 TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, bool bIsUpOrLeft)
 {
-const FButtonStyle* ButtonStyle = &FAppStyle::Get().GetWidgetStyle<FButtonStyle>("SimpleButton");
+	const FButtonStyle* ButtonStyle = &FAppStyle::Get().GetWidgetStyle<FButtonStyle>("NoBorder");
     if (bForVerticalNode)
     {
         return SNew(SHorizontalBox)

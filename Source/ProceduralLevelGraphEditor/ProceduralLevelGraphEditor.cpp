@@ -81,7 +81,6 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
         GraphAsset->EdGraph->Schema = UMazeGraphSchema::StaticClass();
         GraphAsset->EdGraph->bAllowDeletion = false;
     }
-
     bool bHasEntranceNode = false;
     for (UEdGraphNode* Node : GraphAsset->EdGraph->Nodes)
     {

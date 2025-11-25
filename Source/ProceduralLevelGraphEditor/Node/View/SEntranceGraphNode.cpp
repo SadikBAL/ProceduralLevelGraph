@@ -16,7 +16,7 @@ void SEntranceGraphNode::Construct(const FArguments& InArgs, UEntranceGraphNode*
 {
 	this->GraphNode = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 26;
+	TitleFont.Size = 16;
 	UpdateGraphNode();
 	UpdatePinTypes();
 	GetOrAddSlot(ENodeZone::Center)

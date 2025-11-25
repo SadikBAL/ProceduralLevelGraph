@@ -15,13 +15,15 @@ int32 SLayoutGraphNode::OnPaint(const FPaintArgs& Args, const FGeometry& Allotte
 	{
 		if (ImageNode->BackgroundImage)
 		{
-			FVector2D DrawSize(ImageNode->NodeWidth,ImageNode->NodeHeight);
-			
+			FVector2D DrawSize(ImageNode->NodeWidth, ImageNode->NodeHeight);
+			FSlateImageBrush TempBrush(ImageNode->BackgroundImage, DrawSize);
 			FSlateDrawElement::MakeBox(
 				OutDrawElements,
 				LayerId,
 				AllottedGeometry.ToPaintGeometry(),
-				new FSlateImageBrush(ImageNode->BackgroundImage, DrawSize, FLinearColor(1.0f, 1.0f, 1.0f, ImageNode->ImageOpacity))
+				&TempBrush,
+				ESlateDrawEffect::None,
+				FLinearColor(1.0f, 1.0f, 1.0f, ImageNode->ImageOpacity)
 			);
 		}
 	}

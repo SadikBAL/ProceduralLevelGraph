@@ -1,7 +1,6 @@
 ﻿#include "SRoomGraphNodePin.h"
 
 #include "ConnectionDrawingPolicy.h"
-#include "Interfaces/IPluginManager.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Images/SImage.h"
 #include "Styling/SlateTypes.h"
@@ -14,10 +13,11 @@ void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
 	this->SetCursor(EMouseCursor::Crosshairs);
 	this->bShowLabel = false;
 	check(GraphPinObj != nullptr);
-	const FString PluginBaseDir = IPluginManager::Get().FindPlugin("ProceduralLevelGraph")->GetBaseDir();
-	const FString IconPath = FPaths::Combine(*PluginBaseDir, TEXT("Content/Icons/door.png"));
-	PinBrushVertical = MakeShareable(new FSlateImageBrush(IconPath, FVector2D(60.0f, 5.0f)));
-	PinBrushHorizontal = MakeShareable(new FSlateImageBrush(IconPath, FVector2D(5.0f, 60.0f)));
+	PinBrushVertical = MakeShareable(new FSlateColorBrush(FLinearColor::White));
+	PinBrushVertical->ImageSize = FVector2D(TILE_EDITOR_PIN_SCALE, 8.0f);
+	PinBrushHorizontal = MakeShareable(new FSlateColorBrush(FLinearColor::White));
+	PinBrushHorizontal->ImageSize = FVector2D(8.0f, TILE_EDITOR_PIN_SCALE);
+	
 	SGraphPin::Construct(SGraphPin::FArguments(), InPin);
 }
 

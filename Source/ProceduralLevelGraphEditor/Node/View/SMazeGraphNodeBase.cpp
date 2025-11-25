@@ -18,17 +18,16 @@ void SMazeGraphNodeBase::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinW
 
 void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilter, bool bMarkDirty)
 {
-    const int GridSnapValue = 50;
     bOnDrag = FSlateApplication::Get().GetPressedMouseButtons().Contains(EKeys::LeftMouseButton);
     float DirectionX = GraphNode->GetNodePosX() - NewPosition.X;
     float DirectionY = GraphNode->GetNodePosY() - NewPosition.Y;
     if (DirectionX > 15)
     {
-        DirectionX = GridSnapValue;
+        DirectionX = GRID_SNAP_SCALE;
     }
     else if (DirectionX < -15)
     {
-        DirectionX = GridSnapValue * -1;
+        DirectionX = GRID_SNAP_SCALE * -1;
     }
     else
     {
@@ -36,11 +35,11 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     }
     if (DirectionY > 15)
     {
-        DirectionY = GridSnapValue;
+        DirectionY = GRID_SNAP_SCALE;
     }
     else if (DirectionY < -15)
     {
-        DirectionY = GridSnapValue * -1;
+        DirectionY = GRID_SNAP_SCALE * -1;
     }
     else
     {
@@ -49,13 +48,13 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     FVector2f SnipPosition;
     if (bOnDrag)
     {
-        SnipPosition.X = FMath::GridSnap(NewPosition.X, GridSnapValue);
-        SnipPosition.Y = FMath::GridSnap(NewPosition.Y, GridSnapValue);
+        SnipPosition.X = FMath::GridSnap(NewPosition.X, GRID_SNAP_SCALE);
+        SnipPosition.Y = FMath::GridSnap(NewPosition.Y, GRID_SNAP_SCALE);
     }
     else
     {
-        SnipPosition.X = FMath::GridSnap(GraphNode->GetNodePosX() - DirectionX, GridSnapValue);
-        SnipPosition.Y = FMath::GridSnap(GraphNode->GetNodePosY() - DirectionY, GridSnapValue);
+        SnipPosition.X = FMath::GridSnap(GraphNode->GetNodePosX() - DirectionX, GRID_SNAP_SCALE);
+        SnipPosition.Y = FMath::GridSnap(GraphNode->GetNodePosY() - DirectionY, GRID_SNAP_SCALE);
     }
    
     SGraphNode::MoveTo(SnipPosition, NodeFilter, bMarkDirty);

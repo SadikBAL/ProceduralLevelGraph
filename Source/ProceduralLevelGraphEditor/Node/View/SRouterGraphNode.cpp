@@ -15,7 +15,7 @@ void SRouterGraphNode::Construct(const FArguments& InArgs, URouterGraphNode* InN
 {
     this->GraphNode = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 16;
+	TitleFont.Size = 10;
 	UpdateGraphNode();
 	UpdatePinTypes();
 	GetOrAddSlot(ENodeZone::Center)

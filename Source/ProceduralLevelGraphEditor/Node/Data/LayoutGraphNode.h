@@ -14,7 +14,7 @@ public:
 	TObjectPtr<UTexture2D> BackgroundImage;
 	
 	UPROPERTY(EditAnywhere, Category = "Background Display", meta = (ClampMin = "0.0", ClampMax = "1.0"))
-	float ImageOpacity = 0.5f;
+	float ImageOpacity = 0.2f;
 
 	UPROPERTY(EditAnywhere, Category = "Background Display")
 	FText TitleText;
