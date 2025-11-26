@@ -586,7 +586,9 @@ void FProceduralLevelGraphEditor::PasteSelectedNodes()
             Node->NodePosX = (Node->NodePosX - AvgNodePosition.X) + PasteLocation.X;
             Node->NodePosY = (Node->NodePosY - AvgNodePosition.Y) + PasteLocation.Y;
             Node->SnapToGrid(50);
+            Node->Pins.Empty();
             Node->AllocateDefaultPins();
+            Node->ReconstructNode();
         }
         GraphEditorWidget->ClearSelectionSet();
         for (UEdGraphNode* Node : PastedNodes)
