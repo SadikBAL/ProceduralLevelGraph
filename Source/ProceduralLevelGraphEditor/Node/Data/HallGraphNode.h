@@ -19,4 +19,6 @@ public:
 	int HallLength;
 	UFUNCTION()
 	void UpdateHallLength(int Value);
+	UPROPERTY(EditDefaultsOnly, Category = "Hall")
+	TSubclassOf<AMazeTileActor> HallBlueprint;
 };

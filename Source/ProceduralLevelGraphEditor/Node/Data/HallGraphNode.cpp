@@ -6,6 +6,18 @@
 UHallGraphNode::UHallGraphNode()
 {
 	HallLength = 5.0f;
+	static ConstructorHelpers::FClassFinder<AActor> BP_Room_ClassFinder(
+		TEXT("Blueprint'/Game/LevelPrototyping/BP_Hall.BP_Hall_C'")
+		);
+	if (BP_Room_ClassFinder.Succeeded())
+	{
+		HallBlueprint = BP_Room_ClassFinder.Class;
+	}
+	else
+	{
+		HallBlueprint = nullptr;
+		UE_LOG(LogTemp, Error, TEXT("UHallGraphNode constructor: BP_Hall_C sınıfı bulunamadı!"));
+	}
 }
 FText UHallGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
@@ -32,4 +44,6 @@ void UHallGraphNode::UpdateHallLength(int Value)
 		MyGraph->NotifyGraphChanged();
 	}
 }
+
+
 #undef LOCTEXT_NAMESPACE

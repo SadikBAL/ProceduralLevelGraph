@@ -20,6 +20,7 @@ void URoomGraphNode::AllocateDefaultPins()
     CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Left"));
     CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Right"));
 }
+
 void URoomGraphNode::OnTileBlueprintsChanged()
 {
     //Update Witdh and Heighht
