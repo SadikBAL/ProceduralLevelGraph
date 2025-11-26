@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "MazeGraphNodeBase.h"
+#include "ProceduralLevelGraphRuntime/Actor/HallActor.h"
+#include "ProceduralLevelGraphRuntime/Actor/RoomActor.h"
 #include "RoomGraphNode.generated.h"
 
 UCLASS()
@@ -17,11 +19,11 @@ public:
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
-    int RoomWith;
+    int RoomWidth;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomHeight;
     UPROPERTY(EditDefaultsOnly, Category = "Room")
-    TArray<TSubclassOf<AMazeTileActor>> RoomBlueprints;
+    TArray<TSubclassOf<ARoomActor>> RoomBlueprints;
     UPROPERTY(EditDefaultsOnly, Category = "Room")
-    TArray<TSubclassOf<AMazeTileActor>> HallBlueprints;
+    TArray<TSubclassOf<AHallActor>> HallBlueprints;
 };

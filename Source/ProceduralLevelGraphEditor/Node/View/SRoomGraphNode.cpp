@@ -140,7 +140,7 @@ FOptionalSize SRoomGraphNode::GetNodeHeight() const
 		}
 		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
 		{
-			return RoomNode->RoomWith * TILE_EDITOR_SCALE;
+			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;
@@ -152,7 +152,7 @@ FOptionalSize SRoomGraphNode::GetNodeWidth() const
 	{
 		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
 		{
-			return RoomNode->RoomWith * TILE_EDITOR_SCALE;
+			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
 		}
 		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
 		{

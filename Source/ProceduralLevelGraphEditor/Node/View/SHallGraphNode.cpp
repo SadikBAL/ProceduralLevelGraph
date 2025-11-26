@@ -5,11 +5,9 @@
 #include "Widgets/Images/SImage.h"
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/Input/SEditableTextBox.h"
-
 #include "SGraphPin.h"
 #include "SRoomGraphNodePin.h"
 #include "ProceduralLevelGraphEditor/ProceduralLevelGraphEditor.h"
-#include "Toolkits/ToolkitManager.h"
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNode"
 
@@ -229,7 +227,7 @@ FOptionalSize SHallGraphNode::GetNodeHeight() const
 		}
 		else
 		{
-			return TILE_EDITOR_SCALE;
+			return HallNode->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
 	return 0.0f;
@@ -241,7 +239,7 @@ FOptionalSize SHallGraphNode::GetNodeWidth() const
 	{
 		if (HallNode->RoomRotation == 0 || HallNode->RoomRotation == 180)
 		{
-			return TILE_EDITOR_SCALE;
+			return HallNode->RoomWidth * TILE_EDITOR_SCALE;
 		}
 		else
 		{

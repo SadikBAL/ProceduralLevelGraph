@@ -7,7 +7,7 @@ UHallGraphNode::UHallGraphNode()
 {
 	HallLength = 5.0f;
 	static ConstructorHelpers::FClassFinder<AActor> BP_Room_ClassFinder(
-		TEXT("Blueprint'/Game/LevelPrototyping/BP_Hall.BP_Hall_C'")
+		TEXT("Blueprint'/Game/LevelPrototyping/BP_HallActor_4X4.BP_HallActor_4X4_C'")
 		);
 	if (BP_Room_ClassFinder.Succeeded())
 	{
@@ -16,8 +16,9 @@ UHallGraphNode::UHallGraphNode()
 	else
 	{
 		HallBlueprint = nullptr;
-		UE_LOG(LogTemp, Error, TEXT("UHallGraphNode constructor: BP_Hall_C sınıfı bulunamadı!"));
+		UE_LOG(LogTemp, Error, TEXT("UHallGraphNode constructor: BP_HallActor_4X4_C sınıfı bulunamadı!"));
 	}
+	OnTileBlueprintsChanged();
 }
 FText UHallGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
@@ -34,6 +35,26 @@ void UHallGraphNode::AllocateDefaultPins()
 EMazePinType UHallGraphNode::GetPinType()
 {
 	return Super::GetPinType();
+}
+
+void UHallGraphNode::OnTileBlueprintsChanged()
+{
+	if (const AHallActor* DefaultTile = GetDefault<AHallActor>(HallBlueprint))
+	{
+		RoomWidth = DefaultTile->Width;
+	}
+}
+
+void UHallGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
+					   ? PropertyChangedEvent.Property->GetFName() 
+					   : NAME_None;
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(UHallGraphNode, HallBlueprint))
+	{
+		OnTileBlueprintsChanged();
+	}
+	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 
 void UHallGraphNode::UpdateHallLength(int Value)

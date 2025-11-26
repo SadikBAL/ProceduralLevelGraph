@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "MazeGraphNodeBase.h"
+#include "ProceduralLevelGraphRuntime/Actor/HallActor.h"
 #include "HallGraphNode.generated.h"
 
 UCLASS()
@@ -15,10 +16,13 @@ public:
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual void AllocateDefaultPins() override;
 	virtual EMazePinType GetPinType() override;
+	void OnTileBlueprintsChanged();UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hall")
+	int RoomWidth;
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hall", meta = (UIMin = "1", UIMax = "20", ClampMin = "1", ClampMax = "20", MultipleOf = "1"))
 	int HallLength;
 	UFUNCTION()
 	void UpdateHallLength(int Value);
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
-	TSubclassOf<AMazeTileActor> HallBlueprint;
+	TSubclassOf<AHallActor> HallBlueprint;
 };

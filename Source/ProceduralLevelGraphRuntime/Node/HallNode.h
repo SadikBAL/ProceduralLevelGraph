@@ -12,6 +12,7 @@ class PROCEDURALLEVELGRAPHRUNTIME_API UHallNode : public UMazeNodeBase
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	float HallLength;
+	TSubclassOf<AMazeTileActor> HallBlueprint;
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
 	virtual void SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction) override;
 };

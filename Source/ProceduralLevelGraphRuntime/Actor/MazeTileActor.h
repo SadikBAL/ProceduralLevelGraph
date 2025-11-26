@@ -1,12 +1,13 @@
 ﻿#pragma once
-#include "Node/MazeNodeBase.h"
+#include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
 #include "MazeTileActor.generated.h"
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class AMazeTileActor : public AActor
 {
 	GENERATED_BODY()
-	AMazeTileActor();
 public:
+	AMazeTileActor();
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tile")
 	TObjectPtr<USceneComponent> SceneRoot;
 	

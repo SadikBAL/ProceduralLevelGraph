@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "ProceduralLevelGraphRuntime/MazeTileActor.h"
+#include "ProceduralLevelGraphRuntime/Actor/MazeTileActor.h"
 #include "MazeGraphNodeBase.generated.h"
 
 UCLASS()

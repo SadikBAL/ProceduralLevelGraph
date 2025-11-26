@@ -1,6 +1,6 @@
 ﻿#include "MazeNodeBase.h"
 
-#include "ProceduralLevelGraphRuntime/MazeTileActor.h"
+#include "ProceduralLevelGraphRuntime/Actor/MazeTileActor.h"
 
 void UMazeNodeBase::SpawnMazeObject(UWorld* World,FVector Position, EMazeDirection Direction)
 {

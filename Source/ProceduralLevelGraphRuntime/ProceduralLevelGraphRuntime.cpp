@@ -1,7 +1,7 @@
 #include "ProceduralLevelGraphRuntime.h"
 
 #include "EngineUtils.h"
-#include "MazeTileActor.h"
+#include "Actor/MazeTileActor.h"
 #include "NavigationSystem.h"
 #include "Components/BrushComponent.h"
 #include "NavMesh/NavMeshBoundsVolume.h"

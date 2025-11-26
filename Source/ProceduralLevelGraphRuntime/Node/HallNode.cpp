@@ -1,6 +1,6 @@
 ﻿#include "HallNode.h"
 
-#include "ProceduralLevelGraphRuntime/MazeTileActor.h"
+#include "ProceduralLevelGraphRuntime/Actor/MazeTileActor.h"
 
 UHallNode::UHallNode()
 {
@@ -24,7 +24,7 @@ float UHallNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 
 void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction)
 {
-	if (!ActorToSpawnClass)
+	if (!HallBlueprint)
 	{
 		return;
 	}
@@ -82,7 +82,7 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AActor* MazeObject = World->SpawnActor<AActor>(
-			ActorToSpawnClass,
+			HallBlueprint,
 			TileSpawnLocation,
 			Rotator,
 			SpawnParams

@@ -1,4 +1,5 @@
 ﻿#include "MazeTileActor.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 
 AMazeTileActor::AMazeTileActor()
 {

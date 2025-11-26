@@ -6,7 +6,7 @@
 URoomGraphNode::URoomGraphNode()
 {
     RoomHeight = 5;
-    RoomWith = 5;
+    RoomWidth = 5;
 }
 
 FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
@@ -24,7 +24,7 @@ void URoomGraphNode::AllocateDefaultPins()
 void URoomGraphNode::OnTileBlueprintsChanged()
 {
     //Update Witdh and Heighht
-    RoomWith = 0;
+    RoomWidth = 0;
     RoomHeight = 0;
     for (const TSubclassOf<AMazeTileActor>& TileClass : RoomBlueprints)
     {
@@ -33,9 +33,9 @@ void URoomGraphNode::OnTileBlueprintsChanged()
             const AMazeTileActor* DefaultTile = GetDefault<AMazeTileActor>(TileClass);
             if (DefaultTile)
             {
-                if (DefaultTile->Width > RoomWith )
+                if (DefaultTile->Width > RoomWidth )
                 {
-                    RoomWith = DefaultTile->Width;
+                    RoomWidth = DefaultTile->Width;
                 }
                 if (DefaultTile->Height > RoomHeight)
                 {

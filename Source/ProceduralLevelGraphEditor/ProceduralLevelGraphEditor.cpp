@@ -308,7 +308,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             {
                 URoomNode* RuntimeRoom = NewObject<URoomNode>(GraphAsset);
                 RuntimeRoom->RoomHeight = RoomEdNode->RoomHeight;
-                RuntimeRoom->RoomWidth = RoomEdNode->RoomWith;
+                RuntimeRoom->RoomWidth = RoomEdNode->RoomWidth;
                 RuntimeRoom->RoomRotation = RoomEdNode->RoomRotation;
                 RuntimeRoom->RoomBlueprints = RoomEdNode->RoomBlueprints;
                 RuntimeRoom->HallBlueprints = RoomEdNode->HallBlueprints;
@@ -319,6 +319,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 UHallNode* RuntimeHall = NewObject<UHallNode>(GraphAsset);
                 RuntimeHall->HallLength = HallEdNode->HallLength;
                 RuntimeHall->RoomRotation = HallEdNode->RoomRotation;
+                RuntimeHall->HallBlueprint = HallEdNode->HallBlueprint;
                 NewRuntimeNode = RuntimeHall;
                 
             }
