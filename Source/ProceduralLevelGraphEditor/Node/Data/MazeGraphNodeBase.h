@@ -29,10 +29,12 @@ public:
 	int RoomRotation = 0;
 	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Right")
 	virtual EMazePinType GetPinType();
-
+	//UPROPERTY(VisibleAnywhere, Category = "Spawning")
+	//TSubclassOf<AMazeTileLevelInstance> LevelInstanceRef;
 protected:
 	UPROPERTY()
 	FText NodeTitle = FText::FromString("ROOM");
 	UPROPERTY()
 	bool bIsOnHighlightedPath;
+
 };

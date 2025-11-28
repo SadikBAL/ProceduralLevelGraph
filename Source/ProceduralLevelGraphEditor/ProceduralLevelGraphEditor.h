@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Node/Data/MazeGraphNodeBase.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "Toolkits/AssetEditorToolkit.h"
 
 class UProceduralLevelGraphRuntime;

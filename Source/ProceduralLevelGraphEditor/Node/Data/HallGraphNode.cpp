@@ -6,17 +6,17 @@
 UHallGraphNode::UHallGraphNode()
 {
 	HallLength = 5.0f;
-	static ConstructorHelpers::FClassFinder<AActor> BP_Room_ClassFinder(
-		TEXT("Blueprint'/Game/LevelPrototyping/BP_HallActor_4X4.BP_HallActor_4X4_C'")
-		);
-	if (BP_Room_ClassFinder.Succeeded())
+	static ConstructorHelpers::FClassFinder<ALevelInstance> BP_LevelInstance_Finder(
+		TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Halls/LI_Hall_4X4.LI_Hall_4X4_C'")
+	);
+	if (BP_LevelInstance_Finder.Succeeded())
 	{
-		HallBlueprint = BP_Room_ClassFinder.Class;
+		HallLevelInstanceRef = BP_LevelInstance_Finder.Class;
 	}
 	else
 	{
-		HallBlueprint = nullptr;
-		UE_LOG(LogTemp, Error, TEXT("UHallGraphNode constructor: BP_HallActor_4X4_C sınıfı bulunamadı!"));
+		HallLevelInstanceRef = nullptr;
+		UE_LOG(LogTemp, Error, TEXT("UHallGraphNode constructor: LI_Hall_4X4 class not found!"));
 	}
 	OnTileBlueprintsChanged();
 }
@@ -39,9 +39,13 @@ EMazePinType UHallGraphNode::GetPinType()
 
 void UHallGraphNode::OnTileBlueprintsChanged()
 {
-	if (const AHallActor* DefaultTile = GetDefault<AHallActor>(HallBlueprint))
+	if (HallLevelInstanceRef) 
 	{
-		RoomWidth = DefaultTile->Width;
+		const AHallLevelInstance* DefaultTile = HallLevelInstanceRef->GetDefaultObject<AHallLevelInstance>();
+		if (DefaultTile)
+		{
+			RoomWidth = DefaultTile->Width;
+		}
 	}
 }
 
@@ -50,7 +54,7 @@ void UHallGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
 	FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
 					   ? PropertyChangedEvent.Property->GetFName() 
 					   : NAME_None;
-	if (PropertyName == GET_MEMBER_NAME_CHECKED(UHallGraphNode, HallBlueprint))
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(UHallGraphNode, HallLevelInstanceRef))
 	{
 		OnTileBlueprintsChanged();
 	}

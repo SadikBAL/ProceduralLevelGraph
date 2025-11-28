@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "MazeNodeBase.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
+#include "ProceduralLevelGraphRuntime/LevelInstance/RoomLevelInstance.h"
 #include "EntranceRoom.generated.h"
 
 UCLASS(BlueprintType)
@@ -16,7 +18,9 @@ public:
 	float RoomHeight;
 	UPROPERTY(BlueprintReadOnly, Category = "Entrance Node")
 	FVector RoomPosition;
-
+	UPROPERTY(BlueprintReadOnly, Category = "Entrance Node")
+	TSubclassOf<ARoomLevelInstance> EntranceInstanceRef;
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
+	virtual void SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction) override;
 
 };

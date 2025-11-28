@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "MazeNodeBase.h"
+#include "ProceduralLevelGraphRuntime/LevelInstance/HallLevelInstance.h"
 #include "HallNode.generated.h"
 
 UCLASS(BlueprintType)
@@ -12,7 +13,7 @@ class PROCEDURALLEVELGRAPHRUNTIME_API UHallNode : public UMazeNodeBase
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	float HallLength;
-	TSubclassOf<AMazeTileActor> HallBlueprint;
+	TSubclassOf<AHallLevelInstance> HallLevelInstanceRef;
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
 	virtual void SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction) override;
 };

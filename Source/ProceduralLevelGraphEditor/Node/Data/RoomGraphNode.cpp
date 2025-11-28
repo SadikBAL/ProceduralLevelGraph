@@ -5,8 +5,22 @@
 
 URoomGraphNode::URoomGraphNode()
 {
-    RoomHeight = 5;
-    RoomWidth = 5;
+    if (RoomLevelInstanceRefs.IsEmpty())
+    {
+        static ConstructorHelpers::FClassFinder<ARoomLevelInstance> BP_LevelInstance_Finder(
+        TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Rooms/LI_Room_3X2.LI_Room_3X2_C'")
+        );
+        if (BP_LevelInstance_Finder.Succeeded())
+        {
+            RoomLevelInstanceRefs.Add(BP_LevelInstance_Finder.Class);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("URoomGraphNode constructor: LI_Room_3X2 class not found!"));
+        }
+    }
+
+    OnTileBlueprintsChanged();
 }
 
 FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
@@ -26,11 +40,11 @@ void URoomGraphNode::OnTileBlueprintsChanged()
     //Update Witdh and Heighht
     RoomWidth = 0;
     RoomHeight = 0;
-    for (const TSubclassOf<AMazeTileActor>& TileClass : RoomBlueprints)
+    for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRefs)
     {
         if (TileClass)
         {
-            const AMazeTileActor* DefaultTile = GetDefault<AMazeTileActor>(TileClass);
+            const AMazeTileLevelInstance* DefaultTile = GetDefault<AMazeTileLevelInstance>(TileClass);
             if (DefaultTile)
             {
                 if (DefaultTile->Width > RoomWidth )
@@ -51,7 +65,7 @@ void URoomGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
     FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
                        ? PropertyChangedEvent.Property->GetFName() 
                        : NAME_None;
-    if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomGraphNode, RoomBlueprints))
+    if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomGraphNode, RoomLevelInstanceRefs))
     {
         OnTileBlueprintsChanged();
     }

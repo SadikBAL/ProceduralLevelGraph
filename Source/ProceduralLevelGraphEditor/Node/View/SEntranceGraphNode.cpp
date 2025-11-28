@@ -8,6 +8,7 @@
 
 #include "SGraphPin.h"
 #include "SRoomGraphNodePin.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "ProceduralLevelGraphRuntime/Node/EntranceRoom.h"
 
 #define LOCTEXT_NAMESPACE "SEntranceGraphNode"
@@ -141,7 +142,7 @@ FOptionalSize SEntranceGraphNode::GetNodeHeight() const
 		}
 		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
 		{
-			return RoomNode->RoomWith * TILE_EDITOR_SCALE;
+			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;
@@ -153,7 +154,7 @@ FOptionalSize SEntranceGraphNode::GetNodeWidth() const
 	{
 		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
 		{
-			return RoomNode->RoomWith * TILE_EDITOR_SCALE;
+			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
 		}
 		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
 		{

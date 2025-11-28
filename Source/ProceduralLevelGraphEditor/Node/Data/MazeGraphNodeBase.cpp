@@ -1,7 +1,8 @@
 ﻿#include "MazeGraphNodeBase.h"
 
 #include "Framework/Commands/GenericCommands.h"
-#define LOCTEXT_NAMESPACE "RoomGraphNodeBase"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
+#define LOCTEXT_NAMESPACE "MazeGraphNodeBase"
 FText UMazeGraphNodeBase::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
 	return LOCTEXT("RoomNodeTitle", "Room");

@@ -1,20 +1,11 @@
 ﻿#include "HallNode.h"
 
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "ProceduralLevelGraphRuntime/Actor/MazeTileActor.h"
 
 UHallNode::UHallNode()
 {
-	static ConstructorHelpers::FClassFinder<AActor> BP_Room_ClassFinder(
-	TEXT("Blueprint'/Game/LevelPrototyping/BP_Hall.BP_Hall_C'")
-);
-	if (BP_Room_ClassFinder.Succeeded())
-	{
-		ActorToSpawnClass = BP_Room_ClassFinder.Class;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("URoomNode constructor: BP_Room_C sınıfı bulunamadı!"));
-	}
+	
 }
 
 float UHallNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
@@ -24,13 +15,13 @@ float UHallNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 
 void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction)
 {
-	if (!HallBlueprint)
+	if (!HallLevelInstanceRef)
 	{
 		return;
 	}
 	if (!World)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
+		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: there is no World!"));
 		return;
 	}
 	FVector TileSpawnLocation = Position;
@@ -82,20 +73,20 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AActor* MazeObject = World->SpawnActor<AActor>(
-			HallBlueprint,
+			HallLevelInstanceRef,
 			TileSpawnLocation,
 			Rotator,
 			SpawnParams
 		);
 		if (MazeObject)
 		{
-			AMazeTileActor* SpawnedMazeTileActor = Cast<AMazeTileActor>(MazeObject);
-			SpawnedMazeTileActor->SetNodeData(this);
-			UE_LOG(LogTemp, Log, TEXT("%s Spawn edildi."), *MazeObject->GetName());
+			AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(MazeObject);
+			SpawnedLevelInstance->SetNodeData(this);
+			UE_LOG(LogTemp, Log, TEXT("%s Spawned successful."), *MazeObject->GetName());
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("%s spawn edilemedi"), *ActorToSpawnClass->GetName());
+			UE_LOG(LogTemp, Log, TEXT("Hall Node Spawned failed."));
 		}
 	}
 }

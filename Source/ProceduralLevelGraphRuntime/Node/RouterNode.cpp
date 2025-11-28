@@ -1,23 +1,66 @@
 ﻿#include "RouterNode.h"
 
+#include "LevelInstance/LevelInstanceActor.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
+
 URouterNode::URouterNode()
 {
-	static ConstructorHelpers::FClassFinder<AActor> BP_Room_ClassFinder(
-	TEXT("Blueprint'/Game/LevelPrototyping/BP_Router.BP_Router_C'")
-);
-	if (BP_Room_ClassFinder.Succeeded())
-	{
-		ActorToSpawnClass = BP_Room_ClassFinder.Class;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("URouterNode constructor: BP_Router sınıfı bulunamadı!"));
-	}
 }
-
-
 
 float URouterNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
 	return TILE_SCALE * 0.5;
+}
+
+void URouterNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction)
+{
+	if (!RouterInstanceRef)
+	{
+		return;
+	}
+
+	
+	if (!World)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
+		return;
+	}
+	
+	switch (Direction)
+	{
+	case EMazeDirection::Up:
+		SpawnLocation = Position - FVector(0,GetHalfDistanceOfRoom(EMazeOrientation::Vertical),0);
+		break;
+	case EMazeDirection::Down:
+		SpawnLocation = Position + FVector(0,GetHalfDistanceOfRoom(EMazeOrientation::Vertical),0);
+		break;
+	case EMazeDirection::Left:
+		SpawnLocation = Position - FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal),0,0);
+		break;
+	case EMazeDirection::Right:
+		SpawnLocation = Position + FVector(GetHalfDistanceOfRoom(EMazeOrientation::Horizontal),0,0);
+		break;
+	default:
+		break;
+	}
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AActor* MazeObject = World->SpawnActor<AActor>(
+		RouterInstanceRef,
+		SpawnLocation,
+		FRotator::ZeroRotator,
+		SpawnParams
+	);
+
+	if (MazeObject)
+	{
+		ARoomLevelInstance* SpawnedMazeTileActor = Cast<ARoomLevelInstance>(MazeObject);
+		SpawnedMazeTileActor->SetNodeData(this);
+		UE_LOG(LogTemp, Log, TEXT("%s Spawn successfully."), *MazeObject->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Router Node Spawned failed."));
+	}
 }

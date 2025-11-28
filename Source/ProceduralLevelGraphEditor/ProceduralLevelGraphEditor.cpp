@@ -310,8 +310,8 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 RuntimeRoom->RoomHeight = RoomEdNode->RoomHeight;
                 RuntimeRoom->RoomWidth = RoomEdNode->RoomWidth;
                 RuntimeRoom->RoomRotation = RoomEdNode->RoomRotation;
-                RuntimeRoom->RoomBlueprints = RoomEdNode->RoomBlueprints;
-                RuntimeRoom->HallBlueprints = RoomEdNode->HallBlueprints;
+                RuntimeRoom->RoomLevelInstanceRefs = RoomEdNode->RoomLevelInstanceRefs;
+                RuntimeRoom->HallLevelInstanceRefs = RoomEdNode->HallLevelInstanceRefs;
                 NewRuntimeNode = RuntimeRoom;
             }
             else if (UHallGraphNode* HallEdNode = Cast<UHallGraphNode>(EdNode))
@@ -319,7 +319,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 UHallNode* RuntimeHall = NewObject<UHallNode>(GraphAsset);
                 RuntimeHall->HallLength = HallEdNode->HallLength;
                 RuntimeHall->RoomRotation = HallEdNode->RoomRotation;
-                RuntimeHall->HallBlueprint = HallEdNode->HallBlueprint;
+                RuntimeHall->HallLevelInstanceRef = HallEdNode->HallLevelInstanceRef;
                 NewRuntimeNode = RuntimeHall;
                 
             }
@@ -327,15 +327,17 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             {
                 URouterNode* RuntimeRouter = NewObject<URouterNode>(GraphAsset);
                 RuntimeRouter->RoomRotation = RouterEdNode->RoomRotation;
+                RuntimeRouter->RouterInstanceRef = RouterEdNode->RouterLevelInstanceRef;
                 NewRuntimeNode = RuntimeRouter;
             }
             else if (UEntranceGraphNode* EntranceEdNode = Cast<UEntranceGraphNode>(EdNode))
             {
                 UEntranceNode* RuntimeEntrance = NewObject<UEntranceNode>(GraphAsset);
                 RuntimeEntrance->RoomHeight = EntranceEdNode->RoomHeight;
-                RuntimeEntrance->RoomWidth = EntranceEdNode->RoomWith;
+                RuntimeEntrance->RoomWidth = EntranceEdNode->RoomWidth;
                 RuntimeEntrance->RoomRotation = EntranceEdNode->RoomRotation;
                 RuntimeEntrance->RoomPosition = EntranceEdNode->RoomPosition;
+                RuntimeEntrance->EntranceInstanceRef = EntranceEdNode->EntranceLevelInstanceRef;
                 NewRuntimeNode = RuntimeEntrance;
                 // Start Location its special node.
                 GraphAsset->StartNode = NewRuntimeNode;

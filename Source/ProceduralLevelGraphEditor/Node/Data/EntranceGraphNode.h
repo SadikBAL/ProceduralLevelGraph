@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "MazeGraphNodeBase.h"
+#include "ProceduralLevelGraphRuntime/LevelInstance/RoomLevelInstance.h"
 #include "EntranceGraphNode.generated.h"
 
 UCLASS()
@@ -15,10 +16,13 @@ public:
 	virtual void AllocateDefaultPins() override;
     virtual bool CanUserDeleteNode() const override;
 	virtual bool CanUserCopyNode() const override;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
-	int RoomWith;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
+	void OnTileBlueprintsChanged();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
+	int RoomWidth;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
 	int RoomHeight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	FVector RoomPosition;
+	UPROPERTY(VisibleAnywhere, Category = "Room")
+	TSubclassOf<ARoomLevelInstance> EntranceLevelInstanceRef;
 };

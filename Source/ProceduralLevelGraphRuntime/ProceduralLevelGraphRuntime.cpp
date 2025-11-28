@@ -3,7 +3,9 @@
 #include "EngineUtils.h"
 #include "Actor/MazeTileActor.h"
 #include "NavigationSystem.h"
+#include "ProceduralLevelGraphTypes.h"
 #include "Components/BrushComponent.h"
+#include "LevelInstance/MazeTileLevelInstance.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 #include "Node/EntranceRoom.h"
 
@@ -38,7 +40,7 @@ void UProceduralLevelGraphRuntime::DeleteMaze()
 	for (TActorIterator<AActor> It(World); It; ++It)
 	{
 		AActor* Actor = *It;
-		if (Actor && Actor->IsA(AMazeTileActor::StaticClass()))
+		if (Actor && Actor->IsA(AMazeTileLevelInstance::StaticClass()))
 		{
 			Actor->Destroy();
 		}

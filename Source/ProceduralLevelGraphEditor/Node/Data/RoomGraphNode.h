@@ -4,6 +4,7 @@
 #include "MazeGraphNodeBase.h"
 #include "ProceduralLevelGraphRuntime/Actor/HallActor.h"
 #include "ProceduralLevelGraphRuntime/Actor/RoomActor.h"
+#include "ProceduralLevelGraphRuntime/LevelInstance/RoomLevelInstance.h"
 #include "RoomGraphNode.generated.h"
 
 UCLASS()
@@ -23,7 +24,7 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomHeight;
     UPROPERTY(EditDefaultsOnly, Category = "Room")
-    TArray<TSubclassOf<ARoomActor>> RoomBlueprints;
+    TArray<TSubclassOf<ARoomLevelInstance>> RoomLevelInstanceRefs;
     UPROPERTY(EditDefaultsOnly, Category = "Room")
-    TArray<TSubclassOf<AHallActor>> HallBlueprints;
+    TArray<TSubclassOf<AHallLevelInstance>> HallLevelInstanceRefs;
 };

@@ -1,8 +1,10 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "MazeNodeBase.generated.h"
+
+class AMazeTileLevelInstance;
+
 UCLASS(BlueprintType)
 class PROCEDURALLEVELGRAPHRUNTIME_API UMazeNodeBase : public UObject
 {
@@ -23,9 +25,6 @@ public:
 	TObjectPtr<UMazeNodeBase> UpNode;
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	TArray<UMazeNodeBase*> Others;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
-	TSubclassOf<AActor> ActorToSpawnClass;
 
 	UFUNCTION(BlueprintCallable)
 	virtual  void SpawnMazeObject(UWorld* World,FVector Position, EMazeDirection Direction);

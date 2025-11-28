@@ -2,8 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "MazeNodeBase.h"
-#include "ProceduralLevelGraphRuntime/Actor/HallActor.h"
-#include "ProceduralLevelGraphRuntime/Actor/RoomActor.h"
+#include "ProceduralLevelGraphRuntime/LevelInstance/HallLevelInstance.h"
+#include "ProceduralLevelGraphRuntime/LevelInstance/RoomLevelInstance.h"
 #include "RoomNode.generated.h"
 
 UCLASS(BlueprintType)
@@ -19,9 +19,9 @@ public:
 	float RoomHeight;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Room Node")
-	TArray<TSubclassOf<ARoomActor>> RoomBlueprints;
+	TArray<TSubclassOf<ARoomLevelInstance>> RoomLevelInstanceRefs;
 	UPROPERTY(BlueprintReadOnly, Category = "Room Node")
-	TArray<TSubclassOf<AHallActor>> HallBlueprints;
+	TArray<TSubclassOf<AHallLevelInstance>> HallLevelInstanceRefs;
 	
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
 	virtual void SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction) override;
