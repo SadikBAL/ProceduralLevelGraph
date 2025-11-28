@@ -2,8 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "MazeGraphNodeBase.h"
-#include "ProceduralLevelGraphRuntime/Actor/HallActor.h"
-#include "ProceduralLevelGraphRuntime/Actor/RoomActor.h"
 #include "ProceduralLevelGraphRuntime/LevelInstance/RoomLevelInstance.h"
 #include "RoomGraphNode.generated.h"
 

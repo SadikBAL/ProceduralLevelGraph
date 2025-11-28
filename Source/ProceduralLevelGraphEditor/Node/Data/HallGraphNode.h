@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "MazeGraphNodeBase.h"
-#include "ProceduralLevelGraphRuntime/Actor/HallActor.h"
 #include "ProceduralLevelGraphRuntime/LevelInstance/HallLevelInstance.h"
 #include "HallGraphNode.generated.h"
 
@@ -20,6 +19,8 @@ public:
 	void OnTileBlueprintsChanged();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hall")
 	int RoomWidth;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hall")
+	int RoomTile;
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hall", meta = (UIMin = "1", UIMax = "20", ClampMin = "1", ClampMax = "20", MultipleOf = "1"))
 	int HallLength;

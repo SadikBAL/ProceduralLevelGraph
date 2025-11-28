@@ -1,7 +1,6 @@
 ﻿#include "RoomNode.h"
 
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
-#include "ProceduralLevelGraphRuntime/Actor/MazeTileActor.h"
 
 URoomNode::URoomNode()
 {

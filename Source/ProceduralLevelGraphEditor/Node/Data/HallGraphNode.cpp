@@ -45,6 +45,7 @@ void UHallGraphNode::OnTileBlueprintsChanged()
 		if (DefaultTile)
 		{
 			RoomWidth = DefaultTile->Width;
+			RoomTile  = DefaultTile->Height;
 		}
 	}
 }

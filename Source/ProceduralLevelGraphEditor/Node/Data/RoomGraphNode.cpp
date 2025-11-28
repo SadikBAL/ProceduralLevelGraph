@@ -8,7 +8,7 @@ URoomGraphNode::URoomGraphNode()
     if (RoomLevelInstanceRefs.IsEmpty())
     {
         static ConstructorHelpers::FClassFinder<ARoomLevelInstance> BP_LevelInstance_Finder(
-        TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Rooms/LI_Room_3X2.LI_Room_3X2_C'")
+        TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Rooms/LI_Room_12X8.LI_Room_12X8_C'")
         );
         if (BP_LevelInstance_Finder.Succeeded())
         {
@@ -16,7 +16,18 @@ URoomGraphNode::URoomGraphNode()
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("URoomGraphNode constructor: LI_Room_3X2 class not found!"));
+            UE_LOG(LogTemp, Error, TEXT("URoomGraphNode constructor: LI_Room_12X8 class not found!"));
+        }
+        static ConstructorHelpers::FClassFinder<AHallLevelInstance> BP_HallInstance_Finder(
+        TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Halls/LI_Hall_4X4.LI_Hall_4X4_C'")
+        );
+        if (BP_HallInstance_Finder.Succeeded())
+        {
+            HallLevelInstanceRefs.Add(BP_HallInstance_Finder.Class);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("URoomGraphNode constructor: LI_Room_12X8 class not found!"));
         }
     }
 

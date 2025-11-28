@@ -28,12 +28,12 @@ FReply SHallGraphNode::OnMinusBrushClicked(EMazeDirection ButtonLocation)
 		switch (ButtonLocation)
 		{
 			case EMazeDirection::Up:
-				LocalPosition.Y += TILE_EDITOR_SCALE;
+				LocalPosition.Y += HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
 			break;
 			case EMazeDirection::Down:
 			break;
 			case EMazeDirection::Left:
-				LocalPosition.X += TILE_EDITOR_SCALE;
+				LocalPosition.X += HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
 			break;
 			case EMazeDirection::Right:
 			break;
@@ -54,12 +54,12 @@ FReply SHallGraphNode::OnPlusBrushClicked(EMazeDirection ButtonLocation)
 		switch (ButtonLocation)
 		{
 			case EMazeDirection::Up:
-				LocalPosition.Y -= TILE_EDITOR_SCALE;
+				LocalPosition.Y -= HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
 				break;
 			case EMazeDirection::Down:
 				break;
 			case EMazeDirection::Left:
-				LocalPosition.X -= TILE_EDITOR_SCALE;
+				LocalPosition.X -= HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
 				break;
 			case EMazeDirection::Right:
 				break;
@@ -219,15 +219,15 @@ void SHallGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidge
 
 FOptionalSize SHallGraphNode::GetNodeHeight() const
 {
-	if (UHallGraphNode* HallNode = Cast<UHallGraphNode>(GraphNode))
+	if (HallGraphNodeRef)
 	{
-		if (HallNode->RoomRotation == 0 || HallNode->RoomRotation == 180)
+		if (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180)
 		{
-			return HallNode->HallLength * TILE_EDITOR_SCALE;
+			return HallGraphNodeRef->HallLength * HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
 		}
 		else
 		{
-			return HallNode->RoomWidth * TILE_EDITOR_SCALE;
+			return HallGraphNodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
 	return 0.0f;
@@ -235,15 +235,15 @@ FOptionalSize SHallGraphNode::GetNodeHeight() const
 
 FOptionalSize SHallGraphNode::GetNodeWidth() const
 {
-	if (UHallGraphNode* HallNode = Cast<UHallGraphNode>(GraphNode))
+	if (HallGraphNodeRef)
 	{
-		if (HallNode->RoomRotation == 0 || HallNode->RoomRotation == 180)
+		if (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180)
 		{
-			return HallNode->RoomWidth * TILE_EDITOR_SCALE;
+			return HallGraphNodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
 		else
 		{
-			return HallNode->HallLength * TILE_EDITOR_SCALE;
+			return HallGraphNodeRef->HallLength * HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
 		}
 	}
 	return 0.0f;
