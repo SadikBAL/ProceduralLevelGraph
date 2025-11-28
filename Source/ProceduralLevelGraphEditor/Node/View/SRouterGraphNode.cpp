@@ -131,11 +131,33 @@ void SRouterGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWid
 
 FOptionalSize SRouterGraphNode::GetNodeHeight() const
 {
-	return FOptionalSize(TILE_EDITOR_SCALE);
+	if (URouterGraphNode* RoomNode = Cast<URouterGraphNode>(GraphNode))
+	{
+		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		{
+			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
+		}
+		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		{
+			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
+		}
+	}
+	return 5.0f;
 }
 
 FOptionalSize SRouterGraphNode::GetNodeWidth() const
 {
-	return FOptionalSize(TILE_EDITOR_SCALE);
+	if (URouterGraphNode* RoomNode = Cast<URouterGraphNode>(GraphNode))
+	{
+		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		{
+			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
+		}
+		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		{
+			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
+		}
+	}
+	return 5.0f;
 }
 #undef LOCTEXT_NAMESPACE

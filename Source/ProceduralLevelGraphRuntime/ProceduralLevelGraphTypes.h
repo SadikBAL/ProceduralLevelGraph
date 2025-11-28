@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-constexpr float TILE_SCALE = 400.0f;
-constexpr float TILE_EDITOR_SCALE = 100.0f;
-constexpr float GRID_SNAP_SCALE = TILE_EDITOR_SCALE * 0.5f;
-constexpr float TILE_EDITOR_PIN_SCALE = TILE_EDITOR_SCALE * 0.5f;
+constexpr float TILE_SCALE = 100.0f;
+constexpr float TILE_EDITOR_SCALE = 25.0f;
+constexpr float GRID_SNAP_SCALE = 25.0f;
+constexpr float TILE_EDITOR_PIN_SCALE = 100.0 * 0.5f;
 
 UENUM(BlueprintType)
 enum class EMazeDirection : uint8

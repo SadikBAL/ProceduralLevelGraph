@@ -326,6 +326,8 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             else if (URouterGraphNode* RouterEdNode = Cast<URouterGraphNode>(EdNode))
             {
                 URouterNode* RuntimeRouter = NewObject<URouterNode>(GraphAsset);
+                RuntimeRouter->RoomHeight = RouterEdNode->RoomHeight;
+                RuntimeRouter->RoomWidth = RouterEdNode->RoomWidth;
                 RuntimeRouter->RoomRotation = RouterEdNode->RoomRotation;
                 RuntimeRouter->RouterInstanceRef = RouterEdNode->RouterLevelInstanceRef;
                 NewRuntimeNode = RuntimeRouter;

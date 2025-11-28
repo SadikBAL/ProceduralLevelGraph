@@ -7,6 +7,8 @@
 #include "ProceduralLevelGraphRuntime/LevelInstance/RoomLevelInstance.h"
 #include "RoomGraphNode.generated.h"
 
+class AHallLevelInstance;
+
 UCLASS()
 class URoomGraphNode : public UMazeGraphNodeBase
 {

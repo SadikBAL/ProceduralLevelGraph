@@ -4,6 +4,8 @@
 #include "MazeGraphNodeBase.h"
 #include "RouterGraphNode.generated.h"
 
+class ARoomLevelInstance;
+
 UCLASS()
 class URouterGraphNode : public UMazeGraphNodeBase
 {

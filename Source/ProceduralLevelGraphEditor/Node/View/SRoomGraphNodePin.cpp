@@ -1,6 +1,7 @@
 ﻿#include "SRoomGraphNodePin.h"
 
 #include "ConnectionDrawingPolicy.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Images/SImage.h"
 #include "Styling/SlateTypes.h"

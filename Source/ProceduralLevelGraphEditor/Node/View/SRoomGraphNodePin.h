@@ -4,6 +4,8 @@
 #include "SGraphPin.h"
 #include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
 
+enum class EMazePinType : uint8;
+
 class SRoomGraphNodePin : public SGraphPin
 {
 public:

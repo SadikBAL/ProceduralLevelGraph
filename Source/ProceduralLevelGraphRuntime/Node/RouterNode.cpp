@@ -9,7 +9,14 @@ URouterNode::URouterNode()
 
 float URouterNode::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
-	return TILE_SCALE * 0.5;
+	if (Orientation == EMazeOrientation::Horizontal)
+	{
+		return RoomWidth * TILE_SCALE * 0.5;
+	}
+	else
+	{
+		return RoomHeight * TILE_SCALE * 0.5;
+	}
 }
 
 void URouterNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction)

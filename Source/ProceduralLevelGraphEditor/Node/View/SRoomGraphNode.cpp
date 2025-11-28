@@ -8,6 +8,7 @@
 
 #include "SGraphPin.h"
 #include "SRoomGraphNodePin.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNode"
 
