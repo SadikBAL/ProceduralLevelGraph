@@ -19,7 +19,7 @@ URoomGraphNode::URoomGraphNode()
             UE_LOG(LogTemp, Error, TEXT("URoomGraphNode constructor: LI_Room_12X8 class not found!"));
         }
         static ConstructorHelpers::FClassFinder<AHallLevelInstance> BP_HallInstance_Finder(
-        TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Halls/LI_Hall_4X4.LI_Hall_4X4_C'")
+        TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Halls/LI_Hall_4X1.LI_Hall_4X1_C'")
         );
         if (BP_HallInstance_Finder.Succeeded())
         {
