@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "LevelInstance/LevelInstanceActor.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
 
 #include "MazeTileLevelInstance.generated.h"
@@ -23,6 +24,8 @@ public:
 	UFUNCTION()
 	TArray<FName> GetMeshPartNames(EMazeDirection LocalDirection, int LocalRotation);
 private:
+	//UPROPERTY(Transient, DuplicateTransient)
+	//UMazeNodeBase* MazeNodeRef;
 	UPROPERTY()
-	UMazeNodeBase* NodeData;
+	FMazeTileData NodeData;
 };

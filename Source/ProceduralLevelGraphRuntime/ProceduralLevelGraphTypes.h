@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "ProceduralLevelGraphTypes.generated.h"
+
 constexpr float TILE_SCALE = 100.0f;
 constexpr float TILE_EDITOR_SCALE = 25.0f;
 constexpr float GRID_SNAP_SCALE = 25.0f;
@@ -34,4 +36,16 @@ enum class ERouteType : uint8
 	RouteB,
 	RouteC,
 	RouteD
+};
+
+USTRUCT(BlueprintType)
+struct FMazeTileData
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	TMap<EMazeDirection, EMazePinType> MazeDirectionMap;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	int32 RoomRotation = 0;
 };

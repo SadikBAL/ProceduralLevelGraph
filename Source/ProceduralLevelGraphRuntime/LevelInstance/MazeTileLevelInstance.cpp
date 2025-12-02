@@ -10,97 +10,97 @@ AMazeTileLevelInstance::AMazeTileLevelInstance()
 
 void AMazeTileLevelInstance::OnLevelInstanceLoaded()
 {
-	if (NodeData != nullptr)
-	{
-		
-		if (NodeData->UpNode)
+		if (NodeData.MazeDirectionMap.Contains(EMazeDirection::Up) && NodeData.MazeDirectionMap[EMazeDirection::Up] != EMazePinType::Hidden)
 		{
-			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Up,NodeData->RoomRotation);
+			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Up,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 
-			SearchedTags = GetMeshPartNames(EMazeDirection::Up,NodeData->RoomRotation);
+			SearchedTags = GetMeshPartNames(EMazeDirection::Up,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 		else
 		{
-			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Up,NodeData->RoomRotation);
+			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Up,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 			
-			SearchedTags = GetMeshPartNames(EMazeDirection::Up,NodeData->RoomRotation);
+			SearchedTags = GetMeshPartNames(EMazeDirection::Up,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
-		if (NodeData->DownNode)
+		if (NodeData.MazeDirectionMap.Contains(EMazeDirection::Down) && NodeData.MazeDirectionMap[EMazeDirection::Down] != EMazePinType::Hidden)
 		{
-			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Down,NodeData->RoomRotation);
+			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Down,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 			
-			SearchedTags = GetMeshPartNames(EMazeDirection::Down,NodeData->RoomRotation);
+			SearchedTags = GetMeshPartNames(EMazeDirection::Down,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, false);
 			
 		}
 		else
 		{
-			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Down,NodeData->RoomRotation);
+			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Down,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 			
-			SearchedTags = GetMeshPartNames(EMazeDirection::Down,NodeData->RoomRotation);
+			SearchedTags = GetMeshPartNames(EMazeDirection::Down,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
-		if (NodeData->LeftNode)
+		if (NodeData.MazeDirectionMap.Contains(EMazeDirection::Left) && NodeData.MazeDirectionMap[EMazeDirection::Left] != EMazePinType::Hidden)
 		{
-			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Left,NodeData->RoomRotation);
+			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Left,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 			
-			SearchedTags = GetMeshPartNames(EMazeDirection::Left,NodeData->RoomRotation);
+			SearchedTags = GetMeshPartNames(EMazeDirection::Left,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 		else
 		{
-			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Left,NodeData->RoomRotation);
+			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Left,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 			
-			SearchedTags = GetMeshPartNames(EMazeDirection::Left,NodeData->RoomRotation);
+			SearchedTags = GetMeshPartNames(EMazeDirection::Left,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
-		if (NodeData->RightNode)
+		if (NodeData.MazeDirectionMap.Contains(EMazeDirection::Right) && NodeData.MazeDirectionMap[EMazeDirection::Right] != EMazePinType::Hidden)
 		{
-			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Right,NodeData->RoomRotation);
+			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Right,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 			
-			SearchedTags = GetMeshPartNames(EMazeDirection::Right,NodeData->RoomRotation);
+			SearchedTags = GetMeshPartNames(EMazeDirection::Right,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
 		else
 		{
-			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Right,NodeData->RoomRotation);
+			TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Right,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Wall"));
 			UpdateMeshPartVisibilities(SearchedTags, true);
 			
-			SearchedTags = GetMeshPartNames(EMazeDirection::Right,NodeData->RoomRotation);
+			SearchedTags = GetMeshPartNames(EMazeDirection::Right,NodeData.RoomRotation);
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
-	}
 	Super::OnLevelInstanceLoaded();
 }
 
 void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)
 {
-	NodeData = BaseNode;
+	NodeData.RoomRotation = BaseNode->RoomRotation;
+	NodeData.MazeDirectionMap.Add(EMazeDirection::Up,	   (BaseNode->UpNode    ? EMazePinType::Tier1 : EMazePinType::Hidden));
+	NodeData.MazeDirectionMap.Add(EMazeDirection::Down,  (BaseNode->DownNode  ? EMazePinType::Tier1 : EMazePinType::Hidden));
+	NodeData.MazeDirectionMap.Add(EMazeDirection::Left,  (BaseNode->LeftNode  ? EMazePinType::Tier1 : EMazePinType::Hidden));
+	NodeData.MazeDirectionMap.Add(EMazeDirection::Right, (BaseNode->RightNode ? EMazePinType::Tier1 : EMazePinType::Hidden));
 }
 
 void AMazeTileLevelInstance::UpdateMeshPartVisibilities(TArray<FName> SearchedTags, bool bVisibility)
