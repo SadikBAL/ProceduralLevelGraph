@@ -4,6 +4,7 @@
 #include "ConnectionDrawingPolicy.h"
 #include "EdGraph/EdGraphSchema.h"
 #include "ScopedTransaction.h"
+#include "ProceduralLevelGraphEditor/Node/Data/MazeGraphNodeBase.h"
 #include "MazeGraphSchema.generated.h"
 
 class UEdGraphNode_PLGBase;
@@ -62,6 +63,22 @@ struct FPLGGraphSchemaAction_NewNode : public FEdGraphSchemaAction
     virtual UEdGraphNode* PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin, const FVector2f& Location, bool bSelectNewNode = true) override;
     UPROPERTY()
     TObjectPtr<UEdGraphNode> NodeTemplate;
+};
+
+USTRUCT()
+struct FPLGGraphSchemaAction_PasteMirror : public FEdGraphSchemaAction
+{
+    GENERATED_BODY();
+
+    FPLGGraphSchemaAction_PasteMirror() : MirrorDirection(EMazeOrientation::Horizontal) {}
+
+    FPLGGraphSchemaAction_PasteMirror(FText InNodeCategory, FText InMenuDesc, FText InToolTip, const int32 InGrouping, EMazeOrientation InDirection)
+        : FEdGraphSchemaAction(InNodeCategory, InMenuDesc, InToolTip, InGrouping), MirrorDirection(InDirection) {}
+    
+    //virtual UEdGraphNode* PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin, const FVector2D Location, bool bSelectNewNode = true) override;
+    virtual UEdGraphNode* PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin, const FVector2f& Location, bool bSelectNewNode = true) override;
+    UPROPERTY()
+    EMazeOrientation MirrorDirection;;
 };
 
 USTRUCT()

@@ -4,11 +4,12 @@
 #include "Node/Data/MazeGraphNodeBase.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "Toolkits/AssetEditorToolkit.h"
+#include "EditorUndoClient.h"
 
 class UProceduralLevelGraphRuntime;
 class SGraphEditor;
 
-class FProceduralLevelGraphEditor : public FAssetEditorToolkit, public FNotifyHook
+class FProceduralLevelGraphEditor : public FAssetEditorToolkit, public FNotifyHook, public FEditorUndoClient
 {
 public:
     static const FName GraphCanvasTabId;
@@ -32,6 +33,11 @@ public:
     virtual FLinearColor GetWorldCentricTabColorScale() const override;
     virtual void PostInitAssetEditor() override;
     // End of FAssetEditorToolkit interface
+
+    // FEditorUndoClient interface (YENİ EKLENENLER)
+    virtual void PostUndo(bool bSuccess) override;
+    virtual void PostRedo(bool bSuccess) override;
+    // End of FEditorUndoClient interface
     
     TMap<ERouteType, TArray<UMazeGraphNodeBase*>> Routes;
     void FindAllRoutes(UMazeGraphNodeBase* SelectedNode);
@@ -46,6 +52,7 @@ public:
     void CopySelectedNodes();
     void PasteSelectedNodes();
     void DuplicateSelectedNodes();
+    void PasteSelectedNodes(EMazeOrientation Direction);
     
 private:
     void OnSelectedNodesChanged(const TSet<UObject*>& Objects);

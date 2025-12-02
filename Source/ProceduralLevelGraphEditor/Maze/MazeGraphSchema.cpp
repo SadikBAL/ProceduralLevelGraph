@@ -18,6 +18,24 @@
 
 #define LOCTEXT_NAMESPACE "MazeGraphSchema"
 
+UEdGraphNode* FPLGGraphSchemaAction_PasteMirror::PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin,
+     const FVector2f& Location, bool bSelectNewNode)
+{
+    if (UObject* GraphOwner = ParentGraph->GetOuter())
+    {
+        TSharedPtr<IToolkit> FoundToolkit = FToolkitManager::Get().FindEditorForAsset(GraphOwner);
+        if (FoundToolkit.IsValid())
+        {
+            TSharedPtr<FProceduralLevelGraphEditor> GraphEditor = StaticCastSharedPtr<FProceduralLevelGraphEditor>(FoundToolkit);
+            if (GraphEditor.IsValid())
+            {
+                GraphEditor->PasteSelectedNodes(MirrorDirection);
+            }
+        }
+    }
+    return nullptr;
+}
+
 UEdGraphNode* FPLGGraphSchemaAction_NewNode::PerformAction(class UEdGraph* ParentGraph, UEdGraphPin* FromPin, const FVector2f& Location, bool bSelectNewNode)
 {
     UEdGraphNode* ResultNode = nullptr;
@@ -31,7 +49,7 @@ UEdGraphNode* FPLGGraphSchemaAction_NewNode::PerformAction(class UEdGraph* Paren
         {
             FromPin->Modify();
         }
-
+        NodeTemplate->SetFlags(RF_Transactional);
         NodeTemplate->Rename(nullptr, ParentGraph);
         ParentGraph->AddNode(NodeTemplate, true, bSelectNewNode);
         NodeTemplate->CreateNewGuid();
@@ -124,21 +142,21 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
         LOCTEXT("NodeCategory", "Procedural"),
         LOCTEXT("NewRoomNode", "Add Room Node"),
         LOCTEXT("NewRoomNodeTooltip", "Adds a room node."), 0));
-    NewNodeAction_Room->NodeTemplate = NewObject<URoomGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
+    NewNodeAction_Room->NodeTemplate = NewObject<URoomGraphNode>(ContextMenuBuilder.OwnerOfTemporaries, NAME_None, RF_Transactional);
     ContextMenuBuilder.AddAction(NewNodeAction_Room);
 
     TSharedPtr<FPLGGraphSchemaAction_NewNode> NewNodeAction_Hall(new FPLGGraphSchemaAction_NewNode(
         LOCTEXT("NodeCategory", "Procedural"),
         LOCTEXT("NewRoomNode", "Add Hall Node"),
         LOCTEXT("NewRoomNodeTooltip", "Adds a hall node."), 0));
-    NewNodeAction_Hall->NodeTemplate = NewObject<UHallGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
+    NewNodeAction_Hall->NodeTemplate = NewObject<UHallGraphNode>(ContextMenuBuilder.OwnerOfTemporaries, NAME_None, RF_Transactional);
     ContextMenuBuilder.AddAction(NewNodeAction_Hall);
 
     TSharedPtr<FPLGGraphSchemaAction_NewNode> NewNodeAction_Router(new FPLGGraphSchemaAction_NewNode(
        LOCTEXT("NodeCategory", "Procedural"),
        LOCTEXT("NewRoomNode", "Add Router Node"),
        LOCTEXT("NewRoomNodeTooltip", "Adds a router node."), 0));
-    NewNodeAction_Router->NodeTemplate = NewObject<URouterGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
+    NewNodeAction_Router->NodeTemplate = NewObject<URouterGraphNode>(ContextMenuBuilder.OwnerOfTemporaries, NAME_None, RF_Transactional);
     ContextMenuBuilder.AddAction(NewNodeAction_Router);
     /* Its generetad on init one time. it coudnt doublcate or delete.
     TSharedPtr<FPLGGraphSchemaAction_NewNode> NewNodeAction_Entrance(new FPLGGraphSchemaAction_NewNode(
@@ -152,9 +170,26 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
     LOCTEXT("NodeCategory", "Procedural"),
     LOCTEXT("NewImgComment", "Add Layout Node"),
     LOCTEXT("NewImgCommentTooltip", "Adds a resizable background image region."), 0));
-    NewNodeAction_ImgComment->NodeTemplate = NewObject<ULayoutGraphNode>(ContextMenuBuilder.OwnerOfTemporaries);
+    NewNodeAction_ImgComment->NodeTemplate = NewObject<ULayoutGraphNode>(ContextMenuBuilder.OwnerOfTemporaries, NAME_None, RF_Transactional);
     ContextMenuBuilder.AddAction(NewNodeAction_ImgComment);
-    
+
+    TSharedPtr<FPLGGraphSchemaAction_PasteMirror> PasteMirrorHAction = MakeShareable(new FPLGGraphSchemaAction_PasteMirror(
+        FText::FromString(TEXT("Edit")),
+        NSLOCTEXT("MazeGraphSchema", "PasteMirrorHorizontal", "Paste Mirror Horizontal (Left/Right)"),
+        NSLOCTEXT("MazeGraphSchema", "PasteMirrorHTooltip", "Mirrors nodes along X axis (Flips Left/Right)"),
+        0,
+        EMazeOrientation::Horizontal
+    ));
+    ContextMenuBuilder.AddAction(PasteMirrorHAction);
+
+    TSharedPtr<FPLGGraphSchemaAction_PasteMirror> PasteMirrorVAction = MakeShareable(new FPLGGraphSchemaAction_PasteMirror(
+        FText::FromString(TEXT("Edit")),
+        NSLOCTEXT("MazeGraphSchema", "PasteMirrorVertical", "Paste Mirror Vertical (Up/Down)"),
+        NSLOCTEXT("MazeGraphSchema", "PasteMirrorVTooltip", "Mirrors nodes along Y axis (Flips Up/Down)"),
+        0,
+        EMazeOrientation::Vertical
+    ));
+    ContextMenuBuilder.AddAction(PasteMirrorVAction);
     if (!ContextMenuBuilder.FromPin)
     {
         FString TextToImport;
