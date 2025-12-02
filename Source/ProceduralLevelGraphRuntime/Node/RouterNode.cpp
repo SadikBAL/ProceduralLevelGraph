@@ -50,13 +50,15 @@ void URouterNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirectio
 	default:
 		break;
 	}
+	FRotator Rotator = FRotator::ZeroRotator;
+	Rotator.Yaw = RoomRotation;
 	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AActor* MazeObject = World->SpawnActor<AActor>(
 		RouterInstanceRef,
 		SpawnLocation,
-		FRotator::ZeroRotator,
+		Rotator,
 		SpawnParams
 	);
 
