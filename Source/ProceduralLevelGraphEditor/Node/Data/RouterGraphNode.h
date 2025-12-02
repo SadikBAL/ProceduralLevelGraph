@@ -15,9 +15,9 @@ public:
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual void AllocateDefaultPins() override;
 	void OnTileBlueprintsChanged();
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Router", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Router", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
 	int RoomWidth;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Router", meta = (UIMin = "1", UIMax = "10", ClampMin = "1", ClampMax = "10", MultipleOf = "1"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Router", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
 	int RoomHeight;
 	UPROPERTY(VisibleAnywhere, Category = "Router")
 	TSubclassOf<ARoomLevelInstance> RouterLevelInstanceRef;
