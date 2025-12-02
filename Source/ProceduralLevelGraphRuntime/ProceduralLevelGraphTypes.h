@@ -48,4 +48,7 @@ struct FMazeTileData
 
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	int32 RoomRotation = 0;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	FBox RoomBounds = FBox();
 };

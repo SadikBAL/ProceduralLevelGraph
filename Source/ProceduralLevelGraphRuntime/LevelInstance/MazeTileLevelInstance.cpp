@@ -91,6 +91,8 @@ void AMazeTileLevelInstance::OnLevelInstanceLoaded()
 			SearchedTags.Add(FName("Door"));
 			UpdateMeshPartVisibilities(SearchedTags, false);
 		}
+
+	NodeData.RoomBounds = GetLevelBounds();
 	Super::OnLevelInstanceLoaded();
 }
 
@@ -187,4 +189,11 @@ TArray<FName> AMazeTileLevelInstance::GetMeshPartNames(EMazeDirection LocalDirec
 	}
 
 	return AddTags;
+}
+
+FBox AMazeTileLevelInstance::GetLevelBounds() const
+{
+	FBox LevelBounds;
+	GetLoadedLevel()->GetLevelBoundsFromAsset(this,LevelBounds);
+	return LevelBounds;
 }

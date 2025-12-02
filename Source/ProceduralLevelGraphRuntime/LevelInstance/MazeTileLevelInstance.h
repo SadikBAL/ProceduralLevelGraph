@@ -12,6 +12,7 @@ class AMazeTileLevelInstance : public ALevelInstance
 public:
 	AMazeTileLevelInstance();
 	virtual void OnLevelInstanceLoaded() override;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "30", ClampMin = "1", ClampMax = "30", MultipleOf = "1"))
 	int Width;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "30", ClampMin = "1", ClampMax = "30", MultipleOf = "1"))
@@ -23,9 +24,12 @@ public:
 	void UpdateMeshPartVisibilities(TArray<FName> SearchedTags, bool bVisibility);
 	UFUNCTION()
 	TArray<FName> GetMeshPartNames(EMazeDirection LocalDirection, int LocalRotation);
+	FBox GetLevelBounds() const;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FMazeTileData NodeData;
+
 private:
 	//UPROPERTY(Transient, DuplicateTransient)
 	//UMazeNodeBase* MazeNodeRef;
-	UPROPERTY()
-	FMazeTileData NodeData;
+
 };
