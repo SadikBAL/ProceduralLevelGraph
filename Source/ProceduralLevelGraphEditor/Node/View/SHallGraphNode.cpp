@@ -80,7 +80,7 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	TitleFont.Size = 12;
 	UpdateGraphNode();
 	UpdatePinTypes();
-	const FVector2D IconSize(16.0f * (TILE_EDITOR_SCALE / 100.0f), 16.0f * (TILE_EDITOR_SCALE / 100.0f));
+	const FVector2D IconSize(22.0f, 22.0f);
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Minus.T_Button_Icon_Minus")))
 		ButtonMinusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Plus.T_Button_Icon_Plus")))
