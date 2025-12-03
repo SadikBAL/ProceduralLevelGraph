@@ -82,7 +82,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
-	TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
+	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
 	if (PinName == FName("Up"))
 	{
 		UpPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
@@ -133,15 +133,15 @@ void SRoomGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidge
 
 FOptionalSize SRoomGraphNode::GetNodeHeight() const
 {
-	if (URoomGraphNode* RoomNode = Cast<URoomGraphNode>(GraphNode))
+	if (const URoomGraphNode* NodeRef = Cast<URoomGraphNode>(GraphNode))
 	{
-		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		if (NodeRef->RoomRotation == 0 || NodeRef->RoomRotation == 180)
 		{
-			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
+			return NodeRef->RoomHeight * TILE_EDITOR_SCALE;
 		}
-		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		else if (NodeRef->RoomRotation == 90 || NodeRef->RoomRotation == 270)
 		{
-			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
+			return NodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;
@@ -149,15 +149,15 @@ FOptionalSize SRoomGraphNode::GetNodeHeight() const
 
 FOptionalSize SRoomGraphNode::GetNodeWidth() const
 {
-	if (URoomGraphNode* RoomNode = Cast<URoomGraphNode>(GraphNode))
+	if (const URoomGraphNode* NodeRef = Cast<URoomGraphNode>(GraphNode))
 	{
-		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		if (NodeRef->RoomRotation == 0 || NodeRef->RoomRotation == 180)
 		{
-			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
+			return NodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
-		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		else if (NodeRef->RoomRotation == 90 || NodeRef->RoomRotation == 270)
 		{
-			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
+			return NodeRef->RoomHeight * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;

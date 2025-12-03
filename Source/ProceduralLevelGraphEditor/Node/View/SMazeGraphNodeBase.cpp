@@ -64,7 +64,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     {
         return;
     }
-    TSharedPtr<SGraphPanel> OwnerPanel = GetOwnerPanel();
+    const TSharedPtr<SGraphPanel> OwnerPanel = GetOwnerPanel();
     if(!OwnerPanel.IsValid()) return;
 
     constexpr float ConnectionThreshold = 15.0f;
@@ -118,7 +118,7 @@ FVector2D SMazeGraphNodeBase::GetPinPositionInGraphSpace(const TSharedPtr<SGraph
     {
         return FVector2D::ZeroVector;
     }
-    if (UEdGraphNode* OwningNode = Pin->GetOwningNode())
+    if (const UEdGraphNode* OwningNode = Pin->GetOwningNode())
     {
         TSharedPtr<SGraphNode> NodeWidget = GraphPanel->GetNodeWidgetFromGuid(OwningNode->NodeGuid);
         if (NodeWidget.IsValid())

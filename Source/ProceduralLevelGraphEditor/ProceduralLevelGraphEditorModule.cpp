@@ -8,8 +8,8 @@
 void FProceduralLevelGraphEditorModule::StartupModule()
 {
     IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
-    
-    EAssetTypeCategories::Type PLGCategory = AssetTools.RegisterAdvancedAssetCategory(FName(TEXT("ProceduralLevelGraph")), LOCTEXT("ProceduralLevelGraphCategory", "Procedural Level Graph"));
+
+    const EAssetTypeCategories::Type PLGCategory = AssetTools.RegisterAdvancedAssetCategory(FName(TEXT("ProceduralLevelGraph")), LOCTEXT("ProceduralLevelGraphCategory", "Procedural Level Graph"));
     
     AssetTypeActions = MakeShareable(new FAssetTypeActions_ProceduralLevelGraph(PLGCategory));
     AssetTools.RegisterAssetTypeActions(AssetTypeActions.ToSharedRef());

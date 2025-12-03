@@ -16,7 +16,10 @@ public:
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual void AllocateDefaultPins() override;
 	virtual EMazePinType GetPinType() override;
+	
 	void OnTileBlueprintsChanged();
+	void UpdateHallLength(int Value);
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hall")
 	int RoomWidth;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hall")
@@ -24,8 +27,6 @@ public:
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hall", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
 	int HallLength;
-	UFUNCTION()
-	void UpdateHallLength(int Value);
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
 	TSubclassOf<AHallLevelInstance> HallLevelInstanceRef;
 };

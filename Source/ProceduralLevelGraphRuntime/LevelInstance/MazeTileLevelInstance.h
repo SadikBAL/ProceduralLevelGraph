@@ -12,24 +12,19 @@ class AMazeTileLevelInstance : public ALevelInstance
 public:
 	AMazeTileLevelInstance();
 	virtual void OnLevelInstanceLoaded() override;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
-	int Width;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
-	int Height;
-	
+	FBox GetLevelBounds() const;
 	UFUNCTION(BlueprintCallable, Category = "Tile")
 	void SetNodeData(UMazeNodeBase* BaseNode);
 	UFUNCTION()
 	void UpdateMeshPartVisibilities(TArray<FName> SearchedTags, bool bVisibility);
 	UFUNCTION()
 	TArray<FName> GetMeshPartNames(EMazeDirection LocalDirection, int LocalRotation);
-	FBox GetLevelBounds() const;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
+	int Width;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
+	int Height;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FMazeTileData NodeData;
-
-private:
-	//UPROPERTY(Transient, DuplicateTransient)
-	//UMazeNodeBase* MazeNodeRef;
-
+	
 };

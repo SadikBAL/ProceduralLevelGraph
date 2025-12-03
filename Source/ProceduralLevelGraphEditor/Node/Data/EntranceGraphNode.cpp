@@ -25,6 +25,7 @@ FText UEntranceGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
 	return LOCTEXT("EntranceNodeTitle", "Entrance");
 }
+
 void UEntranceGraphNode::AllocateDefaultPins()
 {
 	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Up"));
@@ -47,12 +48,24 @@ void UEntranceGraphNode::OnTileBlueprintsChanged()
 {
 	if (EntranceLevelInstanceRef) 
 	{
-		const ARoomLevelInstance* DefaultTile = EntranceLevelInstanceRef->GetDefaultObject<ARoomLevelInstance>();
-		if (DefaultTile)
+		if (const ARoomLevelInstance* DefaultTile = EntranceLevelInstanceRef->GetDefaultObject<ARoomLevelInstance>())
 		{
 			RoomWidth = DefaultTile->Width;
 			RoomHeight = DefaultTile->Height;
 		}
 	}
 }
+
+void UEntranceGraphNode::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+	const FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
+					   ? PropertyChangedEvent.Property->GetFName() 
+					   : NAME_None;
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(UEntranceGraphNode, EntranceLevelInstanceRef))
+	{
+		OnTileBlueprintsChanged();
+	}
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+}
+
 #undef LOCTEXT_NAMESPACE

@@ -12,14 +12,12 @@ class UMazeGraphNodeBase : public UEdGraphNode
 
 public:
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
-	FGameplayTagContainer GameplayTags;
-	*/
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual bool CanUserDeleteNode() const override;
 	virtual bool CanUserCopyNode() const;
 	virtual void GetNodeContextMenuActions(class UToolMenu* Menu, class UGraphNodeContextMenuContext* Context) const override;
 	virtual void PinConnectionListChanged(UEdGraphPin* Pin) override;
+	virtual EMazePinType GetPinType();
 
 	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Right")
 	void RotateRoomToRight();
@@ -27,10 +25,7 @@ public:
 	void RotateRoomToLeft();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Node Process")
 	int RoomRotation = 0;
-	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Right")
-	virtual EMazePinType GetPinType();
-	//UPROPERTY(VisibleAnywhere, Category = "Spawning")
-	//TSubclassOf<AMazeTileLevelInstance> LevelInstanceRef;
+
 protected:
 	UPROPERTY()
 	FText NodeTitle = FText::FromString("ROOM");

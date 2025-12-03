@@ -87,7 +87,7 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 		ButtonPlusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Rotate.T_Button_Icon_Rotate")))
 		ButtonRotateBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
-	const float EdgePadding = 10.0f;
+    constexpr float EdgePadding = 10.0f;
 	const bool bIsVertical = (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180);
 	GetOrAddSlot(ENodeZone::Center)
 		.HAlign(HAlign_Center)
@@ -168,7 +168,7 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
-	TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
+	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
 	if (PinName == FName("Up"))
 	{
 		UpPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);

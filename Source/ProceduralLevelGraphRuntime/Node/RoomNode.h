@@ -17,7 +17,6 @@ public:
 	float RoomWidth;
 	UPROPERTY(BlueprintReadOnly, Category = "Room Node")
 	float RoomHeight;
-	
 	UPROPERTY(BlueprintReadOnly, Category = "Room Node")
 	TArray<TSubclassOf<ARoomLevelInstance>> RoomLevelInstanceRefs;
 	UPROPERTY(BlueprintReadOnly, Category = "Room Node")

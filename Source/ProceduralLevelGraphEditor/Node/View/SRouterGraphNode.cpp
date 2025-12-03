@@ -81,7 +81,7 @@ void SRouterGraphNode::Construct(const FArguments& InArgs, URouterGraphNode* InN
 void SRouterGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
-	TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
+	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
 	if (PinName == FName("Up"))
 	{
 		UpPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
@@ -131,15 +131,15 @@ void SRouterGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWid
 
 FOptionalSize SRouterGraphNode::GetNodeHeight() const
 {
-	if (URouterGraphNode* RoomNode = Cast<URouterGraphNode>(GraphNode))
+	if (const URouterGraphNode* NodeRef = Cast<URouterGraphNode>(GraphNode))
 	{
-		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		if (NodeRef->RoomRotation == 0 || NodeRef->RoomRotation == 180)
 		{
-			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
+			return NodeRef->RoomHeight * TILE_EDITOR_SCALE;
 		}
-		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		else if (NodeRef->RoomRotation == 90 || NodeRef->RoomRotation == 270)
 		{
-			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
+			return NodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;
@@ -147,15 +147,15 @@ FOptionalSize SRouterGraphNode::GetNodeHeight() const
 
 FOptionalSize SRouterGraphNode::GetNodeWidth() const
 {
-	if (URouterGraphNode* RoomNode = Cast<URouterGraphNode>(GraphNode))
+	if (const URouterGraphNode* NodeRef = Cast<URouterGraphNode>(GraphNode))
 	{
-		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		if (NodeRef->RoomRotation == 0 || NodeRef->RoomRotation == 180)
 		{
-			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
+			return NodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
-		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		else if (NodeRef->RoomRotation == 90 || NodeRef->RoomRotation == 270)
 		{
-			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
+			return NodeRef->RoomHeight * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;

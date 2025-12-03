@@ -10,6 +10,13 @@ class ULayoutGraphNode : public UEdGraphNode_Comment
 	GENERATED_BODY()
 	ULayoutGraphNode();
 public:
+
+	virtual void AllocateDefaultPins() override;
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+	virtual void ResizeNode(const FVector2f& NewSize) override;
+	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
+	virtual FText GetTooltipText() const override;
+	
 	UPROPERTY(EditAnywhere, Category = "Background Display")
 	TObjectPtr<UTexture2D> BackgroundImage;
 	
@@ -18,10 +25,5 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Background Display")
 	FText TitleText;
-	virtual void AllocateDefaultPins() override;
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
-	virtual void ResizeNode(const FVector2f& NewSize) override;
-
-	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
-	virtual FText GetTooltipText() const override;
+	
 };

@@ -26,11 +26,10 @@ void UEntranceNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirect
 	{
 		return;
 	}
-
 	
 	if (!World)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
+		UE_LOG(LogTemp, Warning, TEXT("EntranceNode->SpawnMazeObject: there is no World!"));
 		return;
 	}
 	

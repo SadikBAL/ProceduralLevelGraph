@@ -29,7 +29,7 @@ void URouterNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirectio
 	
 	if (!World)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: Geçerli bir dünya (World) bulunamadı!"));
+		UE_LOG(LogTemp, Warning, TEXT("RouterNode->SpawnMazeObject: there is no World!"));
 		return;
 	}
 	

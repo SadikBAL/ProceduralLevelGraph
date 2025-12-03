@@ -51,7 +51,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 	}
 	if (!World)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SpawnMazeObject: there is no world."));
+		UE_LOG(LogTemp, Warning, TEXT("RoomNode->SpawnMazeObject: there is no World!"));
 		return;
 	}
 	switch (Direction)

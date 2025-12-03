@@ -43,11 +43,9 @@ void FProceduralLevelGraphEditor::HandleDelete()
 
     for (FGraphPanelSelectionSet::TConstIterator NodeIt(SelectedNodes); NodeIt; ++NodeIt)
     {
-        UEdGraphNode* Node = CastChecked<UEdGraphNode>(*NodeIt);
-
-        if (Node->CanUserDeleteNode())
+        if (UEdGraphNode* NodeRef = CastChecked<UEdGraphNode>(*NodeIt); NodeRef->CanUserDeleteNode())
         {
-            FBlueprintEditorUtils::RemoveNode(NULL, Node, true);
+            FBlueprintEditorUtils::RemoveNode(nullptr, NodeRef, true);
         }
     }
 }
@@ -61,7 +59,6 @@ FProceduralLevelGraphEditor::FProceduralLevelGraphEditor()
 {
     GraphAsset = nullptr;
     CommandList = nullptr;
-    
 }
 
 FProceduralLevelGraphEditor::~FProceduralLevelGraphEditor()
@@ -108,7 +105,7 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
     OnGraphChangedDelegateHandle = GraphAsset->EdGraph->AddOnGraphChangedHandler(FOnGraphChanged::FDelegate::CreateRaw(this, &FProceduralLevelGraphEditor::OnGraphChanged));
     FGraphEditorCommands::Register();
 
-    TSharedRef<FTabManager::FLayout> StandaloneDefaultLayout = FTabManager::NewLayout("Standalone_MazeGraph_Layout_V1")
+    const TSharedRef<FTabManager::FLayout> StandaloneDefaultLayout = FTabManager::NewLayout("Standalone_MazeGraph_Layout_V1")
         ->AddArea
         (
             FTabManager::NewPrimaryArea()->SetOrientation(Orient_Vertical)
@@ -130,8 +127,8 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
             )
         );
 
-    const bool bCreateDefaultStandaloneMenu = true;
-    const bool bCreateDefaultToolbar = true;
+    constexpr bool bCreateDefaultStandaloneMenu = true;
+    constexpr bool bCreateDefaultToolbar = true;
     CommandList = MakeShareable(new FUICommandList);
 
     CommandList->MapAction(
@@ -169,7 +166,7 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
 void FProceduralLevelGraphEditor::RegisterTabSpawners(const TSharedRef<class FTabManager>& InTabManager)
 {
     WorkspaceMenuCategory = InTabManager->AddLocalWorkspaceMenuCategory(LOCTEXT("WorkspaceMenu_ProceduralLevelGraphEditor", "Procedural Level Graph Editor"));
-    auto WorkspaceMenuCategoryRef = WorkspaceMenuCategory.ToSharedRef();
+    const auto WorkspaceMenuCategoryRef = WorkspaceMenuCategory.ToSharedRef();
 
     FAssetEditorToolkit::RegisterTabSpawners(InTabManager);
 
@@ -313,10 +310,10 @@ void FProceduralLevelGraphEditor::SaveAsset_Execute()
 bool FProceduralLevelGraphEditor::IsPinVisible(UEdGraphPin* Pin)
 {
     if (!Pin) return false;
-    if (UHallGraphNode* HallEdNode = Cast<UHallGraphNode>(Pin->GetOwningNode()))
+    if (const UHallGraphNode* NodeRef = Cast<UHallGraphNode>(Pin->GetOwningNode()))
     {
-        FName PinName = Pin->GetFName();
-        int32 Rotation = HallEdNode->RoomRotation;
+        const FName PinName = Pin->GetFName();
+        const int32 Rotation = NodeRef->RoomRotation;
         if (PinName == FName("Up") || PinName == FName("Down"))
         {
             return (Rotation == 0 || Rotation == 180);
@@ -403,7 +400,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             Node->Others.Empty(); 
         }
     }
-    for (auto Map : NodeMap)
+    for (const auto Map : NodeMap)
     {
         UEdGraphNode* EdGraph = Map.Key;
         UMazeNodeBase* RuntimeNode = Map.Value;
@@ -411,7 +408,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
         {
             if (LinkedPin->GetName() == FName("Up"))
             {
-                for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                for (const UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                 {
                     if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
                     {
@@ -421,7 +418,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             }
             else if (LinkedPin->GetName() == FName("Down"))
             {
-                for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                for (const UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                 {
                     if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
                     {
@@ -431,7 +428,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             }
             else if (LinkedPin->GetName() == FName("Left"))
             {
-                for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                for (const UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                 {
                     if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
                     {
@@ -441,7 +438,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             }
             else if (LinkedPin->GetName() == FName("Right"))
             {
-                for (UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                for (const UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
                 {
                     if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
                     {
@@ -454,7 +451,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
     }
     if (!GraphAsset->StartNode)
     {
-        UE_LOG(LogTemp, Error, TEXT("SaveGraphToRuntimeData Error : StartNode is null. Ist coudnt working on runtime."));
+        UE_LOG(LogTemp, Error, TEXT("SaveGraphToRuntimeData Error : StartNode is null. Ist couldn't working on runtime."));
     }
 }
 
@@ -476,13 +473,13 @@ void FProceduralLevelGraphEditor::FindAllRoutes(UMazeGraphNodeBase* SelectedNode
     }
     if (!TargetNode)
     {
-        UE_LOG(LogTemp, Warning, TEXT("UpdateAllPathsFromNode: Grafikte Entrance Node bulunamadı!"));
+        UE_LOG(LogTemp, Warning, TEXT("UpdateAllPathsFromNode: Entrance node not fount."));
         return;
     }
 
     if (SelectedNode == TargetNode)
     {
-        UE_LOG(LogTemp, Warning, TEXT("UpdateAllPathsFromNode: Grafikte Entrance Node bulunamadı!"));
+        UE_LOG(LogTemp, Warning, TEXT("UpdateAllPathsFromNode: Entrance node not fount."));
     }
     else
     {
@@ -508,7 +505,7 @@ void FProceduralLevelGraphEditor::FindAllRoutes(UMazeGraphNodeBase* SelectedNode
         {
             Routes.Add(ERouteType::RouteD, AllPaths[3]);
         }
-        UE_LOG(LogTemp, Log, TEXT("Toplam %d adet alternatif yol bulundu."), AllPaths.Num());
+        UE_LOG(LogTemp, Log, TEXT("%d path founded."), AllPaths.Num());
     }
 }
 
@@ -545,7 +542,7 @@ void FProceduralLevelGraphEditor::FindAllPathsRecursive(UMazeGraphNodeBase* Curr
                 continue;
             }
 
-            for (UEdGraphPin* OtherPin : Pin->LinkedTo)
+            for (const UEdGraphPin* OtherPin : Pin->LinkedTo)
             {
                 if (UMazeGraphNodeBase* NeighborNode = Cast<UMazeGraphNodeBase>(OtherPin->GetOwningNode()))
                 {
@@ -612,7 +609,7 @@ void FProceduralLevelGraphEditor::PasteSelectedNodes()
         FEdGraphUtilities::ImportNodesFromText(GraphAsset->EdGraph, TextToImport, PastedNodes);
 
         FVector2D AvgNodePosition(0.0f, 0.0f);
-        for (UEdGraphNode* Node : PastedNodes)
+        for (const UEdGraphNode* Node : PastedNodes)
         {
             AvgNodePosition.X += Node->NodePosX;
             AvgNodePosition.Y += Node->NodePosY;
@@ -658,8 +655,8 @@ void FProceduralLevelGraphEditor::PasteSelectedNodes(EMazeOrientation Direction)
     {
         FString TextToImport;
         FPlatformApplicationMisc::ClipboardPaste(TextToImport);
-        
-        FText TransactionTitle = (Direction == EMazeOrientation::Horizontal) ? 
+
+        const FText TransactionTitle = (Direction == EMazeOrientation::Horizontal) ? 
             NSLOCTEXT("ProceduralLevelGraphEditor", "PasteMirrorH", "Paste Mirror Horizontal") :
             NSLOCTEXT("ProceduralLevelGraphEditor", "PasteMirrorV", "Paste Mirror Vertical");
 
@@ -671,7 +668,7 @@ void FProceduralLevelGraphEditor::PasteSelectedNodes(EMazeOrientation Direction)
         FEdGraphUtilities::ImportNodesFromText(GraphAsset->EdGraph, TextToImport, PastedNodes);
 
         FVector2D AvgNodePosition(0.0f, 0.0f);
-        for (UEdGraphNode* Node : PastedNodes)
+        for (const UEdGraphNode* Node : PastedNodes)
         {
             AvgNodePosition.X += Node->NodePosX;
             AvgNodePosition.Y += Node->NodePosY;
@@ -679,7 +676,7 @@ void FProceduralLevelGraphEditor::PasteSelectedNodes(EMazeOrientation Direction)
 
         if (PastedNodes.Num() > 0)
         {
-            const float InvNumNodes = 1.0f / float(PastedNodes.Num());
+            const float InvNumNodes = 1.0f / static_cast<float>(PastedNodes.Num());
             AvgNodePosition.X *= InvNumNodes;
             AvgNodePosition.Y *= InvNumNodes;
         }
@@ -688,48 +685,48 @@ void FProceduralLevelGraphEditor::PasteSelectedNodes(EMazeOrientation Direction)
             float Width = 100.0f; 
             float Height = 100.0f;
 
-            if (URoomGraphNode* Room = Cast<URoomGraphNode>(InNode))
+            if (const URoomGraphNode* RoomRef = Cast<URoomGraphNode>(InNode))
             {
-                bool bIsVert = Room->RoomRotation == 0 || Room->RoomRotation == 180;
-                Width = (bIsVert ? Room->RoomWidth : Room->RoomHeight) * TILE_EDITOR_SCALE;
-                Height = (bIsVert ? Room->RoomHeight : Room->RoomWidth) * TILE_EDITOR_SCALE;
+                bool bIsVert = RoomRef->RoomRotation == 0 || RoomRef->RoomRotation == 180;
+                Width = (bIsVert ? RoomRef->RoomWidth : RoomRef->RoomHeight) * TILE_EDITOR_SCALE;
+                Height = (bIsVert ? RoomRef->RoomHeight : RoomRef->RoomWidth) * TILE_EDITOR_SCALE;
             }
-            else if (UHallGraphNode* Hall = Cast<UHallGraphNode>(InNode))
+            else if (const UHallGraphNode* HallRef = Cast<UHallGraphNode>(InNode))
             {
-                bool bIsVert = Hall->RoomRotation == 0 || Hall->RoomRotation == 180;
-                float Length = Hall->HallLength * Hall->RoomTile;
-                float Thickness = Hall->RoomWidth;
+                bool bIsVert = HallRef->RoomRotation == 0 || HallRef->RoomRotation == 180;
+                float Length = HallRef->HallLength * HallRef->RoomTile;
+                float Thickness = HallRef->RoomWidth;
                 
                 Width = (bIsVert ? Thickness : Length) * TILE_EDITOR_SCALE;
                 Height = (bIsVert ? Length : Thickness) * TILE_EDITOR_SCALE;
             }
-            else if (UEntranceGraphNode* Entrance = Cast<UEntranceGraphNode>(InNode))
+            else if (const UEntranceGraphNode* EntranceRef = Cast<UEntranceGraphNode>(InNode))
             {
-                bool bIsVert = Entrance->RoomRotation == 0 || Entrance->RoomRotation == 180;
-                Width = (bIsVert ? Entrance->RoomWidth : Entrance->RoomHeight) * TILE_EDITOR_SCALE;
-                Height = (bIsVert ? Entrance->RoomHeight : Entrance->RoomWidth) * TILE_EDITOR_SCALE;
+                bool bIsVert = EntranceRef->RoomRotation == 0 || EntranceRef->RoomRotation == 180;
+                Width = (bIsVert ? EntranceRef->RoomWidth : EntranceRef->RoomHeight) * TILE_EDITOR_SCALE;
+                Height = (bIsVert ? EntranceRef->RoomHeight : EntranceRef->RoomWidth) * TILE_EDITOR_SCALE;
             }
-            else if (URouterGraphNode* Router = Cast<URouterGraphNode>(InNode))
+            else if (const URouterGraphNode* RouterRef = Cast<URouterGraphNode>(InNode))
             {
-                bool bIsVert = Router->RoomRotation == 0 || Router->RoomRotation == 180;
-                Width = (bIsVert ? Router->RoomWidth : Router->RoomHeight) * TILE_EDITOR_SCALE;
-                Height = (bIsVert ? Router->RoomHeight : Router->RoomWidth) * TILE_EDITOR_SCALE;
+                bool bIsVert = RouterRef->RoomRotation == 0 || RouterRef->RoomRotation == 180;
+                Width = (bIsVert ? RouterRef->RoomWidth : RouterRef->RoomHeight) * TILE_EDITOR_SCALE;
+                Height = (bIsVert ? RouterRef->RoomHeight : RouterRef->RoomWidth) * TILE_EDITOR_SCALE;
             }
-            else if (ULayoutGraphNode* Layout = Cast<ULayoutGraphNode>(InNode))
+            else if (const ULayoutGraphNode* LayoutRef = Cast<ULayoutGraphNode>(InNode))
             {
-                Width = Layout->NodeWidth;
-                Height = Layout->NodeHeight;
+                Width = LayoutRef->NodeWidth;
+                Height = LayoutRef->NodeHeight;
             }
-
             return FVector2f(Width, Height);
+            
         };
         
         for (UEdGraphNode* Node : PastedNodes)
         {
             Node->CreateNewGuid();
-            float RelativeX = Node->NodePosX - AvgNodePosition.X;
-            float RelativeY = Node->NodePosY - AvgNodePosition.Y;
-            FVector2f NodeSize = GetNodeSize(Node);
+            const float RelativeX = Node->NodePosX - AvgNodePosition.X;
+            const float RelativeY = Node->NodePosY - AvgNodePosition.Y;
+            const FVector2f NodeSize = GetNodeSize(Node);
             if (Direction == EMazeOrientation::Horizontal)
             {
                 Node->NodePosX = PasteLocation.X - RelativeX - NodeSize.X;
@@ -750,7 +747,7 @@ void FProceduralLevelGraphEditor::PasteSelectedNodes(EMazeOrientation Direction)
                     else if (MazeNode->RoomRotation == 180) MazeNode->RoomRotation = 0;
                 }
             }
-            Node->SnapToGrid(GRID_SNAP_SCALE); // Grid Snap Scale'i headerdan alıyor
+            Node->SnapToGrid(GRID_SNAP_SCALE);
             Node->Pins.Empty();
             Node->AllocateDefaultPins();
             Node->ReconstructNode();

@@ -11,12 +11,12 @@ int32 SLayoutGraphNode::OnPaint(const FPaintArgs& Args, const FGeometry& Allotte
 	const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId,
 	const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
 {
-	if (ULayoutGraphNode* ImageNode = Cast<ULayoutGraphNode>(GraphNode))
+	if (const ULayoutGraphNode* ImageNode = Cast<ULayoutGraphNode>(GraphNode))
 	{
 		if (ImageNode->BackgroundImage)
 		{
-			FVector2D DrawSize(ImageNode->NodeWidth, ImageNode->NodeHeight);
-			FSlateImageBrush TempBrush(ImageNode->BackgroundImage, DrawSize);
+			const FVector2D DrawSize(ImageNode->NodeWidth, ImageNode->NodeHeight);
+			const FSlateImageBrush TempBrush(ImageNode->BackgroundImage, DrawSize);
 			FSlateDrawElement::MakeBox(
 				OutDrawElements,
 				LayerId,

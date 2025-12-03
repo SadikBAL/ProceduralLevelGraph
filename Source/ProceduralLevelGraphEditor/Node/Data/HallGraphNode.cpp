@@ -20,10 +20,12 @@ UHallGraphNode::UHallGraphNode()
 	}
 	OnTileBlueprintsChanged();
 }
+
 FText UHallGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
 	return LOCTEXT("HallNodeTitle", "Hall");
 }
+
 void UHallGraphNode::AllocateDefaultPins()
 {
 	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Up"));
@@ -41,8 +43,7 @@ void UHallGraphNode::OnTileBlueprintsChanged()
 {
 	if (HallLevelInstanceRef) 
 	{
-		const AHallLevelInstance* DefaultTile = HallLevelInstanceRef->GetDefaultObject<AHallLevelInstance>();
-		if (DefaultTile)
+		if (const AHallLevelInstance* DefaultTile = HallLevelInstanceRef->GetDefaultObject<AHallLevelInstance>())
 		{
 			RoomWidth = DefaultTile->Width;
 			RoomTile  = DefaultTile->Height;
@@ -52,7 +53,7 @@ void UHallGraphNode::OnTileBlueprintsChanged()
 
 void UHallGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-	FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
+	const FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
 					   ? PropertyChangedEvent.Property->GetFName() 
 					   : NAME_None;
 	if (PropertyName == GET_MEMBER_NAME_CHECKED(UHallGraphNode, HallLevelInstanceRef))
@@ -70,6 +71,5 @@ void UHallGraphNode::UpdateHallLength(int Value)
 		MyGraph->NotifyGraphChanged();
 	}
 }
-
 
 #undef LOCTEXT_NAMESPACE

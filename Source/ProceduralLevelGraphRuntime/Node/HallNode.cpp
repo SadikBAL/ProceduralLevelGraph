@@ -20,7 +20,7 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 	}
 	if (!World)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SpawnMyRoom: there is no World!"));
+		UE_LOG(LogTemp, Warning, TEXT("HallNode->SpawnMazeObject: there is no World!"));
 		return;
 	}
 	FVector TileSpawnLocation = Position;

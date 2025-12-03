@@ -18,7 +18,9 @@ public:
 	virtual FOptionalSize GetNodeHeight() const;
 	virtual FOptionalSize GetNodeWidth() const;
 	virtual void UpdatePinTypes();
+	
 protected:
+	
 	int PinPadding = -4;
 	bool bOnDrag = false;
 	TSharedPtr<SRoomGraphNodePin> UpPin;

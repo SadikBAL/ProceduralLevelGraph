@@ -34,7 +34,7 @@ public:
     virtual void PostInitAssetEditor() override;
     // End of FAssetEditorToolkit interface
 
-    // FEditorUndoClient interface (YENİ EKLENENLER)
+    // FEditorUndoClient interface
     virtual void PostUndo(bool bSuccess) override;
     virtual void PostRedo(bool bSuccess) override;
     // End of FEditorUndoClient interface

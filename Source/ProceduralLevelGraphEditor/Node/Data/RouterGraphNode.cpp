@@ -33,12 +33,23 @@ void URouterGraphNode::AllocateDefaultPins()
 	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Right"));
 }
 
+void URouterGraphNode::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+	FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
+					   ? PropertyChangedEvent.Property->GetFName() 
+					   : NAME_None;
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(URouterGraphNode, RouterLevelInstanceRef))
+	{
+		OnTileBlueprintsChanged();
+	}
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+}
+
 void URouterGraphNode::OnTileBlueprintsChanged()
 {
 	if (RouterLevelInstanceRef) 
 	{
-		const ARoomLevelInstance* DefaultTile = RouterLevelInstanceRef->GetDefaultObject<ARoomLevelInstance>();
-		if (DefaultTile)
+		if (const ARoomLevelInstance* DefaultTile = RouterLevelInstanceRef->GetDefaultObject<ARoomLevelInstance>())
 		{
 			RoomWidth = DefaultTile->Width;
 			RoomHeight = DefaultTile->Height;

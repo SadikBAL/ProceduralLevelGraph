@@ -19,6 +19,7 @@ TSharedPtr<SGraphNode> FSRoomGraphNodeFactory::CreateNode(UEdGraphNode* Node) co
 	}
 	return nullptr;
 }
+
 TSharedPtr<SGraphNode> FSHallGraphNodeFactory::CreateNode(UEdGraphNode* Node) const
 {
 	if (UHallGraphNode* HallNode = Cast<UHallGraphNode>(Node))
@@ -36,6 +37,7 @@ TSharedPtr<SGraphNode> FSRouterGraphNodeFactory::CreateNode(UEdGraphNode* Node) 
 	}
 	return nullptr;
 }
+
 TSharedPtr<SGraphNode> FSEntranceGraphNodeFactory::CreateNode(UEdGraphNode* Node) const
 {
 	if (UEntranceGraphNode* EntranceNode = Cast<UEntranceGraphNode>(Node))

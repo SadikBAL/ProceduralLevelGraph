@@ -17,7 +17,7 @@ void SEntranceGraphNode::Construct(const FArguments& InArgs, UEntranceGraphNode*
 {
 	this->GraphNode = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 16;
+	TitleFont.Size = 12;
 	UpdateGraphNode();
 	UpdatePinTypes();
 	GetOrAddSlot(ENodeZone::Center)
@@ -134,15 +134,15 @@ void SEntranceGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinW
 
 FOptionalSize SEntranceGraphNode::GetNodeHeight() const
 {
-	if (UEntranceGraphNode* RoomNode = Cast<UEntranceGraphNode>(GraphNode))
+	if (const UEntranceGraphNode* NoodRef = Cast<UEntranceGraphNode>(GraphNode))
 	{
-		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		if (NoodRef->RoomRotation == 0 || NoodRef->RoomRotation == 180)
 		{
-			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
+			return NoodRef->RoomHeight * TILE_EDITOR_SCALE;
 		}
-		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		else if (NoodRef->RoomRotation == 90 || NoodRef->RoomRotation == 270)
 		{
-			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
+			return NoodRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;
@@ -150,15 +150,15 @@ FOptionalSize SEntranceGraphNode::GetNodeHeight() const
 
 FOptionalSize SEntranceGraphNode::GetNodeWidth() const
 {
-	if (UEntranceGraphNode* RoomNode = Cast<UEntranceGraphNode>(GraphNode))
+	if (const UEntranceGraphNode* NoodRef = Cast<UEntranceGraphNode>(GraphNode))
 	{
-		if (RoomNode->RoomRotation == 0 || RoomNode->RoomRotation == 180)
+		if (NoodRef->RoomRotation == 0 || NoodRef->RoomRotation == 180)
 		{
-			return RoomNode->RoomWidth * TILE_EDITOR_SCALE;
+			return NoodRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
-		else if (RoomNode->RoomRotation == 90 || RoomNode->RoomRotation == 270)
+		else if (NoodRef->RoomRotation == 90 || NoodRef->RoomRotation == 270)
 		{
-			return RoomNode->RoomHeight * TILE_EDITOR_SCALE;
+			return NoodRef->RoomHeight * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;

@@ -172,24 +172,7 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
     LOCTEXT("NewImgCommentTooltip", "Adds a resizable background image region."), 0));
     NewNodeAction_ImgComment->NodeTemplate = NewObject<ULayoutGraphNode>(ContextMenuBuilder.OwnerOfTemporaries, NAME_None, RF_Transactional);
     ContextMenuBuilder.AddAction(NewNodeAction_ImgComment);
-
-    TSharedPtr<FPLGGraphSchemaAction_PasteMirror> PasteMirrorHAction = MakeShareable(new FPLGGraphSchemaAction_PasteMirror(
-        FText::FromString(TEXT("Edit")),
-        NSLOCTEXT("MazeGraphSchema", "PasteMirrorHorizontal", "Paste Mirror Horizontal (Left/Right)"),
-        NSLOCTEXT("MazeGraphSchema", "PasteMirrorHTooltip", "Mirrors nodes along X axis (Flips Left/Right)"),
-        0,
-        EMazeOrientation::Horizontal
-    ));
-    ContextMenuBuilder.AddAction(PasteMirrorHAction);
-
-    TSharedPtr<FPLGGraphSchemaAction_PasteMirror> PasteMirrorVAction = MakeShareable(new FPLGGraphSchemaAction_PasteMirror(
-        FText::FromString(TEXT("Edit")),
-        NSLOCTEXT("MazeGraphSchema", "PasteMirrorVertical", "Paste Mirror Vertical (Up/Down)"),
-        NSLOCTEXT("MazeGraphSchema", "PasteMirrorVTooltip", "Mirrors nodes along Y axis (Flips Up/Down)"),
-        0,
-        EMazeOrientation::Vertical
-    ));
-    ContextMenuBuilder.AddAction(PasteMirrorVAction);
+    
     if (!ContextMenuBuilder.FromPin)
     {
         FString TextToImport;
@@ -202,8 +185,24 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
                 NSLOCTEXT("MazeGraphSchema", "PasteTooltip", "Pastes nodes from clipboard here"),
                 0 
             ));
-            
             ContextMenuBuilder.AddAction(PasteAction);
+            TSharedPtr<FPLGGraphSchemaAction_PasteMirror> PasteMirrorHAction = MakeShareable(new FPLGGraphSchemaAction_PasteMirror(
+        FText::FromString(TEXT("Edit")),
+        NSLOCTEXT("MazeGraphSchema", "PasteMirrorHorizontal", "Paste Mirror Horizontal (Left/Right)"),
+        NSLOCTEXT("MazeGraphSchema", "PasteMirrorHTooltip", "Mirrors nodes along X axis (Flips Left/Right)"),
+        0,
+        EMazeOrientation::Horizontal
+             ));
+            ContextMenuBuilder.AddAction(PasteMirrorHAction);
+
+            TSharedPtr<FPLGGraphSchemaAction_PasteMirror> PasteMirrorVAction = MakeShareable(new FPLGGraphSchemaAction_PasteMirror(
+                FText::FromString(TEXT("Edit")),
+                NSLOCTEXT("MazeGraphSchema", "PasteMirrorVertical", "Paste Mirror Vertical (Up/Down)"),
+                NSLOCTEXT("MazeGraphSchema", "PasteMirrorVTooltip", "Mirrors nodes along Y axis (Flips Up/Down)"),
+                0,
+                EMazeOrientation::Vertical
+            ));
+            ContextMenuBuilder.AddAction(PasteMirrorVAction);
         }
     }
 }

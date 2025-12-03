@@ -3,6 +3,7 @@
 #include "Framework/Commands/GenericCommands.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #define LOCTEXT_NAMESPACE "MazeGraphNodeBase"
+
 FText UMazeGraphNodeBase::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
 	return LOCTEXT("RoomNodeTitle", "Room");
@@ -40,7 +41,6 @@ void UMazeGraphNodeBase::PinConnectionListChanged(UEdGraphPin* Pin)
 	}
 }
 
-
 void UMazeGraphNodeBase::RotateRoomToLeft()
 {
 	RoomRotation -= 90;
@@ -67,5 +67,6 @@ void UMazeGraphNodeBase::RotateRoomToRight()
 		MyGraph->NotifyGraphChanged();
 	}
 }
+
 #undef LOCTEXT_NAMESPACE
 

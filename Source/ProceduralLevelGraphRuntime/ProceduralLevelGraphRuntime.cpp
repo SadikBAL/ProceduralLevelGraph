@@ -14,6 +14,7 @@ UProceduralLevelGraphRuntime::UProceduralLevelGraphRuntime()
 }
 
 #if WITH_EDITOR
+
 void UProceduralLevelGraphRuntime::SpawnMazeToEditor()
 {
 	if (UEntranceNode* Entrance = Cast<UEntranceNode>(StartNode))
@@ -31,21 +32,21 @@ void UProceduralLevelGraphRuntime::CreateMaze()
 
 void UProceduralLevelGraphRuntime::DeleteMaze()
 {
-	UWorld* World = GEditor->GetEditorWorldContext().World();
+	const UWorld* World = GEditor->GetEditorWorldContext().World();
 	if (!World)
 	{
 		return;
 	}
 	for (TActorIterator<AActor> It(World); It; ++It)
 	{
-		AActor* Actor = *It;
-		if (Actor && Actor->IsA(AMazeTileLevelInstance::StaticClass()))
+		AActor* ActorRef = *It;
+		if (ActorRef && ActorRef->IsA(AMazeTileLevelInstance::StaticClass()))
 		{
-			Actor->Destroy();
+			ActorRef->Destroy();
 		}
-		else if (Actor && Actor->IsA(ANavMeshBoundsVolume::StaticClass()))
+		else if (ActorRef && ActorRef->IsA(ANavMeshBoundsVolume::StaticClass()))
 		{
-			Actor->Destroy();
+			ActorRef->Destroy();
 		}
 	}
 }
@@ -63,7 +64,6 @@ void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeN
 	if (Nodes.Find(MazeNodeBase) == INDEX_NONE)
 	{
 		Nodes.Add(MazeNodeBase);
-		
 		MazeNodeBase->SpawnMazeObject(World,Location,Direction);
 		
 		if (MazeNodeBase->UpNode)
@@ -87,7 +87,6 @@ void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeN
 
 void UProceduralLevelGraphRuntime::SpawnMaze(UObject* WorldContextObject)
 {
-	
 	if (UEntranceNode* Entrance = Cast<UEntranceNode>(StartNode))
 	{
 		UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
@@ -102,8 +101,8 @@ void UProceduralLevelGraphRuntime::SpawnMaze(UObject* WorldContextObject)
 
 	        if (ANavMeshBoundsVolume* NavVolume = World->SpawnActor<ANavMeshBoundsVolume>(ANavMeshBoundsVolume::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams))
 	        {
-	            FVector MazeCenterLocation = FVector(0.f, 0.f, 0.f);
-	            FVector MazeExtent = FVector(10000.f, 50000.f, 1000.f);
+	            const FVector MazeCenterLocation = FVector(0.f, 0.f, 0.f);
+	            const FVector MazeExtent = FVector(10000.f, 50000.f, 1000.f);
 
 	            NavVolume->SetActorLocation(MazeCenterLocation);
 	            if (UBrushComponent* BrushComp = NavVolume->GetBrushComponent())

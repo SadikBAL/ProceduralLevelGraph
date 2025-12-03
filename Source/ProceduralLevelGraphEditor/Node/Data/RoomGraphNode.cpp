@@ -30,7 +30,6 @@ URoomGraphNode::URoomGraphNode()
             UE_LOG(LogTemp, Error, TEXT("URoomGraphNode constructor: LI_Room_12X8 class not found!"));
         }
     }
-
     OnTileBlueprintsChanged();
 }
 
@@ -38,6 +37,7 @@ FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
     return LOCTEXT("RoomNodeTitle", "Room");
 }
+
 void URoomGraphNode::AllocateDefaultPins()
 {
     CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Up"));
@@ -48,7 +48,7 @@ void URoomGraphNode::AllocateDefaultPins()
 
 void URoomGraphNode::OnTileBlueprintsChanged()
 {
-    //Update Witdh and Heighht
+    //Update Width and Height
     RoomWidth = 0;
     RoomHeight = 0;
     for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRefs)
@@ -73,7 +73,7 @@ void URoomGraphNode::OnTileBlueprintsChanged()
 
 void URoomGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-    FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
+    const FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
                        ? PropertyChangedEvent.Property->GetFName() 
                        : NAME_None;
     if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomGraphNode, RoomLevelInstanceRefs))
@@ -82,4 +82,5 @@ void URoomGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
     }
     Super::PostEditChangeProperty(PropertyChangedEvent);
 }
+
 #undef LOCTEXT_NAMESPACE
