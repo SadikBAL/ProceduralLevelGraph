@@ -5,6 +5,8 @@
 #include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
 
 #include "MazeTileLevelInstance.generated.h"
+class ULevelInstanceManagerComponent;
+
 UCLASS(Abstract, HideDropdown)
 class AMazeTileLevelInstance : public ALevelInstance
 {
@@ -26,5 +28,8 @@ public:
 	int Height;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FMazeTileData NodeData;
-	
+	UPROPERTY()
+	ULevelInstanceManagerComponent* LevelInstanceManager;
+	UFUNCTION()
+	void ApplyMazeTileData();
 };
