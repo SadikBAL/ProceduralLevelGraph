@@ -1,6 +1,7 @@
 ﻿#include "MazeTileLevelInstance.h"
 
 #include "LevelInstanceManagerComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Engine/StaticMeshActor.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 
@@ -62,6 +63,30 @@ void AMazeTileLevelInstance::UpdateMeshPartVisibilities(TArray<FName> SearchedTa
 					}
 					UE_LOG(LogTemp, Log, TEXT("Bulunan Mesh Component: %s (Actor: %s)"), 
 						*MeshComp->GetName(), 
+						*Actor->GetName());
+				}
+			}
+			TInlineComponentArray<UPointLightComponent*> LightComponent;
+			Actor->GetComponents(LightComponent);
+			for (UPointLightComponent* PointComp : LightComponent)
+			{
+				if (PointComp)
+				{
+					bool bMatched = true;
+					for (FName SearchTag : SearchedTags)
+					{
+						if (!PointComp->ComponentHasTag(SearchTag))
+						{
+							bMatched = false;
+							break;
+						}
+					}
+					if (bMatched)
+					{
+						PointComp->SetVisibility(bVisibility);
+					}
+					UE_LOG(LogTemp, Log, TEXT("Bulunan Mesh Component: %s (Actor: %s)"), 
+						*PointComp->GetName(), 
 						*Actor->GetName());
 				}
 			}
