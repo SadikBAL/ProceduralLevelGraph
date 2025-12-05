@@ -9,5 +9,4 @@ class ARoomLevelInstance : public AMazeTileLevelInstance
 	GENERATED_BODY()
 public:
 	ARoomLevelInstance();
-
 };
