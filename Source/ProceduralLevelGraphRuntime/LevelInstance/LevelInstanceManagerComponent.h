@@ -6,7 +6,7 @@
 #include "LevelInstanceManagerComponent.generated.h"
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class ULevelInstanceManagerComponent : public UChildActorComponent
+class ULevelInstanceManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

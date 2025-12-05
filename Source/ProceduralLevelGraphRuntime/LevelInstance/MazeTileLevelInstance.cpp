@@ -8,9 +8,8 @@
 AMazeTileLevelInstance::AMazeTileLevelInstance()
 {
 	LevelInstanceManager = CreateDefaultSubobject<ULevelInstanceManagerComponent>(TEXT("LevelInstanceManagerComponent"));
-	LevelInstanceManager->SetChildActorClass(ULevelInstanceManagerComponent::StaticClass());
-	LevelInstanceManager->SetupAttachment(RootComponent);
 	LevelInstanceManager->LevelInstance = this;
+	LevelInstanceManager->SetAutoActivate(true);
 }
 
 void AMazeTileLevelInstance::OnLevelInstanceLoaded()
