@@ -15,8 +15,6 @@ public:
 	AMazeTileLevelInstance();
 	virtual void OnLevelInstanceLoaded() override;
 	virtual bool IsLoadingEnabled() const override;
-	virtual void Tick(float DeltaSeconds) override;
-	virtual void TickActor(float DeltaTime, enum ELevelTick TickType, FActorTickFunction& ThisTickFunction) override;
 
 #if WITH_EDITOR
 	virtual  void PreSave(FObjectPreSaveContext SaveContext) override;

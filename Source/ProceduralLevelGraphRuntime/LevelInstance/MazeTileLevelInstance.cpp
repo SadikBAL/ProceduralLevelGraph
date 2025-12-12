@@ -14,7 +14,6 @@ AMazeTileLevelInstance::AMazeTileLevelInstance()
 	LevelInstanceManager = CreateDefaultSubobject<ULevelInstanceManagerComponent>(TEXT("LevelInstanceManagerComponent"));
 	LevelInstanceManager->LevelInstance = this;
 	LevelInstanceManager->SetAutoActivate(true);
-	SetActorTickEnabled(true);
 }
 
 void AMazeTileLevelInstance::OnLevelInstanceLoaded()
@@ -32,7 +31,7 @@ bool AMazeTileLevelInstance::IsLoadingEnabled() const
 void AMazeTileLevelInstance::PreSave(FObjectPreSaveContext SaveContext)
 {
 	Super::PreSave(SaveContext);
-	LevelName = WorldAsset.GetAssetName();
+	LevelName = WorldAsset.GetLongPackageName();
 }
 #endif
 void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)
@@ -306,13 +305,17 @@ void AMazeTileLevelInstance::OnEditorLevelLoadedAndShown()
 void AMazeTileLevelInstance::LoadLevelAsync()
 {
 	bool bSuccess;
-	FVector Loc = GetActorLocation();
-	FRotator Rot = GetActorRotation();
-	UE_LOG(LogTemp, Warning, TEXT("----->: Actor: %s | Location: %s | Rotation: %s"), 
-	*GetName(), 
-	*Loc.ToString(), 
-	*Rot.ToString());
-	LevelStreamingDynamic = Cast<ULevelStreamingDynamic>(ULevelStreamingDynamic::LoadLevelInstance(this, LevelName, Loc, Rot, bSuccess, L"", ULevelStreamingDynamic::StaticClass()));
+	FVector Location = GetActorLocation();
+	FRotator Rotation = GetActorRotation();
+	FString LevelName = WorldAsset.ToSoftObjectPath().GetLongPackageName();
+	if (LevelName.IsEmpty())
+	{
+		UE_LOG(LogTemp, Error, TEXT("LoadLevelAsync LevelName could not be empty."));
+		return;
+	}
+	LevelStreamingDynamic = Cast<ULevelStreamingDynamic>(
+		ULevelStreamingDynamic::LoadLevelInstance(
+			this, LevelName, Location, Rotation, bSuccess, L"", ULevelStreamingDynamic::StaticClass()));
 	if (bSuccess)
 	{
 		LevelStreamingDynamic->OnLevelShown.AddDynamic(this, &AMazeTileLevelInstance::OnLevelLoadedAndShown);

@@ -18,5 +18,6 @@ public:
 	float HallLength;
 	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	int RoomTile;
+	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	TSubclassOf<AHallLevelInstance> HallLevelInstanceRef;
 };
