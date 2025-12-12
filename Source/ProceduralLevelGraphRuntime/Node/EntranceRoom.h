@@ -15,7 +15,7 @@ public:
 	
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation) override;
 	virtual void SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection Direction) override;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "Entrance Node")
 	float RoomWidth;
 	UPROPERTY(BlueprintReadOnly, Category = "Entrance Node")

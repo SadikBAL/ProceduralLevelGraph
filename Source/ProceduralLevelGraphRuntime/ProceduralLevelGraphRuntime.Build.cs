@@ -20,6 +20,7 @@ public class ProceduralLevelGraphRuntime : ModuleRules
                 "GameplayTags"
             ]
         );
+        
         if (Target.bBuildEditor)
         {
             PrivateDependencyModuleNames.AddRange(

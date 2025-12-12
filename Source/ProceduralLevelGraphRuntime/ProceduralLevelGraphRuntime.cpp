@@ -1,5 +1,9 @@
 #include "ProceduralLevelGraphRuntime.h"
 
+#if WITH_EDITOR
+#include "EditorActorFolders.h"
+#endif
+
 #include "EngineUtils.h"
 #include "NavigationSystem.h"
 #include "ProceduralLevelGraphTypes.h"
@@ -32,21 +36,62 @@ void UProceduralLevelGraphRuntime::CreateMaze()
 
 void UProceduralLevelGraphRuntime::DeleteMaze()
 {
-	const UWorld* World = GEditor->GetEditorWorldContext().World();
+	UWorld* World = GEditor->GetEditorWorldContext().World();
 	if (!World)
 	{
 		return;
 	}
+	TSet<FFolder> FoldersToDelete;
 	for (TActorIterator<AActor> It(World); It; ++It)
 	{
 		AActor* ActorRef = *It;
 		if (ActorRef && ActorRef->IsA(AMazeTileLevelInstance::StaticClass()))
 		{
+			if (AMazeTileLevelInstance* Instance = Cast<AMazeTileLevelInstance>(ActorRef))
+			{
+				FFolder ActorFolder = ActorRef->GetFolder();
+           
+				if (ActorFolder.IsValid())
+				{
+					FoldersToDelete.Add(ActorFolder);
+				}
+				if (Instance->LevelStreamingDynamic)
+				{
+					if (ULevel* LoadedLevel = Instance->LevelStreamingDynamic->GetLoadedLevel())
+					{
+						TArray<AActor*> LevelActors = LoadedLevel->Actors; 
+                
+						for (AActor* ActorInLevel : LevelActors)
+						{
+							if (IsValid(ActorInLevel))
+							{
+								World->EditorDestroyActor(ActorInLevel, true);
+							}
+						}
+					}
+					Instance->LevelStreamingDynamic->SetShouldBeVisible(false);
+					Instance->LevelStreamingDynamic->SetShouldBeLoaded(false);
+					World->RemoveStreamingLevel(Instance->LevelStreamingDynamic);
+					Instance->LevelStreamingDynamic = nullptr;
+				}
+			}
 			ActorRef->Destroy();
 		}
 		else if (ActorRef && ActorRef->IsA(ANavMeshBoundsVolume::StaticClass()))
 		{
 			ActorRef->Destroy();
+		}
+	}
+	if (FoldersToDelete.Num() > 0)
+	{
+		FActorFolders& ActorFolders = FActorFolders::Get();
+
+		for (const FFolder& Folder : FoldersToDelete)
+		{
+			if (World)
+			{
+				ActorFolders.DeleteFolder(*World, Folder);
+			}
 		}
 	}
 }
@@ -59,7 +104,7 @@ void UProceduralLevelGraphRuntime::RecreateMaze()
 
 #endif
 
-void UProceduralLevelGraphRuntime::SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location)
+void UProceduralLevelGraphRuntime:: SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location)
 {
 	if (Nodes.Find(MazeNodeBase) == INDEX_NONE)
 	{

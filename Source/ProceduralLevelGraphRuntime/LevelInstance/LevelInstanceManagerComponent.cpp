@@ -1,20 +1,18 @@
 #include "LevelInstanceManagerComponent.h"
+#include "GameFramework/GameStateBase.h"
+#include "LevelInstance/LevelInstanceLevelStreaming.h"
 
 ULevelInstanceManagerComponent::ULevelInstanceManagerComponent()
 {
 	
 }
 
-void ULevelInstanceManagerComponent::OnRegister()
-{
-	Super::OnRegister();
-}
-
 void ULevelInstanceManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	if (LevelInstance)
-	{
-		LevelInstance->ApplyMazeTileData();
-	}
+}
+
+void ULevelInstanceManagerComponent::OnRegister()
+{
+	Super::OnRegister();
 }

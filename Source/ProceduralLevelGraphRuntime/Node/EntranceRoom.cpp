@@ -1,6 +1,7 @@
 ﻿#include "EntranceRoom.h"
 
 #include "RoomNode.h"
+#include "Engine/LevelStreamingDynamic.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 
 UEntranceNode::UEntranceNode()
@@ -59,7 +60,6 @@ void UEntranceNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirect
 		FRotator::ZeroRotator,
 		SpawnParams
 	);
-
 	if (MazeObject)
 	{
 		ARoomLevelInstance* SpawnedMazeTileActor = Cast<ARoomLevelInstance>(MazeObject);
@@ -71,4 +71,3 @@ void UEntranceNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirect
 		UE_LOG(LogTemp, Log, TEXT("Entrance Room Node Spawned failed."));
 	}
 }
-

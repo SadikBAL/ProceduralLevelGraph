@@ -16,7 +16,7 @@ UEntranceGraphNode::UEntranceGraphNode()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("UEntranceGraphNode constructor: LI_Entrance class not found!"));
+		UE_LOG_EDITOR(LogTemp, Error, TEXT("UEntranceGraphNode constructor: LI_Entrance class not found!"));
 	}
 	OnTileBlueprintsChanged();
 }

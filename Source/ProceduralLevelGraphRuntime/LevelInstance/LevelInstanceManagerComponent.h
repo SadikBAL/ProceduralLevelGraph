@@ -5,6 +5,8 @@
 #include "Components/ChildActorComponent.h"
 #include "LevelInstanceManagerComponent.generated.h"
 
+class UPirateExperienceDefinition;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ULevelInstanceManagerComponent : public UActorComponent
 {
@@ -17,4 +19,5 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnRegister() override;
+
 };

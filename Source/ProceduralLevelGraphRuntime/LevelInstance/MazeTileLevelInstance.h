@@ -14,7 +14,14 @@ class AMazeTileLevelInstance : public ALevelInstance
 public:
 	AMazeTileLevelInstance();
 	virtual void OnLevelInstanceLoaded() override;
-	FBox GetLevelBounds() const;
+	virtual bool IsLoadingEnabled() const override;
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void TickActor(float DeltaTime, enum ELevelTick TickType, FActorTickFunction& ThisTickFunction) override;
+
+#if WITH_EDITOR
+	virtual  void PreSave(FObjectPreSaveContext SaveContext) override;
+#endif
+	
 	UFUNCTION(BlueprintCallable, Category = "Tile")
 	void SetNodeData(UMazeNodeBase* BaseNode);
 	UFUNCTION()
@@ -26,6 +33,7 @@ public:
 	int Width;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
 	int Height;
+
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FMazeTileData NodeData;
@@ -33,4 +41,18 @@ public:
 	ULevelInstanceManagerComponent* LevelInstanceManager;
 	UFUNCTION()
 	void ApplyMazeTileData();
+	UFUNCTION()
+	void GroupActors();
+	void OnEditorLevelLoadedAndShown();
+	UFUNCTION()
+	void LoadLevelAsync();
+	UFUNCTION()
+	void OnLevelLoadedAndShown();
+	UPROPERTY()
+	bool bLevelLoadedAndShown = false;
+	UPROPERTY()
+	ULevelStreamingDynamic* LevelStreamingDynamic = nullptr;
+	UPROPERTY(VisibleAnywhere, Category="Level")
+	FString LevelName;
+	
 };

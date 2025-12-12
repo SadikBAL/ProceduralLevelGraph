@@ -45,10 +45,8 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 	default:
 		break;
 	}
-	
 	FRotator Rotator = FRotator::ZeroRotator;
 	Rotator.Yaw = RoomRotation;
-
 	for (int i = 0; i < HallLength; i ++)
 	{
 		
@@ -89,4 +87,3 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		}
 	}
 }
-

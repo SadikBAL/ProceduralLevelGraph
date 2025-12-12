@@ -1,7 +1,10 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/LevelStreamingDynamic.h"
+#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "MazeNodeBase.generated.h"
+
 
 class AMazeTileLevelInstance;
 
@@ -32,7 +35,6 @@ public:
 	virtual FVector GetEdgePosition(EMazeDirection Direction);
 	UFUNCTION(BlueprintCallable)
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation);
-
 	
 protected:
 	UPROPERTY()

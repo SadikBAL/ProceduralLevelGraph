@@ -16,7 +16,7 @@ UHallGraphNode::UHallGraphNode()
 	else
 	{
 		HallLevelInstanceRef = nullptr;
-		UE_LOG(LogTemp, Error, TEXT("UHallGraphNode constructor: LI_Hall_4X4 class not found!"));
+		UE_LOG_EDITOR(LogTemp, Warning, TEXT("UHallGraphNode constructor: LI_Hall_4X4 class not found!"));
 	}
 	OnTileBlueprintsChanged();
 }

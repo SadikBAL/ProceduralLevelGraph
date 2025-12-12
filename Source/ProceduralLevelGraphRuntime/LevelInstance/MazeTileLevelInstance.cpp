@@ -5,19 +5,36 @@
 #include "Engine/StaticMeshActor.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 
+#if WITH_EDITOR
+#include "UObject/ObjectSaveContext.h"
+#endif
+
 AMazeTileLevelInstance::AMazeTileLevelInstance()
 {
 	LevelInstanceManager = CreateDefaultSubobject<ULevelInstanceManagerComponent>(TEXT("LevelInstanceManagerComponent"));
 	LevelInstanceManager->LevelInstance = this;
 	LevelInstanceManager->SetAutoActivate(true);
+	SetActorTickEnabled(true);
 }
 
 void AMazeTileLevelInstance::OnLevelInstanceLoaded()
 {
-	ApplyMazeTileData();
 	Super::OnLevelInstanceLoaded();
+	//ApplyMazeTileData();
 }
 
+bool AMazeTileLevelInstance::IsLoadingEnabled() const
+{
+	return false;
+}
+
+#if WITH_EDITOR
+void AMazeTileLevelInstance::PreSave(FObjectPreSaveContext SaveContext)
+{
+	Super::PreSave(SaveContext);
+	LevelName = WorldAsset.GetAssetName();
+}
+#endif
 void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)
 {
 	NodeData.RoomRotation = BaseNode->RoomRotation;
@@ -25,75 +42,91 @@ void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)
 	NodeData.MazeDirectionMap.Add(EMazeDirection::Down,  (BaseNode->DownNode  ? EMazePinType::Tier1 : EMazePinType::Hidden));
 	NodeData.MazeDirectionMap.Add(EMazeDirection::Left,  (BaseNode->LeftNode  ? EMazePinType::Tier1 : EMazePinType::Hidden));
 	NodeData.MazeDirectionMap.Add(EMazeDirection::Right, (BaseNode->RightNode ? EMazePinType::Tier1 : EMazePinType::Hidden));
+	LoadLevelAsync();
 }
 
 void AMazeTileLevelInstance::UpdateMeshPartVisibilities(TArray<FName> SearchedTags, bool bVisibility)
 {
-	if (ULevel* LoadedLevel = GetLoadedLevel())
+	if (LevelStreamingDynamic)
 	{
-		for (AActor* Actor : LoadedLevel->Actors)
+		if (ULevel* LoadedLevel = LevelStreamingDynamic->GetLoadedLevel())
 		{
-			TInlineComponentArray<UStaticMeshComponent*> MeshComponents;
-			Actor->GetComponents(MeshComponents);
-			for (UStaticMeshComponent* MeshComp : MeshComponents)
+			for (AActor* Actor : LoadedLevel->Actors)
 			{
-				if (MeshComp)
+				TInlineComponentArray<UStaticMeshComponent*> MeshComponents;
+				Actor->GetComponents(MeshComponents);
+				for (UStaticMeshComponent* MeshComp : MeshComponents)
 				{
-					bool bMatched = true;
-					for (FName SearchTag : SearchedTags)
+					if (MeshComp)
 					{
-						if (!MeshComp->ComponentHasTag(SearchTag))
+						bool bMatched = true;
+						for (FName SearchTag : SearchedTags)
 						{
-							bMatched = false;
-							break;
+							if (!MeshComp->ComponentHasTag(SearchTag))
+							{
+								bMatched = false;
+								break;
+							}
 						}
+						if (bMatched)
+						{
+							MeshComp->SetVisibility(bVisibility);
+							if (!bVisibility)
+							{
+								MeshComp->SetCollisionProfileName(FName("NoCollision"));
+							}
+							else
+							{
+								if (SearchedTags.Contains(FName("Door")))
+								{
+									MeshComp->SetCollisionProfileName(FName("Interactable_BlockDynamic"));
+								}
+								else
+								{
+									MeshComp->SetCollisionProfileName(FName("QueryAndPhysics"));
+								}
+								
+							}
+						}
+						UE_LOG(LogTemp, Log, TEXT("Bulunan Mesh Component: %s (Actor: %s)"), 
+							*MeshComp->GetName(), 
+							*Actor->GetName());
 					}
-					if (bMatched)
+				}
+				TInlineComponentArray<UPointLightComponent*> LightComponent;
+				Actor->GetComponents(LightComponent);
+				for (UPointLightComponent* PointComp : LightComponent)
+				{
+					if (PointComp)
 					{
-						MeshComp->SetVisibility(bVisibility);
-						if (!bVisibility)
+						bool bMatched = true;
+						for (FName SearchTag : SearchedTags)
 						{
-							MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+							if (!PointComp->ComponentHasTag(SearchTag))
+							{
+								bMatched = false;
+								break;
+							}
 						}
-						else
+						if (bMatched)
 						{
-							MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+							PointComp->SetVisibility(bVisibility);
 						}
+						UE_LOG(LogTemp, Log, TEXT("Bulunan Mesh Component: %s (Actor: %s)"), 
+							*PointComp->GetName(), 
+							*Actor->GetName());
 					}
-					UE_LOG(LogTemp, Log, TEXT("Bulunan Mesh Component: %s (Actor: %s)"), 
-						*MeshComp->GetName(), 
-						*Actor->GetName());
 				}
 			}
-			TInlineComponentArray<UPointLightComponent*> LightComponent;
-			Actor->GetComponents(LightComponent);
-			for (UPointLightComponent* PointComp : LightComponent)
-			{
-				if (PointComp)
-				{
-					bool bMatched = true;
-					for (FName SearchTag : SearchedTags)
-					{
-						if (!PointComp->ComponentHasTag(SearchTag))
-						{
-							bMatched = false;
-							break;
-						}
-					}
-					if (bMatched)
-					{
-						PointComp->SetVisibility(bVisibility);
-					}
-					UE_LOG(LogTemp, Log, TEXT("Bulunan Mesh Component: %s (Actor: %s)"), 
-						*PointComp->GetName(), 
-						*Actor->GetName());
-				}
-			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("UpdateMeshPartVisibilities: Level not loaded."));
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("UpdateMeshPartVisibilities: Level not loaded."));
+		UE_LOG(LogTemp, Error, TEXT("UpdateMeshPartVisibilities: LevelStreamingDynamic not loaded."));
 	}
 }
 
@@ -220,12 +253,83 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 		SearchedTags.Add(FName("Door"));
 		UpdateMeshPartVisibilities(SearchedTags, false);
 	}
-	NodeData.RoomBounds = GetLevelBounds();
 }
 
-FBox AMazeTileLevelInstance::GetLevelBounds() const
+void AMazeTileLevelInstance::GroupActors()
 {
-	FBox LevelBounds;
-	GetLoadedLevel()->GetLevelBoundsFromAsset(this,LevelBounds);
-	return LevelBounds;
+	/*
+	#if WITH_EDITOR 
+	if (LevelStreamingDynamic)
+	{
+		
+		FString Name = GetActorLabel();
+		FString CustomPath = FString::Printf(TEXT("Procedural/%s"), *Name);
+		this->SetFolderPath(FName(CustomPath));
+		if (ULevel* LoadedLevel = LevelStreamingDynamic->GetLoadedLevel())
+		{
+			for (AActor* Actor : LoadedLevel->Actors)
+			{
+				Actor->SetFolderPath(FName(CustomPath));
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("UpdateMeshPartVisibilities: Level not loaded."));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("UpdateMeshPartVisibilities: LevelStreamingDynamic not loaded."));
+	}
+	#endif
+	*/
+}
+
+void AMazeTileLevelInstance::OnEditorLevelLoadedAndShown()
+{
+	if (LevelStreamingDynamic && LevelStreamingDynamic->IsLevelVisible())
+	{
+		ULevel* LoadedLevel = LevelStreamingDynamic->GetLoadedLevel();
+		UE_LOG(LogTemp, Warning, TEXT("Editor Level Loaded : %s"), *LevelStreamingDynamic->GetWorldAssetPackageName());
+		LevelStreamingDynamic->OnLevelShown.RemoveAll(this);
+		bLevelLoadedAndShown = true;
+		GroupActors();
+		ApplyMazeTileData();
+	}
+	else
+	{
+		FTimerHandle DummyHandle;
+		GetWorld()->GetTimerManager().SetTimer(DummyHandle, this, &ThisClass::OnEditorLevelLoadedAndShown, 1.0f, /*bLooping=*/ false);
+	}
+}
+
+void AMazeTileLevelInstance::LoadLevelAsync()
+{
+	bool bSuccess;
+	FVector Loc = GetActorLocation();
+	FRotator Rot = GetActorRotation();
+	UE_LOG(LogTemp, Warning, TEXT("----->: Actor: %s | Location: %s | Rotation: %s"), 
+	*GetName(), 
+	*Loc.ToString(), 
+	*Rot.ToString());
+	LevelStreamingDynamic = Cast<ULevelStreamingDynamic>(ULevelStreamingDynamic::LoadLevelInstance(this, LevelName, Loc, Rot, bSuccess, L"", ULevelStreamingDynamic::StaticClass()));
+	if (bSuccess)
+	{
+		LevelStreamingDynamic->OnLevelShown.AddDynamic(this, &AMazeTileLevelInstance::OnLevelLoadedAndShown);
+		#if WITH_EDITOR 
+			OnEditorLevelLoadedAndShown();
+		#endif
+	}
+}
+
+void AMazeTileLevelInstance::OnLevelLoadedAndShown()
+{
+	if (LevelStreamingDynamic)
+	{
+		ULevel* LoadedLevel = LevelStreamingDynamic->GetLoadedLevel();
+		UE_LOG(LogTemp, Warning, TEXT("Level Loaded : %s"), *LevelStreamingDynamic->GetWorldAssetPackageName());
+		LevelStreamingDynamic->OnLevelShown.RemoveAll(this);
+		bLevelLoadedAndShown = true;
+		ApplyMazeTileData();
+	}
 }

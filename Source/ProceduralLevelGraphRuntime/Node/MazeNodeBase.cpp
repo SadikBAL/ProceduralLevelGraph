@@ -6,7 +6,6 @@ void UMazeNodeBase::SpawnMazeObject(UWorld* World,FVector Position, EMazeDirecti
 {
 	UE_LOG(LogTemp, Error, TEXT("UMazeNodeBase SpawnMazeObject: you could not spawn any object on base class."));
 }
-
 FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
 {
 	switch (Direction)
@@ -28,3 +27,4 @@ float UMazeNodeBase::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
 	return 0.0f;
 }
+
