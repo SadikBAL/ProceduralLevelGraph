@@ -12,9 +12,9 @@ class FProceduralLevelGraphEditorModule : public IModuleInterface
 public:
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
-
 private:
-    TSharedPtr<IAssetTypeActions> AssetTypeActions;
+    TSharedPtr<IAssetTypeActions> ProceduralLevelGraphAssetTypeAction;
+    TSharedPtr<IAssetTypeActions> HallDataAssetAssetTypeAction;
     TSharedPtr<FSRoomGraphNodeFactory> SRoomGraphNodeFactory;
     TSharedPtr<FSHallGraphNodeFactory> SHallGraphNodeFactory;
     TSharedPtr<FSRouterGraphNodeFactory> SRouterGraphNodeFactory;

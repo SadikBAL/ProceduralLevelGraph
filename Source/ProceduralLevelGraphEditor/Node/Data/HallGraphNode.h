@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "MazeGraphNodeBase.h"
+#include "ProceduralLevelGraphRuntime/Data/HallData.h"
 #include "ProceduralLevelGraphRuntime/LevelInstance/HallLevelInstance.h"
 #include "HallGraphNode.generated.h"
 
@@ -29,4 +30,6 @@ public:
 	int HallLength;
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
 	TSubclassOf<AHallLevelInstance> HallLevelInstanceRef;
+	UPROPERTY(EditDefaultsOnly, Category = "Hall")
+	UHallData* HallData;
 };
