@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "MazeNodeBase.h"
+#include "ProceduralLevelGraphRuntime/Data/HallData.h"
 #include "ProceduralLevelGraphRuntime/LevelInstance/HallLevelInstance.h"
 #include "HallNode.generated.h"
 
@@ -20,4 +21,8 @@ public:
 	int RoomTile;
 	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	TSubclassOf<AHallLevelInstance> HallLevelInstanceRef;
+	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
+	TObjectPtr<UHallData> HallData;
+private:
+	void SpawnMazeObjectLegacy(UWorld* World, FVector Position, EMazeDirection Direction);
 };

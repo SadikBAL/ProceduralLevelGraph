@@ -4,7 +4,7 @@
 
 UHallDataAsserFactory::UHallDataAsserFactory()
 {
-	SupportedClass = UHallDataAsserFactory::StaticClass();
+	SupportedClass = UHallData::StaticClass();
 	bCreateNew = true;
 	bEditAfterNew = true;
 }

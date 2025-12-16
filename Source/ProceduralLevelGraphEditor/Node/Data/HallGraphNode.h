@@ -31,5 +31,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
 	TSubclassOf<AHallLevelInstance> HallLevelInstanceRef;
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
-	UHallData* HallData;
+	TObjectPtr<UHallData> HallData;
 };
