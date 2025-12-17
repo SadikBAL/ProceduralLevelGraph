@@ -23,4 +23,10 @@ public:
 	UPROPERTY ( EditDefaultsOnly , BlueprintReadOnly , Category = "Hall" )
 	TSubclassOf<AHallLevelInstance> HallEndTile;
 	
+#if WITH_EDITOR
+	DECLARE_MULTICAST_DELEGATE(FOnHallDataChanged);
+	FOnHallDataChanged OnHallDataChanged;
+	
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 };

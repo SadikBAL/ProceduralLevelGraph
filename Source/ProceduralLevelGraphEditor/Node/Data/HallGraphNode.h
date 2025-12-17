@@ -17,8 +17,9 @@ public:
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual void AllocateDefaultPins() override;
 	virtual EMazePinType GetPinType() override;
+	virtual void PostLoad() override;
 	
-	void OnTileBlueprintsChanged();
+	void OnHallDataAssetChanged();
 	void UpdateHallLength(int Value);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hall")
@@ -28,4 +29,6 @@ public:
 	int HallLength;
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
 	TObjectPtr<UHallData> HallData;
+	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Refresh")
+	void RefreshNode();
 };

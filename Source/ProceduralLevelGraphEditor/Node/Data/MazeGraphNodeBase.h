@@ -23,6 +23,7 @@ public:
 	void RotateRoomToRight();
 	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Left")
 	void RotateRoomToLeft();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Node Process")
 	int RoomRotation = 0;
 
