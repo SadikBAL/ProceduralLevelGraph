@@ -23,13 +23,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hall")
 	int RoomWidth;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hall")
-	int RoomTile;
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hall", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
 	int HallLength;
-	UPROPERTY(EditDefaultsOnly, Category = "Hall")
-	TSubclassOf<AHallLevelInstance> HallLevelInstanceRef;
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
 	TObjectPtr<UHallData> HallData;
 };

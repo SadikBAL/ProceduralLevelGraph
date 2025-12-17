@@ -6,19 +6,6 @@
 UHallGraphNode::UHallGraphNode()
 {
 	HallLength = 5.0f;
-	static ConstructorHelpers::FClassFinder<ALevelInstance> BP_LevelInstance_Finder(
-		TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Halls/LI_Hall_4X4.LI_Hall_4X4_C'")
-	);
-	if (BP_LevelInstance_Finder.Succeeded())
-	{
-		HallLevelInstanceRef = BP_LevelInstance_Finder.Class;
-	}
-	else
-	{
-		HallLevelInstanceRef = nullptr;
-		UE_LOG_EDITOR(LogTemp, Warning, TEXT("UHallGraphNode constructor: LI_Hall_4X4 class not found!"));
-	}
-	OnTileBlueprintsChanged();
 }
 
 FText UHallGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
@@ -41,25 +28,11 @@ EMazePinType UHallGraphNode::GetPinType()
 
 void UHallGraphNode::OnTileBlueprintsChanged()
 {
-	if (HallLevelInstanceRef) 
-	{
-		if (const AHallLevelInstance* DefaultTile = HallLevelInstanceRef->GetDefaultObject<AHallLevelInstance>())
-		{
-			RoomWidth = DefaultTile->Width;
-			RoomTile  = DefaultTile->Height;
-		}
-	}
+	
 }
 
 void UHallGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-	const FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
-					   ? PropertyChangedEvent.Property->GetFName() 
-					   : NAME_None;
-	if (PropertyName == GET_MEMBER_NAME_CHECKED(UHallGraphNode, HallLevelInstanceRef))
-	{
-		OnTileBlueprintsChanged();
-	}
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 

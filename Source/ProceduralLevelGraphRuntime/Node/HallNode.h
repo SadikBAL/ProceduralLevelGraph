@@ -20,9 +20,5 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	int RoomTile;
 	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
-	TSubclassOf<AHallLevelInstance> HallLevelInstanceRef;
-	UPROPERTY(BlueprintReadOnly, Category = "Hall Node")
 	TObjectPtr<UHallData> HallData;
-private:
-	void SpawnMazeObjectLegacy(UWorld* World, FVector Position, EMazeDirection Direction);
 };

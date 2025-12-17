@@ -24,16 +24,18 @@ FReply SHallGraphNode::OnMinusBrushClicked(EMazeDirection ButtonLocation)
 {
 	if (HallGraphNodeRef)
 	{
+		const bool bShiftDown = FSlateApplication::Get().GetModifierKeys().IsShiftDown();
+		const int32 ShiftMult = bShiftDown ? 5 : 1;
 		FVector2f LocalPosition = GetPosition2f();
 		switch (ButtonLocation)
 		{
 			case EMazeDirection::Up:
-				LocalPosition.Y += HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
+				LocalPosition.Y += TILE_EDITOR_SCALE * ShiftMult;
 			break;
 			case EMazeDirection::Down:
 			break;
 			case EMazeDirection::Left:
-				LocalPosition.X += HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
+				LocalPosition.X += TILE_EDITOR_SCALE * ShiftMult;
 			break;
 			case EMazeDirection::Right:
 			break;
@@ -41,7 +43,7 @@ FReply SHallGraphNode::OnMinusBrushClicked(EMazeDirection ButtonLocation)
 			break;
 		}
 		GraphNode->SetPosition(LocalPosition);
-		HallGraphNodeRef->UpdateHallLength(HallGraphNodeRef->HallLength - 1);
+		HallGraphNodeRef->UpdateHallLength(HallGraphNodeRef->HallLength - ShiftMult);
 	}
 	return FReply::Handled();
 }
@@ -50,16 +52,18 @@ FReply SHallGraphNode::OnPlusBrushClicked(EMazeDirection ButtonLocation)
 {
 	if (HallGraphNodeRef)
 	{
+		const bool bShiftDown = FSlateApplication::Get().GetModifierKeys().IsShiftDown();
+		const int32 ShiftMult = bShiftDown ? 5 : 1;
 		FVector2f LocalPosition = GetPosition2f();
 		switch (ButtonLocation)
 		{
 			case EMazeDirection::Up:
-				LocalPosition.Y -= HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
+				LocalPosition.Y -= (TILE_EDITOR_SCALE * ShiftMult);
 				break;
 			case EMazeDirection::Down:
 				break;
 			case EMazeDirection::Left:
-				LocalPosition.X -= HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
+				LocalPosition.X -= (TILE_EDITOR_SCALE * ShiftMult);
 				break;
 			case EMazeDirection::Right:
 				break;
@@ -67,7 +71,7 @@ FReply SHallGraphNode::OnPlusBrushClicked(EMazeDirection ButtonLocation)
 				break;
 		}
 		GraphNode->SetPosition(LocalPosition);
-		HallGraphNodeRef->UpdateHallLength(HallGraphNodeRef->HallLength + 1);
+		HallGraphNodeRef->UpdateHallLength(HallGraphNodeRef->HallLength + ShiftMult);
 	}
 	return FReply::Handled();
 }
@@ -223,7 +227,7 @@ FOptionalSize SHallGraphNode::GetNodeHeight() const
 	{
 		if (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180)
 		{
-			return HallGraphNodeRef->HallLength * HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
+			return HallGraphNodeRef->HallLength  * TILE_EDITOR_SCALE;
 		}
 		else
 		{
@@ -243,7 +247,7 @@ FOptionalSize SHallGraphNode::GetNodeWidth() const
 		}
 		else
 		{
-			return HallGraphNodeRef->HallLength * HallGraphNodeRef->RoomTile * TILE_EDITOR_SCALE;
+			return HallGraphNodeRef->HallLength * TILE_EDITOR_SCALE;
 		}
 	}
 	return 0.0f;

@@ -355,8 +355,6 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 UHallNode* RuntimeHall = NewObject<UHallNode>(GraphAsset);
                 RuntimeHall->HallLength = HallEdNode->HallLength;
                 RuntimeHall->RoomRotation = HallEdNode->RoomRotation;
-                RuntimeHall->RoomTile  = HallEdNode->RoomTile;
-                RuntimeHall->HallLevelInstanceRef = HallEdNode->HallLevelInstanceRef;
                 RuntimeHall->HallData = HallEdNode->HallData;
                 NewRuntimeNode = RuntimeHall;
                 
@@ -695,7 +693,7 @@ void FProceduralLevelGraphEditor::PasteSelectedNodes(EMazeOrientation Direction)
             else if (const UHallGraphNode* HallRef = Cast<UHallGraphNode>(InNode))
             {
                 bool bIsVert = HallRef->RoomRotation == 0 || HallRef->RoomRotation == 180;
-                float Length = HallRef->HallLength * HallRef->RoomTile;
+                float Length = HallRef->HallLength;
                 float Thickness = HallRef->RoomWidth;
                 
                 Width = (bIsVert ? Thickness : Length) * TILE_EDITOR_SCALE;
