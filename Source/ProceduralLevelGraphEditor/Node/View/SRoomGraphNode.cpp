@@ -15,95 +15,108 @@
 void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 {
 	this->GraphNode = InNode;
+	this->RoomGraphNodeRef = Cast<URoomGraphNode>(GraphNode);
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
 	TitleFont.Size = 24;
 	UpdateGraphNode();
 	UpdatePinTypes();
-	GetOrAddSlot(ENodeZone::Center)
-	.HAlign(HAlign_Center)
-	.VAlign(VAlign_Center)
-	[
-		SNew(SOverlay)
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Center)
-		.VAlign(VAlign_Center)
-	   [
-		  SNew(SBox)
-		  .WidthOverride(GetNodeWidth())
-		  .HeightOverride(GetNodeHeight())
-		  [
-			 SNew(SBorder)
-			 .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
-			 .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
-			 .HAlign(HAlign_Center)
-			   .VAlign(VAlign_Center)
-			 [
-				SNew(STextBlock)
-				.Text(FText::FromString("ROOM"))
-				 .Font(TitleFont)
-			 ]
-		  ]
-	   ]
-		
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0,PinPadding,0,0)
-		[
-			(UpPin.IsValid() && UpPin->PinType != EMazePinType::Hidden)
-			? UpPin.ToSharedRef()
-			: SNullWidget::NullWidget
-		]
+// 1. Değişkeni tanımlayın
+	TSharedPtr<SOverlay> PinOverlay;
 
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0,0,0,PinPadding)
-		[
-			(DownPin.IsValid() && DownPin->PinType != EMazePinType::Hidden)
-			? DownPin.ToSharedRef()
-			: SNullWidget::NullWidget
-		]
+// 2. SAssignNew kullanarak hem oluşturun hem de PinOverlay değişkenine atayın
+SAssignNew(PinOverlay, SOverlay)
++ SOverlay::Slot()
+.HAlign(HAlign_Center)
+.VAlign(VAlign_Center)
+[
+    SNew(SBox)
+    .WidthOverride(this, &SRoomGraphNode::GetNodeWidth)
+    .HeightOverride(this, &SRoomGraphNode::GetNodeHeight)
+    [
+        SNew(SBorder)
+        .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
+        .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
+        .HAlign(HAlign_Center)
+        .VAlign(VAlign_Center)
+        [
+            SNew(STextBlock)
+            .Text(FText::FromString("ROOM"))
+            .Font(TitleFont)
+        ]
+    ]
+];
+	
+for (int32 i = 0; i < RoomPins.Num(); ++i)
+{
+    TSharedPtr<SRoomGraphNodePin> CurrentPinWidget = RoomPins[i];
+    if (CurrentPinWidget.IsValid())
+    {
+        UEdGraphPin* PinObj = CurrentPinWidget->GetPinObj();
+        EHorizontalAlignment HAlign = HAlign_Center;
+        EVerticalAlignment VAlign = VAlign_Center;
+        FMargin Padding(0);
 
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(PinPadding-4,0,0,0)
-		[
-			(LeftPin.IsValid() && LeftPin->PinType != EMazePinType::Hidden)
-			? LeftPin.ToSharedRef()
-			: SNullWidget::NullWidget
-		]
+        if (CurrentPinWidget->PinLocation == EMazeDirection::Up) {
+            VAlign = VAlign_Top;
+            Padding = FMargin(0, PinPadding, 0, 0);
+        }
+        else if (CurrentPinWidget->PinLocation ==EMazeDirection::Down) {
+            VAlign = VAlign_Bottom;
+            Padding = FMargin(0, 0, 0, PinPadding);
+        }
+        else if (CurrentPinWidget->PinLocation == EMazeDirection::Right) {
+            HAlign = HAlign_Right;
+            Padding = FMargin(PinPadding, 0, 0, 0);
+        }
+        else if (CurrentPinWidget->PinLocation == EMazeDirection::Left) {
+            HAlign = HAlign_Left;
+            Padding = FMargin(0, 0, PinPadding-4, 0);
+        }
 
-		+ SOverlay::Slot()
-		.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0,0,PinPadding,0)
-		[
-			(RightPin.IsValid() && RightPin->PinType != EMazePinType::Hidden)
-			? RightPin.ToSharedRef()
-			: SNullWidget::NullWidget
-		]
-	];
+        PinOverlay->AddSlot()
+        .HAlign(HAlign)
+        .VAlign(VAlign)
+        .Padding(Padding)
+        [
+            CurrentPinWidget.ToSharedRef()
+        ];
+    }
+}
+
+// 4. Hazırlanan hiyerarşiyi Node'un merkezine yerleştirin
+this->GetOrAddSlot(ENodeZone::Center)
+.HAlign(HAlign_Center)
+.VAlign(VAlign_Center)
+[
+    PinOverlay.ToSharedRef()
+];
 }
 
 void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	const FName PinName = PinToAdd->GetPinObj()->GetFName();
+	UEdGraphPin* PinObj = PinToAdd->GetPinObj();
 	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
-	if (PinName == FName("Up"))
+	if (RoomGraphNodeRef && RoomGraphNodeRef->DoorDatas.Num() > 0)
 	{
-		UpPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		UpPin->PinDirection = EMazeOrientation::Vertical;
+		TSharedPtr<SRoomGraphNodePin> TempPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		
+		int32 Index = RoomGraphNodeRef->Pins.IndexOfByKey(PinObj);
+		if (Index != INDEX_NONE && Index >= 0 && Index < RoomGraphNodeRef->DoorDatas.Num())
+		{
+			TempPin->PinLocation = RoomGraphNodeRef->DoorDatas [Index].DoorType;
+			if (RoomGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Up 
+				|| RoomGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Down)
+			{
+				TempPin->PinDirection = EMazeOrientation::Vertical;
+			}
+			else
+			{
+				TempPin->PinDirection = EMazeOrientation::Horizontal;
+			}
+			RoomPins.Add(TempPin);
+		}
 	}
-	else if (PinName == FName("Down"))
-	{
-		DownPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		DownPin->PinDirection = EMazeOrientation::Vertical;
-	}
-	else if (PinName == FName("Left"))
-	{
-		LeftPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		LeftPin->PinDirection = EMazeOrientation::Horizontal;
-	}
-	else if (PinName == FName("Right"))
-	{
-		RightPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		RightPin->PinDirection = EMazeOrientation::Horizontal;
-	}
-	
 	SGraphNode::AddPin(PinToAdd);
 }
 
@@ -133,15 +146,15 @@ void SRoomGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidge
 
 FOptionalSize SRoomGraphNode::GetNodeHeight() const
 {
-	if (const URoomGraphNode* NodeRef = Cast<URoomGraphNode>(GraphNode))
+	if (RoomGraphNodeRef)
 	{
-		if (NodeRef->RoomRotation == 0 || NodeRef->RoomRotation == 180)
+		if (RoomGraphNodeRef->RoomRotation == 0 || RoomGraphNodeRef->RoomRotation == 180)
 		{
-			return NodeRef->RoomHeight * TILE_EDITOR_SCALE;
+			return RoomGraphNodeRef->RoomHeight * TILE_EDITOR_SCALE;
 		}
-		else if (NodeRef->RoomRotation == 90 || NodeRef->RoomRotation == 270)
+		else if (RoomGraphNodeRef->RoomRotation == 90 || RoomGraphNodeRef->RoomRotation == 270)
 		{
-			return NodeRef->RoomWidth * TILE_EDITOR_SCALE;
+			return RoomGraphNodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;
@@ -149,15 +162,15 @@ FOptionalSize SRoomGraphNode::GetNodeHeight() const
 
 FOptionalSize SRoomGraphNode::GetNodeWidth() const
 {
-	if (const URoomGraphNode* NodeRef = Cast<URoomGraphNode>(GraphNode))
+	if (RoomGraphNodeRef)
 	{
-		if (NodeRef->RoomRotation == 0 || NodeRef->RoomRotation == 180)
+		if (RoomGraphNodeRef->RoomRotation == 0 || RoomGraphNodeRef->RoomRotation == 180)
 		{
-			return NodeRef->RoomWidth * TILE_EDITOR_SCALE;
+			return RoomGraphNodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
-		else if (NodeRef->RoomRotation == 90 || NodeRef->RoomRotation == 270)
+		else if (RoomGraphNodeRef->RoomRotation == 90 || RoomGraphNodeRef->RoomRotation == 270)
 		{
-			return NodeRef->RoomHeight * TILE_EDITOR_SCALE;
+			return RoomGraphNodeRef->RoomHeight * TILE_EDITOR_SCALE;
 		}
 	}
 	return 5.0f;

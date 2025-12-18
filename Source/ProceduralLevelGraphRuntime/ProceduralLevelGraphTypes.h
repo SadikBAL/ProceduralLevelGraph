@@ -58,3 +58,16 @@ struct FMazeTileData
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	FBox RoomBounds = FBox();
 };
+
+USTRUCT(BlueprintType)
+struct FDoorData
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, Category = "Door Data")
+	EMazeDirection DoorType;
+	UPROPERTY(EditAnywhere, Category = "Door Data")
+	EMazePinType DoorVisibility;
+	UPROPERTY(EditAnywhere, Category = "Door Data")
+	FVector DoorOffset;
+};

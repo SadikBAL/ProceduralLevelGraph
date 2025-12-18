@@ -18,6 +18,7 @@ public:
 
 	EMazeOrientation PinDirection;
 	EMazePinType PinType;
+	EMazeDirection PinLocation;
 	
 protected:
 	

@@ -27,4 +27,5 @@ protected:
 	TSharedPtr<SRoomGraphNodePin> DownPin;
 	TSharedPtr<SRoomGraphNodePin> LeftPin;
 	TSharedPtr<SRoomGraphNodePin> RightPin;
+	TArray<TSharedPtr<SRoomGraphNodePin>> Pins;
 };
