@@ -15,11 +15,13 @@ public:
 	AMazeTileLevelInstance();
 	virtual void OnLevelInstanceLoaded() override;
 	virtual bool IsLoadingEnabled() const override;
-
+	
+	
 #if WITH_EDITOR
 	virtual  void PreSave(FObjectPreSaveContext SaveContext) override;
 	UFUNCTION(CallInEditor, Category = "Level",DisplayName="Load Map Data")
 	void LoadMapData();
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
 	
 	UFUNCTION(BlueprintCallable)

@@ -1,8 +1,10 @@
 ﻿#include "MazeTileLevelInstance.h"
 
 #include "LevelInstanceManagerComponent.h"
+#include "UniversalObjectLocatorInitializeParams.h"
 #include "Components/PointLightComponent.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
+#include "WorldPartition/ActorDescContainer.h"
 #include "WorldPartition/ActorDescList.h"
 #include "WorldPartition/WorldPartitionHelpers.h"
 #include "WorldPartition/WorldPartitionSubsystem.h"
@@ -45,6 +47,25 @@ void AMazeTileLevelInstance::LoadMapData()
 	UWorldPartition* WorldPartition = World->GetWorldPartition();
 	if (!WorldPartition) return;
 	FWorldPartitionHelpers::ForEachActorDesc(WorldPartition, [this](const FWorldPartitionActorDesc* ActorDesc)
+	{
+		if (ActorDesc)
+		{
+			FName ActorClass = ActorDesc->GetNativeClass().GetAssetName();
+			FVector ActorLocation = ActorDesc->GetEditorBounds().GetCenter();
+
+			UE_LOG(LogTemp, Log, TEXT("Actor: %s, Class: %s, Position: %s"), 
+				*ActorDesc->GetActorName().ToString(),
+				*ActorClass.ToString(),
+				*ActorLocation.ToString());
+		}
+		return true; 
+	});
+}
+
+void AMazeTileLevelInstance::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+	FWorldPartitionHelpers::ForEachActorDesc(nullptr, [this](const FWorldPartitionActorDesc* ActorDesc)
 	{
 		if (ActorDesc)
 		{
