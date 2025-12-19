@@ -18,31 +18,30 @@ FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 
 void URoomGraphNode::AllocateDefaultPins()
 {
-    /*
-        CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Up"));
-        CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Down"));
-        CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Left"));
-        CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Right"));
-    */
     FCreatePinParams PinParams;
     for (int i = 0; i <  DoorDatas.Num(); i++)
     {
         if (DoorDatas[i].DoorVisibility == EMazePinType::Tier1)
         {
-            PinParams.Index =i;
+            PinParams.Index = i;
+            FName PinName;
             switch (DoorDatas[i].DoorType)
             {
                 case EMazeDirection::Up:
-                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Up"),PinParams);
+                PinName = *FString::Printf(TEXT("Up_%d"), i);
+                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
                 break;
                 case EMazeDirection::Down:
-                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Down"),PinParams);
+                PinName = *FString::Printf(TEXT("Down_%d"), i);
+                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
                 break;
                 case EMazeDirection::Left:
-                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Left"),PinParams);
+                PinName = *FString::Printf(TEXT("Left_%d"), i);
+                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
                 break;
                 case EMazeDirection::Right:
-                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Right"),PinParams);
+                PinName = *FString::Printf(TEXT("Right_%d"), i);
+                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
                 break;
                 default:
                 break;

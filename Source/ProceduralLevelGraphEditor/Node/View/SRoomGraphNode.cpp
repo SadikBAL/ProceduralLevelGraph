@@ -20,7 +20,6 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
 	TitleFont.Size = 24;
 	UpdateGraphNode();
-	UpdatePinTypes();
 	TSharedPtr<SOverlay> PinOverlay;
 	
 	SAssignNew(PinOverlay, SOverlay)
