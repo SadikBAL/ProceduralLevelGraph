@@ -7,28 +7,6 @@ URoomGraphNode::URoomGraphNode()
 {
     if (RoomLevelInstanceRefs.IsEmpty())
     {
-        // static ConstructorHelpers::FClassFinder<ARoomLevelInstance> BP_LevelInstance_Finder(
-        // TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Rooms/LI_Room_12X8.LI_Room_12X8_C'")
-        // );
-        // if (BP_LevelInstance_Finder.Succeeded())
-        // {
-        //     RoomLevelInstanceRefs.Add(BP_LevelInstance_Finder.Class);
-        // }
-        // else
-        // {
-        //     UE_LOG(LogTemp, Error, TEXT("URoomGraphNode constructor: LI_Room_12X8 class not found!"));
-        // }
-        // static ConstructorHelpers::FClassFinder<AHallLevelInstance> BP_HallInstance_Finder(
-        // TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Halls/LI_Hall_4X1.LI_Hall_4X1_C'")
-        // );
-        // if (BP_HallInstance_Finder.Succeeded())
-        // {
-        //     HallLevelInstanceRefs.Add(BP_HallInstance_Finder.Class);
-        // }
-        // else
-        // {
-        //     UE_LOG(LogTemp, Error, TEXT("URoomGraphNode constructor: LI_Room_12X8 class not found!"));
-        // }
     }
     OnTileBlueprintsChanged();
 }

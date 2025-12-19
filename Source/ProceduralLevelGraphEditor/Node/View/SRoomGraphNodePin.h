@@ -19,6 +19,7 @@ public:
 	EMazeOrientation PinDirection;
 	EMazePinType PinType;
 	EMazeDirection PinLocation;
+	FVector2D PinOffset;
 	
 protected:
 	

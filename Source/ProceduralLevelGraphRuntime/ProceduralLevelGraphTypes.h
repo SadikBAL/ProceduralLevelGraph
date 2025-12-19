@@ -5,7 +5,7 @@
 constexpr float TILE_SCALE = 100.0f;
 constexpr float TILE_EDITOR_SCALE = 25.0f;
 constexpr float GRID_SNAP_SCALE = 25.0f;
-constexpr float TILE_EDITOR_PIN_SCALE = 100.0 * 0.5f;
+constexpr float TILE_EDITOR_PIN_SCALE = 24.0f;
 
 #if WITH_EDITOR
 #define UE_LOG_EDITOR(CategoryName, Verbosity, Format, ...) UE_LOG(CategoryName, Verbosity, Format, ##__VA_ARGS__)
@@ -69,5 +69,5 @@ struct FDoorData
 	UPROPERTY(EditAnywhere, Category = "Door Data")
 	EMazePinType DoorVisibility;
 	UPROPERTY(EditAnywhere, Category = "Door Data")
-	FVector DoorOffset;
+	FVector2D DoorOffset;
 };

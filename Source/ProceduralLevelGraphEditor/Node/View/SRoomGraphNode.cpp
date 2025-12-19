@@ -15,75 +15,73 @@
 void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 {
 	this->GraphNode = InNode;
+	
 	this->RoomGraphNodeRef = Cast<URoomGraphNode>(GraphNode);
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
 	TitleFont.Size = 24;
 	UpdateGraphNode();
 	UpdatePinTypes();
-// 1. Değişkeni tanımlayın
 	TSharedPtr<SOverlay> PinOverlay;
-
-// 2. SAssignNew kullanarak hem oluşturun hem de PinOverlay değişkenine atayın
-SAssignNew(PinOverlay, SOverlay)
-+ SOverlay::Slot()
-.HAlign(HAlign_Center)
-.VAlign(VAlign_Center)
-[
-    SNew(SBox)
-    .WidthOverride(this, &SRoomGraphNode::GetNodeWidth)
-    .HeightOverride(this, &SRoomGraphNode::GetNodeHeight)
-    [
-        SNew(SBorder)
-        .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
-        .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
-        .HAlign(HAlign_Center)
-        .VAlign(VAlign_Center)
-        [
-            SNew(STextBlock)
-            .Text(FText::FromString("ROOM"))
-            .Font(TitleFont)
-        ]
-    ]
-];
 	
-for (int32 i = 0; i < RoomPins.Num(); ++i)
-{
-    TSharedPtr<SRoomGraphNodePin> CurrentPinWidget = RoomPins[i];
-    if (CurrentPinWidget.IsValid())
-    {
-        UEdGraphPin* PinObj = CurrentPinWidget->GetPinObj();
-        EHorizontalAlignment HAlign = HAlign_Center;
-        EVerticalAlignment VAlign = VAlign_Center;
-        FMargin Padding(0);
+	SAssignNew(PinOverlay, SOverlay)
+	+ SOverlay::Slot()
+	.HAlign(HAlign_Center)
+	.VAlign(VAlign_Center)
+	[
+	    SNew(SBox)
+	    .WidthOverride(this, &SRoomGraphNode::GetNodeWidth)
+	    .HeightOverride(this, &SRoomGraphNode::GetNodeHeight)
+	    [
+	        SNew(SBorder)
+	        .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
+	        .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
+	        .HAlign(HAlign_Center)
+	        .VAlign(VAlign_Center)
+	        [
+	            SNew(STextBlock)
+	            .Text(FText::FromString("ROOM"))
+	            .Font(TitleFont)
+	        ]
+	    ]
+	];
+	
+	for (int32 i = 0; i < RoomPins.Num(); ++i)
+	{
+	    TSharedPtr<SRoomGraphNodePin> CurrentPinWidget = RoomPins[i];
+	    if (CurrentPinWidget.IsValid())
+	    {
+	        UEdGraphPin* PinObj = CurrentPinWidget->GetPinObj();
+	        EHorizontalAlignment HAlign = HAlign_Center;
+	        EVerticalAlignment VAlign = VAlign_Center;
+	        FMargin Padding(0);
+	    	
+	        if (CurrentPinWidget->PinLocation == EMazeDirection::Up) {
+	            VAlign = VAlign_Top;
+	            Padding = FMargin(CurrentPinWidget->PinOffset.X * TILE_EDITOR_SCALE, PinPadding, 0, 0);
+	        }
+	        else if (CurrentPinWidget->PinLocation ==EMazeDirection::Down) {
+	            VAlign = VAlign_Bottom;
+	            Padding = FMargin(CurrentPinWidget->PinOffset.X * TILE_EDITOR_SCALE, 0, 2, PinPadding);
+	        }
+	        else if (CurrentPinWidget->PinLocation == EMazeDirection::Right) {
+	            HAlign = HAlign_Right;
+	            Padding = FMargin(0, CurrentPinWidget->PinOffset.Y * TILE_EDITOR_SCALE, PinPadding, 0);
+	        }
+	        else if (CurrentPinWidget->PinLocation == EMazeDirection::Left) {
+	            HAlign = HAlign_Left;
+	            Padding = FMargin(PinPadding-4, CurrentPinWidget->PinOffset.Y * TILE_EDITOR_SCALE,0 , 0);
+	        }
 
-        if (CurrentPinWidget->PinLocation == EMazeDirection::Up) {
-            VAlign = VAlign_Top;
-            Padding = FMargin(0, PinPadding, 0, 0);
-        }
-        else if (CurrentPinWidget->PinLocation ==EMazeDirection::Down) {
-            VAlign = VAlign_Bottom;
-            Padding = FMargin(0, 0, 0, PinPadding);
-        }
-        else if (CurrentPinWidget->PinLocation == EMazeDirection::Right) {
-            HAlign = HAlign_Right;
-            Padding = FMargin(PinPadding, 0, 0, 0);
-        }
-        else if (CurrentPinWidget->PinLocation == EMazeDirection::Left) {
-            HAlign = HAlign_Left;
-            Padding = FMargin(0, 0, PinPadding-4, 0);
-        }
+	        PinOverlay->AddSlot()
+	        .HAlign(HAlign)
+	        .VAlign(VAlign)
+	        .Padding(Padding)
+	        [
+	            CurrentPinWidget.ToSharedRef()
+	        ];
+	    }
+	}
 
-        PinOverlay->AddSlot()
-        .HAlign(HAlign)
-        .VAlign(VAlign)
-        .Padding(Padding)
-        [
-            CurrentPinWidget.ToSharedRef()
-        ];
-    }
-}
-
-// 4. Hazırlanan hiyerarşiyi Node'un merkezine yerleştirin
 this->GetOrAddSlot(ENodeZone::Center)
 .HAlign(HAlign_Center)
 .VAlign(VAlign_Center)
@@ -105,6 +103,7 @@ void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 		if (Index != INDEX_NONE && Index >= 0 && Index < RoomGraphNodeRef->DoorDatas.Num())
 		{
 			TempPin->PinLocation = RoomGraphNodeRef->DoorDatas [Index].DoorType;
+			TempPin->PinOffset = RoomGraphNodeRef->DoorDatas [Index].DoorOffset;
 			if (RoomGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Up 
 				|| RoomGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Down)
 			{
@@ -137,10 +136,6 @@ TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 
 void SRoomGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
 {
-	if(UpPin.IsValid()) OutPinWidgets.Add(UpPin);
-	if(DownPin.IsValid()) OutPinWidgets.Add(DownPin);
-	if(LeftPin.IsValid()) OutPinWidgets.Add(LeftPin);
-	if(RightPin.IsValid()) OutPinWidgets.Add(RightPin);
 	SMazeGraphNodeBase::GetAllPinWidgets(OutPinWidgets);
 }
 
