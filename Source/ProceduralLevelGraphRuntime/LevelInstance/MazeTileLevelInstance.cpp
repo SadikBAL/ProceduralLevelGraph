@@ -37,6 +37,7 @@ void AMazeTileLevelInstance::PreSave(FObjectPreSaveContext SaveContext)
 }
 void AMazeTileLevelInstance::LoadMapData()
 {
+	UE_LOG(LogTemp, Log, TEXT("AMazeTileLevelInstance::LoadMapData()"));
 	UWorld* World = GetWorld();
 	if (!World) return;
 	UWorldPartitionSubsystem* WPSubsystem = World->GetSubsystem<UWorldPartitionSubsystem>();
