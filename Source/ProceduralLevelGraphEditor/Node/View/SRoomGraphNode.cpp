@@ -15,11 +15,12 @@
 void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 {
 	this->GraphNode = InNode;
-	
+
 	this->RoomGraphNodeRef = Cast<URoomGraphNode>(GraphNode);
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
 	TitleFont.Size = 24;
 	UpdateGraphNode();
+	InNode->AllocateDefaultPins();
 	TSharedPtr<SOverlay> PinOverlay;
 	
 	SAssignNew(PinOverlay, SOverlay)
@@ -81,12 +82,12 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	    }
 	}
 
-this->GetOrAddSlot(ENodeZone::Center)
-.HAlign(HAlign_Center)
-.VAlign(VAlign_Center)
-[
-    PinOverlay.ToSharedRef()
-];
+	this->GetOrAddSlot(ENodeZone::Center)
+	.HAlign(HAlign_Center)
+	.VAlign(VAlign_Center)
+	[
+	    PinOverlay.ToSharedRef()
+	];
 }
 
 void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
