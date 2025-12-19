@@ -49,13 +49,13 @@ struct FMazeTileData
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	UPROPERTY(VisibleAnywhere, Category = "Maze Node")
 	TMap<EMazeDirection, EMazePinType> MazeDirectionMap;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	UPROPERTY(VisibleAnywhere, Category = "Maze Node")
 	int32 RoomRotation = 0;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	UPROPERTY(VisibleAnywhere, Category = "Maze Node")
 	FBox RoomBounds = FBox();
 };
 

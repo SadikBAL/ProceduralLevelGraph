@@ -2,8 +2,10 @@
 
 #include "LevelInstanceManagerComponent.h"
 #include "Components/PointLightComponent.h"
-#include "Engine/StaticMeshActor.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
+#include "WorldPartition/ActorDescList.h"
+#include "WorldPartition/WorldPartitionHelpers.h"
+#include "WorldPartition/WorldPartitionSubsystem.h"
 
 #if WITH_EDITOR
 #include "UObject/ObjectSaveContext.h"
@@ -32,6 +34,29 @@ void AMazeTileLevelInstance::PreSave(FObjectPreSaveContext SaveContext)
 {
 	Super::PreSave(SaveContext);
 	LevelName = WorldAsset.ToSoftObjectPath().GetLongPackageName();
+}
+void AMazeTileLevelInstance::LoadMapData()
+{
+	UWorld* World = GetWorld();
+	if (!World) return;
+	UWorldPartitionSubsystem* WPSubsystem = World->GetSubsystem<UWorldPartitionSubsystem>();
+	if (!WPSubsystem) return;
+	UWorldPartition* WorldPartition = World->GetWorldPartition();
+	if (!WorldPartition) return;
+	FWorldPartitionHelpers::ForEachActorDesc(WorldPartition, [this](const FWorldPartitionActorDesc* ActorDesc)
+	{
+		if (ActorDesc)
+		{
+			FName ActorClass = ActorDesc->GetNativeClass().GetAssetName();
+			FVector ActorLocation = ActorDesc->GetEditorBounds().GetCenter();
+
+			UE_LOG(LogTemp, Log, TEXT("Actor: %s, Class: %s, Position: %s"), 
+				*ActorDesc->GetActorName().ToString(),
+				*ActorClass.ToString(),
+				*ActorLocation.ToString());
+		}
+		return true; 
+	});
 }
 #endif
 

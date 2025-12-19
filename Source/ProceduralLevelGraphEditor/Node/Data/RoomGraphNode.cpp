@@ -28,19 +28,19 @@ void URoomGraphNode::AllocateDefaultPins()
             switch (DoorDatas[i].DoorType)
             {
                 case EMazeDirection::Up:
-                PinName = *FString::Printf(TEXT("Up_%d"), i);
+                PinName = FName(*FString::Printf(TEXT("Up_%d_Pin"), i));
                 CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
                 break;
                 case EMazeDirection::Down:
-                PinName = *FString::Printf(TEXT("Down_%d"), i);
+                PinName = FName(*FString::Printf(TEXT("Down_%d_Pin"), i));
                 CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
                 break;
                 case EMazeDirection::Left:
-                PinName = *FString::Printf(TEXT("Left_%d"), i);
+                PinName = FName(*FString::Printf(TEXT("Left_%d_Pin"), i));
                 CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
                 break;
                 case EMazeDirection::Right:
-                PinName = *FString::Printf(TEXT("Right_%d"), i);
+                PinName = FName(*FString::Printf(TEXT("Right_%d_Pin"), i));
                 CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
                 break;
                 default:

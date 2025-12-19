@@ -18,6 +18,8 @@ public:
 
 #if WITH_EDITOR
 	virtual  void PreSave(FObjectPreSaveContext SaveContext) override;
+	UFUNCTION(CallInEditor, Category = "Level",DisplayName="Load Map Data")
+	void LoadMapData();
 #endif
 	
 	UFUNCTION(BlueprintCallable, Category = "Tile")
@@ -27,13 +29,13 @@ public:
 	UFUNCTION()
 	TArray<FName> GetMeshPartNames(EMazeDirection LocalDirection, int LocalRotation);
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Level", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
 	int Width;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Level", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
 	int Height;
 
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY()
 	FMazeTileData NodeData;
 	UPROPERTY()
 	ULevelInstanceManagerComponent* LevelInstanceManager;
