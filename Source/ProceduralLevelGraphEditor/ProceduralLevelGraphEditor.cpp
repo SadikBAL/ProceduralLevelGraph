@@ -164,7 +164,6 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
     }
     
     FAssetEditorToolkit::InitAssetEditor(Mode, InitToolkitHost, FName("ProceduralLevelGraphEditorApp"), StandaloneDefaultLayout, bCreateDefaultStandaloneMenu, bCreateDefaultToolbar, GraphAsset);
-    FEditorDelegates::PostSaveWorldWithContext.AddRaw(this, &FProceduralLevelGraphEditor::OnPreSaveWorld);
 }
 
 void FProceduralLevelGraphEditor::RegisterTabSpawners(const TSharedRef<class FTabManager>& InTabManager)

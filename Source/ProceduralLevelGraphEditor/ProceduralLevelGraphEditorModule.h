@@ -10,6 +10,7 @@ class IAssetTypeActions;
 class FProceduralLevelGraphEditorModule : public IModuleInterface
 {
 public:
+    void OnMapSaved(UWorld* World, FObjectPostSaveContext ObjectPostSaveContext);
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
 private:
@@ -20,4 +21,5 @@ private:
     TSharedPtr<FSRouterGraphNodeFactory> SRouterGraphNodeFactory;
     TSharedPtr<FSEntranceGraphNodeFactory> SEntranceGraphNodeFactory;
     TSharedPtr<FSLayoutGraphNodeFactory> SLayoutGraphNodeFactory;
+    
 };
