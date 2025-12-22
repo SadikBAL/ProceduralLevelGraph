@@ -27,6 +27,6 @@ public:
     TArray<TSubclassOf<ARoomLevelInstance>> RoomLevelInstanceRefs;
     UPROPERTY(EditDefaultsOnly, Category = "Room")
     TArray<TSubclassOf<AHallLevelInstance>> HallLevelInstanceRefs;
-    UPROPERTY(EditDefaultsOnly, Category = "Room")
+    UPROPERTY(VisibleAnywhere, Category = "Room")
     TArray<FDoorData> DoorDatas;
 };

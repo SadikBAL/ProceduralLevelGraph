@@ -85,11 +85,11 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	UpdateGraphNode();
 	UpdatePinTypes();
 	const FVector2D IconSize(22.0f, 22.0f);
-	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Minus.T_Button_Icon_Minus")))
+	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icon/T_Button_Icon_Minus.T_Button_Icon_Minus")))
 		ButtonMinusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
-	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Plus.T_Button_Icon_Plus")))
+	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icon/T_Button_Icon_Plus.T_Button_Icon_Plus")))
 		ButtonPlusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
-	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icons/T_Button_Icon_Rotate.T_Button_Icon_Rotate")))
+	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icon/T_Button_Icon_Rotate.T_Button_Icon_Rotate")))
 		ButtonRotateBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
     constexpr float EdgePadding = 10.0f;
 	const bool bIsVertical = (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180);

@@ -3,9 +3,6 @@
 #include "PassagePoint.h"
 #include "Components/PointLightComponent.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
-#include "WorldPartition/ActorDescContainer.h"
-#include "WorldPartition/WorldPartitionHelpers.h"
-#include "WorldPartition/WorldPartitionSubsystem.h"
 
 #if WITH_EDITOR
 #include "UObject/ObjectSaveContext.h"
@@ -34,23 +31,56 @@ void AMazeTileLevelInstance::PreSave(FObjectPreSaveContext SaveContext)
 {
 	Super::PreSave(SaveContext);
 	LevelName = WorldAsset.ToSoftObjectPath().GetLongPackageName();
+	TArray<AActor*> IgnoreList;
+	LoadMapData(IgnoreList);
 }
 
-void AMazeTileLevelInstance::LoadMapData()
+void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 {
 	UE_LOG(LogTemp, Log, TEXT("AMazeTileLevelInstance::LoadMapData()"));
+	DoorDatas.Empty();
 	if (UPackage* Package = LoadPackage(nullptr, *LevelName, LOAD_None))
 	{
 		if (const UWorld* World = UWorld::FindWorldInPackage(Package))
 		{
 			for (const AActor* Actor : World->PersistentLevel->Actors)
 			{
+				if (IgnoreList.Contains(Actor))
+				{
+					continue;
+				}
 				if (const APassagePoint* PassagePoint = Cast<APassagePoint>(Actor))
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Class : %s	-	 Position : %s"), 
-						 
-						*PassagePoint->GetClass()->GetName(),
-						*PassagePoint->GetActorLocation().ToString());
+					FDoorData TempData;
+					if (PassagePoint->GetActorRotation().Yaw == 0)
+					{
+						TempData.DoorVisibility = EMazePinType::Tier1;
+						TempData.DoorOffset.X = PassagePoint->GetActorLocation().X / 100.0f;;
+						TempData.DoorOffset.Y = 0;
+						if (PassagePoint->GetActorLocation().Y > 0)
+						{
+							TempData.DoorType = EMazeDirection::Down;
+						}
+						else
+						{
+							TempData.DoorType = EMazeDirection::Up;
+						}
+					}
+					else
+					{
+						TempData.DoorVisibility = EMazePinType::Tier1;
+						TempData.DoorOffset.Y = PassagePoint->GetActorLocation().Y / 100.0f;;
+						TempData.DoorOffset.X = 0;
+						if (PassagePoint->GetActorLocation().X > 0)
+						{
+							TempData.DoorType = EMazeDirection::Right;
+						}
+						else
+						{
+							TempData.DoorType = EMazeDirection::Left;
+						}
+					}
+					DoorDatas.Add(TempData);
 				}
 			}
 		}
@@ -60,23 +90,8 @@ void AMazeTileLevelInstance::LoadMapData()
 void AMazeTileLevelInstance::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
-	if (UPackage* Package = LoadPackage(nullptr, *LevelName, LOAD_None))
-	{
-		if (const UWorld* World = UWorld::FindWorldInPackage(Package))
-		{
-			for (const AActor* Actor : World->PersistentLevel->Actors)
-			{
-				if (const APassagePoint* PassagePoint = Cast<APassagePoint>(Actor))
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Class : %s	-	 Position : %s"), 
-						 
-						*PassagePoint->GetClass()->GetName(),
-						*PassagePoint->GetActorLocation().ToString());
-				}
-			}
-		}
-	}
 }
+
 #endif
 
 void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)

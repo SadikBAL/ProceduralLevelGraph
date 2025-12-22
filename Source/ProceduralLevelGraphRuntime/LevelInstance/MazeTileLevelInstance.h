@@ -8,7 +8,7 @@
 class ULevelInstanceManagerComponent;
 
 UCLASS(Abstract, HideDropdown)
-class AMazeTileLevelInstance : public ALevelInstance
+class PROCEDURALLEVELGRAPHRUNTIME_API AMazeTileLevelInstance : public ALevelInstance
 {
 	GENERATED_BODY()
 public:
@@ -19,8 +19,7 @@ public:
 	
 #if WITH_EDITOR
 	virtual  void PreSave(FObjectPreSaveContext SaveContext) override;
-	UFUNCTION(CallInEditor, Category = "Level",DisplayName="Load Map Data")
-	void LoadMapData();
+	void LoadMapData(TArray<AActor*>& IgnoreList);
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
 	
@@ -57,5 +56,6 @@ public:
 	bool bLevelLoadedAndShown = false;
 	UPROPERTY()
 	ULevelStreamingDynamic* LevelStreamingDynamic = nullptr;
-	
+	UPROPERTY(VisibleAnywhere, Category = "Level")
+	TArray<FDoorData> DoorDatas;
 };

@@ -2,27 +2,62 @@
 
 #include "EdGraphUtilities.h"
 #include "EngineUtils.h"
+#include "Selection.h"
+#include "AssetRegistry/AssetRegistryModule.h"
 #include "AssetTypeActions/AssetTpyeActions_HallDataAsset.h"
 #include "AssetTypeActions/AssetTypeActions_ProceduralLevelGraph.h"
+#include "ProceduralLevelGraphRuntime/LevelInstance/MazeTileLevelInstance.h"
 #include "ProceduralLevelGraphRuntime/LevelInstance/PassagePoint.h"
 #include "UObject/ObjectSaveContext.h"
 
 #define LOCTEXT_NAMESPACE "FProceduralLevelGraphEditorModule"
 
-void FProceduralLevelGraphEditorModule::OnMapSaved(UWorld* World, FObjectPostSaveContext ObjectPostSaveContext)
+void FProceduralLevelGraphEditorModule::OnObjectPreSave(UObject* Object, FObjectPreSaveContext ObjectPreSaveContext)
 {
-    if (World)
+    AActor* SavedActor = Cast<AActor>(Object);
+    UWorld* WorldToScan = nullptr;
+    if (SavedActor)
     {
-        // Sadece "Editor World" olduğundan emin olmak isteyebilirsiniz (PIE vs. karışmasın diye)
-        if (World->WorldType == EWorldType::Editor)
+        WorldToScan = SavedActor->GetWorld();
+    }
+    if (WorldToScan && (WorldToScan->WorldType == EWorldType::Editor || WorldToScan->WorldType == EWorldType::EditorPreview))
+    {
+        UE_LOG(LogTemp, Log, TEXT("Updated Map Name : %s"), *WorldToScan->GetName());
+        TArray<AActor*> IgnoreList;
+        UpdateMazeLevelInstanceBluprintsDoorReferances(WorldToScan->GetName(),IgnoreList);
+    }
+}
+
+void FProceduralLevelGraphEditorModule::UpdateMazeLevelInstanceBluprintsDoorReferances(FString LevelInstanceName, TArray<AActor*>& IgnoreList)
+{
+    FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+    FARFilter Filter;
+    Filter.ClassPaths.Add(UBlueprint::StaticClass()->GetClassPathName());
+    Filter.bRecursiveClasses = true;
+
+    TArray<FAssetData> AssetList;
+    AssetRegistryModule.Get().GetAssets(Filter, AssetList);
+    UClass* TargetBaseClass = AMazeTileLevelInstance::StaticClass();
+
+    UE_LOG(LogTemp, Log, TEXT("--- AMazeTileLevelInstance Turevi Blueprintler Araniyor ---"));
+    for (const FAssetData& AssetData : AssetList)
+    {
+        UBlueprint* BlueprintAsset = Cast<UBlueprint>(AssetData.GetAsset());
+        if (BlueprintAsset && BlueprintAsset->GeneratedClass)
         {
-            // Tüm aktörleri dönüyoruz
-            for (TActorIterator<APassagePoint> It(World); It; ++It)
+            if (BlueprintAsset->GeneratedClass->IsChildOf(TargetBaseClass))
             {
-                AActor* Actor = *It;
-                if (Actor)
+               
+                if ( const UClass* BPClass = BlueprintAsset->GeneratedClass)
                 {
-                    UE_LOG(LogTemp, Log, TEXT("Kaydedilen Aktor: %s"), *Actor->GetName());
+                    if (AMazeTileLevelInstance* DefaultObject = Cast<AMazeTileLevelInstance>(BPClass->GetDefaultObject()))
+                    {
+                        if (DefaultObject->GetWorldAsset() && DefaultObject->GetWorldAsset()->GetName() == LevelInstanceName)
+                        {
+                            UE_LOG(LogTemp, Warning, TEXT("Blueprint: %s"), *AssetData.AssetName.ToString());
+                            DefaultObject->LoadMapData(IgnoreList);
+                        }
+                    }
                 }
             }
         }
@@ -32,7 +67,8 @@ void FProceduralLevelGraphEditorModule::OnMapSaved(UWorld* World, FObjectPostSav
 void FProceduralLevelGraphEditorModule::StartupModule()
 {
     IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
-
+    FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+    
     const EAssetTypeCategories::Type PLGCategory = AssetTools.RegisterAdvancedAssetCategory(FName(TEXT("ProceduralLevelGraph")), LOCTEXT("ProceduralLevelGraphCategory", "Procedural Level Graph"));
     
     ProceduralLevelGraphAssetTypeAction = MakeShareable(new FAssetTypeActions_ProceduralLevelGraph(PLGCategory));
@@ -53,7 +89,29 @@ void FProceduralLevelGraphEditorModule::StartupModule()
     FEdGraphUtilities::RegisterVisualNodeFactory(SEntranceGraphNodeFactory);
     FEdGraphUtilities::RegisterVisualNodeFactory(SLayoutGraphNodeFactory);
     
-    FEditorDelegates::PostSaveWorldWithContext.AddRaw(this, &FProceduralLevelGraphEditorModule::OnMapSaved);
+
+    FEditorDelegates::OnDeleteActorsBegin.AddRaw(this, &FProceduralLevelGraphEditorModule::OnDeleteActorsBegin);
+    FCoreUObjectDelegates::OnObjectPreSave.AddRaw(this, &FProceduralLevelGraphEditorModule::OnObjectPreSave);
+    
+}
+void FProceduralLevelGraphEditorModule::OnDeleteActorsBegin()
+{
+    if (!GEditor) return;
+
+    USelection* SelectedActors = GEditor->GetSelectedActors();
+    if (SelectedActors)
+    {
+        for (FSelectionIterator It(*SelectedActors); It; ++It)
+        {
+            APassagePoint* Actor = Cast<APassagePoint>(*It);
+            if (Actor)
+            {
+                TArray<AActor*> IgnoreList;
+                IgnoreList.Add(Actor);
+                UpdateMazeLevelInstanceBluprintsDoorReferances(Actor->GetWorld()->GetName(),IgnoreList);
+            }
+        }
+    }
 }
 
 void FProceduralLevelGraphEditorModule::ShutdownModule()
@@ -90,8 +148,8 @@ void FProceduralLevelGraphEditorModule::ShutdownModule()
     {
         FEdGraphUtilities::UnregisterVisualNodeFactory(SLayoutGraphNodeFactory);
     }
+    FCoreUObjectDelegates::OnObjectPreSave.RemoveAll(this);
     
-    FEditorDelegates::PostSaveWorldWithContext.RemoveAll(this);
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -5,9 +5,6 @@
 
 URoomGraphNode::URoomGraphNode()
 {
-    if (RoomLevelInstanceRefs.IsEmpty())
-    {
-    }
     OnTileBlueprintsChanged();
 }
 
@@ -54,6 +51,7 @@ void URoomGraphNode::AllocateDefaultPins()
 void URoomGraphNode::OnTileBlueprintsChanged()
 {
     //Update Width and Height
+    DoorDatas.Empty();
     RoomWidth = 0;
     RoomHeight = 0;
     for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRefs)
@@ -61,6 +59,7 @@ void URoomGraphNode::OnTileBlueprintsChanged()
         if (TileClass)
         {
             const AMazeTileLevelInstance* DefaultTile = GetDefault<AMazeTileLevelInstance>(TileClass);
+          
             if (DefaultTile)
             {
                 if (DefaultTile->Width > RoomWidth )
@@ -71,6 +70,7 @@ void URoomGraphNode::OnTileBlueprintsChanged()
                 {
                     RoomHeight = DefaultTile->Height;
                 }
+                DoorDatas.Append(DefaultTile->DoorDatas);
             }
         }
     }
