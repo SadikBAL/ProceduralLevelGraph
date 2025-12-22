@@ -18,7 +18,6 @@ public:
     bool CanDelete();
     FProceduralLevelGraphEditor();
     virtual ~FProceduralLevelGraphEditor() override;
-
     void InitEditor(const EToolkitMode::Type Mode, const TSharedPtr<class IToolkitHost>& InitToolkitHost, UProceduralLevelGraphRuntime* InGraph);
 
     // IToolkit interface

@@ -1,6 +1,7 @@
 #include "ProceduralLevelGraphEditor.h"
 
 #include "EdGraphUtilities.h"
+#include "EngineUtils.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphRuntime.h"
 #include "EdGraph/EdGraph.h"
 #include "Widgets/Docking/SDockTab.h"
@@ -21,7 +22,9 @@
 #include "ProceduralLevelGraphEditor/Node/Data/HallGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RoomGraphNode.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RouterGraphNode.h"
+#include "ProceduralLevelGraphRuntime/LevelInstance/PassagePoint.h"
 #include "ProceduralLevelGraphRuntime/Node/EntranceRoom.h"
+#include "UObject/ObjectSaveContext.h"
 #include "Windows/WindowsPlatformApplicationMisc.h"
 
 #define LOCTEXT_NAMESPACE "ProceduralLevelGraphEditor"
@@ -161,6 +164,7 @@ void FProceduralLevelGraphEditor::InitEditor(const EToolkitMode::Type Mode, cons
     }
     
     FAssetEditorToolkit::InitAssetEditor(Mode, InitToolkitHost, FName("ProceduralLevelGraphEditorApp"), StandaloneDefaultLayout, bCreateDefaultStandaloneMenu, bCreateDefaultToolbar, GraphAsset);
+    FEditorDelegates::PostSaveWorldWithContext.AddRaw(this, &FProceduralLevelGraphEditor::OnPreSaveWorld);
 }
 
 void FProceduralLevelGraphEditor::RegisterTabSpawners(const TSharedRef<class FTabManager>& InTabManager)

@@ -1,11 +1,9 @@
 ﻿#include "MazeTileLevelInstance.h"
-
 #include "LevelInstanceManagerComponent.h"
-#include "UniversalObjectLocatorInitializeParams.h"
+#include "PassagePoint.h"
 #include "Components/PointLightComponent.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "WorldPartition/ActorDescContainer.h"
-#include "WorldPartition/ActorDescList.h"
 #include "WorldPartition/WorldPartitionHelpers.h"
 #include "WorldPartition/WorldPartitionSubsystem.h"
 
@@ -37,48 +35,47 @@ void AMazeTileLevelInstance::PreSave(FObjectPreSaveContext SaveContext)
 	Super::PreSave(SaveContext);
 	LevelName = WorldAsset.ToSoftObjectPath().GetLongPackageName();
 }
+
 void AMazeTileLevelInstance::LoadMapData()
 {
 	UE_LOG(LogTemp, Log, TEXT("AMazeTileLevelInstance::LoadMapData()"));
-	UWorld* World = GetWorld();
-	if (!World) return;
-	UWorldPartitionSubsystem* WPSubsystem = World->GetSubsystem<UWorldPartitionSubsystem>();
-	if (!WPSubsystem) return;
-	UWorldPartition* WorldPartition = World->GetWorldPartition();
-	if (!WorldPartition) return;
-	FWorldPartitionHelpers::ForEachActorDesc(WorldPartition, [this](const FWorldPartitionActorDesc* ActorDesc)
+	if (UPackage* Package = LoadPackage(nullptr, *LevelName, LOAD_None))
 	{
-		if (ActorDesc)
+		if (const UWorld* World = UWorld::FindWorldInPackage(Package))
 		{
-			FName ActorClass = ActorDesc->GetNativeClass().GetAssetName();
-			FVector ActorLocation = ActorDesc->GetEditorBounds().GetCenter();
-
-			UE_LOG(LogTemp, Log, TEXT("Actor: %s, Class: %s, Position: %s"), 
-				*ActorDesc->GetActorName().ToString(),
-				*ActorClass.ToString(),
-				*ActorLocation.ToString());
+			for (const AActor* Actor : World->PersistentLevel->Actors)
+			{
+				if (const APassagePoint* PassagePoint = Cast<APassagePoint>(Actor))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Class : %s	-	 Position : %s"), 
+						 
+						*PassagePoint->GetClass()->GetName(),
+						*PassagePoint->GetActorLocation().ToString());
+				}
+			}
 		}
-		return true; 
-	});
+	}
 }
 
 void AMazeTileLevelInstance::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
-	FWorldPartitionHelpers::ForEachActorDesc(nullptr, [this](const FWorldPartitionActorDesc* ActorDesc)
+	if (UPackage* Package = LoadPackage(nullptr, *LevelName, LOAD_None))
 	{
-		if (ActorDesc)
+		if (const UWorld* World = UWorld::FindWorldInPackage(Package))
 		{
-			FName ActorClass = ActorDesc->GetNativeClass().GetAssetName();
-			FVector ActorLocation = ActorDesc->GetEditorBounds().GetCenter();
-
-			UE_LOG(LogTemp, Log, TEXT("Actor: %s, Class: %s, Position: %s"), 
-				*ActorDesc->GetActorName().ToString(),
-				*ActorClass.ToString(),
-				*ActorLocation.ToString());
+			for (const AActor* Actor : World->PersistentLevel->Actors)
+			{
+				if (const APassagePoint* PassagePoint = Cast<APassagePoint>(Actor))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Class : %s	-	 Position : %s"), 
+						 
+						*PassagePoint->GetClass()->GetName(),
+						*PassagePoint->GetActorLocation().ToString());
+				}
+			}
 		}
-		return true; 
-	});
+	}
 }
 #endif
 
