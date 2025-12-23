@@ -7,7 +7,7 @@
 
 URoomGraphNode::URoomGraphNode()
 {
-    OnTileBlueprintsChanged();
+    //OnTileBlueprintsChanged();
 }
 
 FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const

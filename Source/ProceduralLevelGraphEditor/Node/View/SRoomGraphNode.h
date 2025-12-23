@@ -18,7 +18,7 @@ public:
 	virtual void GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const override;
 	virtual FOptionalSize GetNodeHeight() const override;
 	virtual FOptionalSize GetNodeWidth() const override;
-	
+	EMazeDirection GetRotatedPinType(EMazeDirection Unroteted);
 	TObjectPtr<URoomGraphNode> RoomGraphNodeRef;
 	TArray<TSharedPtr<SRoomGraphNodePin>> RoomPins;
 };

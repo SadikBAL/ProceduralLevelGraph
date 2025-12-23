@@ -60,7 +60,7 @@ void UHallGraphNode::OnHallDataAssetChanged()
 		{
 			for (auto Element : HallData->HallTiles)
 			{
-				if (Element->GetDefaultObject<AMazeTileLevelInstance>()->Width > RoomWidth)
+				if (Element && Element->GetDefaultObject<AMazeTileLevelInstance>()->Width > RoomWidth)
 				{
 					RoomWidth = Element->GetDefaultObject<AMazeTileLevelInstance>()->Width;
 				}

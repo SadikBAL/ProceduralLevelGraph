@@ -6,6 +6,7 @@ constexpr float TILE_SCALE = 100.0f;
 constexpr float TILE_EDITOR_SCALE = 25.0f;
 constexpr float GRID_SNAP_SCALE = 25.0f;
 constexpr float TILE_EDITOR_PIN_SCALE = 24.0f;
+constexpr int   MAZE_DIRECTION_MAX = 4;
 
 #if WITH_EDITOR
 #define UE_LOG_EDITOR(CategoryName, Verbosity, Format, ...) UE_LOG(CategoryName, Verbosity, Format, ##__VA_ARGS__)
@@ -16,11 +17,11 @@ constexpr float TILE_EDITOR_PIN_SCALE = 24.0f;
 UENUM(BlueprintType)
 enum class EMazeDirection : uint8
 {
-	Up,
-	Down,
-	Left,
-	Right,
-	None
+	Up = 0,
+	Down = 2,
+	Left = 3,
+	Right = 1,
+	None = 4
 };
 UENUM(BlueprintType)
 enum class EMazeOrientation : uint8
