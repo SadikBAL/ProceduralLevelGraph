@@ -29,6 +29,4 @@ public:
 	int HallLength;
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
 	TObjectPtr<UHallData> HallData;
-	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Refresh")
-	void RefreshNode();
 };

@@ -18,6 +18,7 @@ public:
     virtual void AllocateDefaultPins() override;
     void OnTileBlueprintsChanged();
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+    virtual void PostLoad() override;
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomWidth;

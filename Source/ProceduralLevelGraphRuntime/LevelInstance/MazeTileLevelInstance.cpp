@@ -27,6 +27,7 @@ bool AMazeTileLevelInstance::IsLoadingEnabled() const
 }
 
 #if WITH_EDITOR
+
 void AMazeTileLevelInstance::PreSave(FObjectPreSaveContext SaveContext)
 {
 	Super::PreSave(SaveContext);
@@ -85,6 +86,7 @@ void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 			}
 		}
 	}
+	OnMazeTileLevelInstanceUpdated.Broadcast();
 }
 
 void AMazeTileLevelInstance::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)

@@ -88,11 +88,6 @@ void UHallGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
 	}
 }
 
-void UHallGraphNode::RefreshNode()
-{
-	OnHallDataAssetChanged();
-}
-
 void UHallGraphNode::UpdateHallLength(int Value)
 {
 	HallLength = Value;

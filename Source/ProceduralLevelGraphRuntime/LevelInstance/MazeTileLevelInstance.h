@@ -21,6 +21,8 @@ public:
 	virtual  void PreSave(FObjectPreSaveContext SaveContext) override;
 	void LoadMapData(TArray<AActor*>& IgnoreList);
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	DECLARE_MULTICAST_DELEGATE(FOnMazeTileLevelInstanceUpdated);
+	FOnMazeTileLevelInstanceUpdated OnMazeTileLevelInstanceUpdated;
 #endif
 	
 	UFUNCTION(BlueprintCallable)

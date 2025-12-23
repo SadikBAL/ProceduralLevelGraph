@@ -1,4 +1,6 @@
 #include "RoomGraphNode.h"
+
+#include "HallGraphNode.h"
 #include "EdGraph/EdGraphPin.h"
 
 #define LOCTEXT_NAMESPACE "RoomGraphNode"
@@ -74,6 +76,10 @@ void URoomGraphNode::OnTileBlueprintsChanged()
             }
         }
     }
+    if (UEdGraph* MyGraph = GetGraph())
+    {
+        MyGraph->NotifyGraphChanged();
+    }
 }
 
 void URoomGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -83,9 +89,32 @@ void URoomGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
                        : NAME_None;
     if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomGraphNode, RoomLevelInstanceRefs))
     {
+        for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRefs)
+        {
+            if (TileClass)
+            {
+                AMazeTileLevelInstance* MutableActor = const_cast<AMazeTileLevelInstance*>(GetDefault<AMazeTileLevelInstance>(TileClass));
+                MutableActor->OnMazeTileLevelInstanceUpdated.RemoveAll(this);
+                MutableActor->OnMazeTileLevelInstanceUpdated.AddUObject(this, &URoomGraphNode::OnTileBlueprintsChanged);
+            }
+        }
         OnTileBlueprintsChanged();
     }
     Super::PostEditChangeProperty(PropertyChangedEvent);
+}
+
+void URoomGraphNode::PostLoad()
+{
+    Super::PostLoad();
+    for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRefs)
+    {
+        if (TileClass)
+        {
+            AMazeTileLevelInstance* MutableActor = const_cast<AMazeTileLevelInstance*>(GetDefault<AMazeTileLevelInstance>(TileClass));
+            MutableActor->OnMazeTileLevelInstanceUpdated.RemoveAll(this);
+            MutableActor->OnMazeTileLevelInstanceUpdated.AddUObject(this, &URoomGraphNode::OnTileBlueprintsChanged);
+        }
+    }
 }
 
 #undef LOCTEXT_NAMESPACE
