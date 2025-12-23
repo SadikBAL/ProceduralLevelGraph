@@ -209,19 +209,19 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
 
  FEnumPinType UMazeGraphSchema::GetPinType(const UEdGraphPin* A) const
  {
-    if (A->GetName().Compare(FString("Up")) == 0)
+    if (A->GetName().Contains(FString("Up")))
     {
         return FEnumPinType::Up;
     }
-    else if (A->GetName().Compare(FString("Down")) == 0)
+    else if (A->GetName().Contains(FString("Down")))
     {
         return FEnumPinType::Down;
     }
-    else if (A->GetName().Compare(FString("Left")) == 0)
+    else if (A->GetName().Contains(FString("Left")))
     {
         return FEnumPinType::Left;
     }
-    else if (A->GetName().Compare(FString("Right")) == 0)
+    else if (A->GetName().Contains(FString("Right")))
     {
         return FEnumPinType::Right;
     }
@@ -230,7 +230,7 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
 
 const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const
 {
-   
+
     if (A->GetOwningNode() == B->GetOwningNode())
     {
         return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
