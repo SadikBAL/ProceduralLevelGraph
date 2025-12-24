@@ -17,35 +17,37 @@ FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 
 void URoomGraphNode::AllocateDefaultPins()
 {
+    Pins.Empty();
     FCreatePinParams PinParams;
     for (int i = 0; i <  DoorDatas.Num(); i++)
     {
-        if (DoorDatas[i].DoorVisibility == EMazePinType::Tier1)
+        PinParams.Index = i;
+        FName PinName;
+        UEdGraphPin* TempPin = nullptr;
+        switch (DoorDatas[i].DoorType)
         {
-            PinParams.Index = i;
-            FName PinName;
-            switch (DoorDatas[i].DoorType)
-            {
-                case EMazeDirection::Up:
-                PinName = FName(*FString::Printf(TEXT("Up_%d_Pin"), i));
-                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
-                break;
-                case EMazeDirection::Down:
-                PinName = FName(*FString::Printf(TEXT("Down_%d_Pin"), i));
-                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
-                break;
-                case EMazeDirection::Left:
-                PinName = FName(*FString::Printf(TEXT("Left_%d_Pin"), i));
-                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
-                break;
-                case EMazeDirection::Right:
-                PinName = FName(*FString::Printf(TEXT("Right_%d_Pin"), i));
-                CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
-                break;
-                default:
-                break;
-            }
-            
+            case EMazeDirection::Up:
+            PinName = FName(*FString::Printf(TEXT("Up_%d_Pin"), i));
+            TempPin = CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
+            break;
+            case EMazeDirection::Down:
+            PinName = FName(*FString::Printf(TEXT("Down_%d_Pin"), i));
+            TempPin = CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
+            break;
+            case EMazeDirection::Left:
+            PinName = FName(*FString::Printf(TEXT("Left_%d_Pin"), i));
+            TempPin = CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
+            break;
+            case EMazeDirection::Right:
+            PinName = FName(*FString::Printf(TEXT("Right_%d_Pin"), i));
+            TempPin = CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName,PinParams);
+            break;
+            default:
+            break;
+        }
+        if (DoorDatas[i].DoorVisibility == EMazePinType::Hidden && TempPin != nullptr)
+        {
+            TempPin->bHidden = true;
         }
     }
 }
@@ -120,7 +122,6 @@ void URoomGraphNode::PostLoad()
 EMazeDirection URoomGraphNode::GetMazePinDirection(const UEdGraphPin* Pin)
 {
     int32 PinIndex = Pins.IndexOfByKey(Pin);
-    UE_LOG(LogTemp, Warning, TEXT("PinIndex %d"), PinIndex);
     if (DoorDatas.IsValidIndex(PinIndex))
     {
         return GetRotatedPinDirection(DoorDatas[PinIndex].DoorType);
