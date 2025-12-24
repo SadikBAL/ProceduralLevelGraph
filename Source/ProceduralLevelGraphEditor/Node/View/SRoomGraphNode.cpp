@@ -52,14 +52,9 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	        EHorizontalAlignment HAlign = HAlign_Center;
 	        EVerticalAlignment VAlign = VAlign_Center;
 	        FMargin Padding(0);
-	    	//To-Do Rotation Hesaba katılmıyor Katmak lazım odalar aslinda donmuyor :(
-	    	/* 0 -> 90
-	    	 * Top -> Right -> Down -> Left
-	    	 * 
-	    	*/
 	    	int32 LocalOffset = 0;
 	    	int32 LocalMult = 1;
-	    	if (GetRotatedPinType(CurrentPinWidget->PinLocation) == EMazeDirection::Up) {
+	    	if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Up) {
 	    		//Up
 	            VAlign = VAlign_Top;
 	    		LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
@@ -71,7 +66,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 				}
 	            Padding = FMargin(LocalOffset * LocalMult * TILE_EDITOR_SCALE, PinPadding, 0, 0);
 	        }
-	    	else if (GetRotatedPinType(CurrentPinWidget->PinLocation) == EMazeDirection::Right) {
+	    	else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Right) {
 	    		//Right
 	    		HAlign = HAlign_Right;
 	    		LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
@@ -83,7 +78,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	    		}
 	    		Padding = FMargin(0, LocalOffset * LocalMult  * TILE_EDITOR_SCALE, PinPadding, 0);
 	    	}
-	        else if (GetRotatedPinType(CurrentPinWidget->PinLocation) == EMazeDirection::Down) {
+	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Down) {
 	            //Left
 	        	VAlign = VAlign_Bottom;
 	        	LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
@@ -95,7 +90,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	        	}
 	        	Padding = FMargin(LocalOffset * LocalMult  * TILE_EDITOR_SCALE, 0, 2, PinPadding);
 	        }
-	        else if (GetRotatedPinType(CurrentPinWidget->PinLocation) == EMazeDirection::Left) {
+	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Left) {
 	            //Down
 	        	HAlign = HAlign_Left;
 	        	LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
@@ -206,13 +201,4 @@ FOptionalSize SRoomGraphNode::GetNodeWidth() const
 	}
 	return 5.0f;
 }
-
-EMazeDirection SRoomGraphNode::GetRotatedPinType(EMazeDirection Unroteted)
-{
-	int32 Value = static_cast<int32>(Unroteted);
-	Value += (RoomGraphNodeRef->RoomRotation / 90);
-	Value = Value % MAZE_DIRECTION_MAX;
-	return static_cast<EMazeDirection>(Value);
-}
-
 #undef LOCTEXT_NAMESPACE

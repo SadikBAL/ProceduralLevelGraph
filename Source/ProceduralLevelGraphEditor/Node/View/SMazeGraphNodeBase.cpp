@@ -133,9 +133,7 @@ FVector2D SMazeGraphNodeBase::GetPinPositionInGraphSpace(const TSharedPtr<SGraph
                 FVector2D LocalPosition = PanelGeometry.AbsoluteToLocal(AbsolutePosition);
                 FVector2D ViewOffset = GraphPanel->GetViewOffset();
                 float Zoom = GraphPanel->GetZoomAmount();
-                
                 return (LocalPosition - ViewOffset) / Zoom;
-                
             }
         }
     }

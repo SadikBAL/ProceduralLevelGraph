@@ -17,7 +17,9 @@ public:
 	virtual bool CanUserCopyNode() const;
 	virtual void GetNodeContextMenuActions(class UToolMenu* Menu, class UGraphNodeContextMenuContext* Context) const override;
 	virtual void PinConnectionListChanged(UEdGraphPin* Pin) override;
+	virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin);
 	virtual EMazePinType GetPinType();
+	virtual EMazeDirection GetRotatedPinDirection(EMazeDirection Unrotated);
 
 	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Right")
 	void RotateRoomToRight();

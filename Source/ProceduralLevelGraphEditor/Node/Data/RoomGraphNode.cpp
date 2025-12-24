@@ -117,4 +117,15 @@ void URoomGraphNode::PostLoad()
     }
 }
 
+EMazeDirection URoomGraphNode::GetMazePinDirection(const UEdGraphPin* Pin)
+{
+    int32 PinIndex = Pins.IndexOfByKey(Pin);
+    UE_LOG(LogTemp, Warning, TEXT("PinIndex %d"), PinIndex);
+    if (DoorDatas.IsValidIndex(PinIndex))
+    {
+        return GetRotatedPinDirection(DoorDatas[PinIndex].DoorType);
+    }
+    return EMazeDirection::None;
+}
+
 #undef LOCTEXT_NAMESPACE

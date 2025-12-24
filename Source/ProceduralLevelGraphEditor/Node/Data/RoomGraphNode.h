@@ -19,6 +19,7 @@ public:
     void OnTileBlueprintsChanged();
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
     virtual void PostLoad() override;
+    virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin) override;
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomWidth;

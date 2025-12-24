@@ -206,28 +206,6 @@ FPLGConnectionDrawingPolicy::FPLGConnectionDrawingPolicy(int32 InBackLayerID, in
         }
     }
 }
-
- FEnumPinType UMazeGraphSchema::GetPinType(const UEdGraphPin* A) const
- {
-    if (A->GetName().Contains(FString("Up")))
-    {
-        return FEnumPinType::Up;
-    }
-    else if (A->GetName().Contains(FString("Down")))
-    {
-        return FEnumPinType::Down;
-    }
-    else if (A->GetName().Contains(FString("Left")))
-    {
-        return FEnumPinType::Left;
-    }
-    else if (A->GetName().Contains(FString("Right")))
-    {
-        return FEnumPinType::Right;
-    }
-    return FEnumPinType::None;
- }
-
 const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGraphPin* A, const UEdGraphPin* B) const
 {
 
@@ -243,59 +221,36 @@ const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGrap
     {
         return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
     }
-    
-    FEnumPinType AType = GetPinType(A);
-    FEnumPinType BType = GetPinType(B);
-    if (UHallGraphNode* HallNodeA = Cast<UHallGraphNode>(A->GetOwningNode()))
-    {
-        if (HallNodeA->RoomRotation == 0 || HallNodeA->RoomRotation == 180)
-        {
-            if (AType == FEnumPinType::Left || AType == FEnumPinType::Right)
-            {
-                return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
-            }
-        }
-        else
-        {
-            if (AType == FEnumPinType::Up || AType == FEnumPinType::Down)
-            {
-                return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
-            }
-        }
-    }
-    if (UHallGraphNode* HallNodeB = Cast<UHallGraphNode>(A->GetOwningNode()))
-    {
-        if (HallNodeB->RoomRotation == 0 || HallNodeB->RoomRotation == 180)
-        {
-            if (BType == FEnumPinType::Left || BType == FEnumPinType::Right)
-            {
-                return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
-            }
-        }
-        else
-        {
-            if (BType == FEnumPinType::Up || BType == FEnumPinType::Down)
-            {
-                return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
-            }
-        }
-    }
-    if (AType == FEnumPinType::None || BType == FEnumPinType::None)
-    {
-        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
-    }
-    if ((AType == FEnumPinType::Down  && BType != FEnumPinType::Up)    ||
-        (AType == FEnumPinType::Up    && BType != FEnumPinType::Down)  ||
-        (AType == FEnumPinType::Left  && BType != FEnumPinType::Right) ||
-        (AType == FEnumPinType::Right && BType != FEnumPinType::Left)  )
-    {
-        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
-    }
-    else
-    {
-        return FPinConnectionResponse(CONNECT_RESPONSE_MAKE, FText::GetEmpty());
-    }
 
+    UMazeGraphNodeBase* ABaseNode = Cast<UMazeGraphNodeBase>(A->GetOwningNode());
+    UMazeGraphNodeBase* BBaseNode = Cast<UMazeGraphNodeBase>(B->GetOwningNode());
+    if (ABaseNode == nullptr || BBaseNode == nullptr)
+    {
+        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+    }
+    EMazeDirection ADirection = ABaseNode->GetMazePinDirection(A);
+    EMazeDirection BDirection = BBaseNode->GetMazePinDirection(B);
+    if (ADirection == EMazeDirection::None || BDirection == EMazeDirection::None)
+    {
+        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+    }
+    if (ADirection == EMazeDirection::Up && BDirection != EMazeDirection::Down)
+    {
+        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+    }
+    if (ADirection == EMazeDirection::Down && BDirection != EMazeDirection::Up)
+    {
+        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+    }
+    if (ADirection == EMazeDirection::Left && BDirection != EMazeDirection::Right)
+    {
+        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+    }
+    if (ADirection == EMazeDirection::Right && BDirection != EMazeDirection::Left)
+    {
+        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
+    }
+    return FPinConnectionResponse(CONNECT_RESPONSE_MAKE, FText::GetEmpty());
 }
 
  class FConnectionDrawingPolicy* UMazeGraphSchema::CreateConnectionDrawingPolicy(int32 InBackLayerID,

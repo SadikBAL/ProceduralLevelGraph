@@ -1,6 +1,7 @@
 ﻿#include "SRoomGraphNodePin.h"
 
 #include "ConnectionDrawingPolicy.h"
+#include "ProceduralLevelGraphEditor/Node/Data/MazeGraphNodeBase.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Images/SImage.h"
@@ -11,14 +12,16 @@ void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
 {
 	SGraphPin::FArguments Args;
 	GraphPinObj = InPin;
-	this->SetCursor(EMouseCursor::Crosshairs);
+	this->SetCursor(EMouseCursor::None);
 	this->bShowLabel = false;
+	this->SetDiffHighlighted(false);
+	this->SetEnabled(false);
 	check(GraphPinObj != nullptr);
 	PinBrushVertical = MakeShareable(new FSlateColorBrush(FLinearColor::White));
 	PinBrushVertical->ImageSize = FVector2D(TILE_EDITOR_PIN_SCALE, 8.0f);
 	PinBrushHorizontal = MakeShareable(new FSlateColorBrush(FLinearColor::White));
 	PinBrushHorizontal->ImageSize = FVector2D(8.0f, TILE_EDITOR_PIN_SCALE);
-	
+	PinBase = Cast<UMazeGraphNodeBase>(GraphPinObj->GetOwningNode());
 	SGraphPin::Construct(SGraphPin::FArguments(), InPin);
 }
 
@@ -29,6 +32,31 @@ FReply SRoomGraphNodePin::OnMouseButtonDown(const FGeometry& MyGeometry, const F
 
 const FSlateBrush* SRoomGraphNodePin::GetPinIcon() const
 {
+	if (PinBase)
+	{
+		if (PinBase->RoomRotation == 0 || PinBase->RoomRotation == 180)
+		{
+			if (PinDirection == EMazeOrientation::Vertical)
+			{
+				return PinBrushVertical.Get();
+			}
+			else if (PinDirection == EMazeOrientation::Horizontal)
+			{
+				return PinBrushHorizontal.Get();
+			}
+		}
+		else
+		{
+			if (PinDirection == EMazeOrientation::Horizontal)
+			{
+				return PinBrushVertical.Get();
+			}
+			else if (PinDirection == EMazeOrientation::Vertical)
+			{
+				return PinBrushHorizontal.Get();
+			}
+		}
+	}
 	if (PinDirection == EMazeOrientation::Vertical)
 	{
 		return PinBrushVertical.Get();

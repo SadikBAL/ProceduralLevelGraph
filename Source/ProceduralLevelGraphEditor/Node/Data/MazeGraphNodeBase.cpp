@@ -31,7 +31,6 @@ void UMazeGraphNodeBase::GetNodeContextMenuActions(class UToolMenu* Menu,
 	}
 	Super::GetNodeContextMenuActions(Menu, Context);
 }
-
 void UMazeGraphNodeBase::PinConnectionListChanged(UEdGraphPin* Pin)
 {
 	Super::PinConnectionListChanged(Pin);
@@ -39,6 +38,11 @@ void UMazeGraphNodeBase::PinConnectionListChanged(UEdGraphPin* Pin)
 	{
 		Graph->GetOuter()->MarkPackageDirty();
 	}
+}
+
+EMazeDirection UMazeGraphNodeBase::GetMazePinDirection(const UEdGraphPin* Pin)
+{
+	return EMazeDirection::None;
 }
 
 void UMazeGraphNodeBase::RotateRoomToLeft()
@@ -56,6 +60,14 @@ void UMazeGraphNodeBase::RotateRoomToLeft()
 EMazePinType UMazeGraphNodeBase::GetPinType()
 {
 	return EMazePinType::Tier1;
+}
+
+EMazeDirection UMazeGraphNodeBase::GetRotatedPinDirection(EMazeDirection Unrotated)
+{
+	int32 Value = static_cast<int32>(Unrotated);
+	Value += (RoomRotation / 90);
+	Value = Value % MAZE_DIRECTION_MAX;
+	return static_cast<EMazeDirection>(Value);
 }
 
 void UMazeGraphNodeBase::RotateRoomToRight()

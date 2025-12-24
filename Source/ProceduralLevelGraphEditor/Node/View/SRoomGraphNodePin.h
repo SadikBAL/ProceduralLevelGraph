@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "SGraphPin.h"
+#include "SMazeGraphNodeBase.h"
+#include "ProceduralLevelGraphEditor/Node/Data/MazeGraphNodeBase.h"
 #include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
 
 enum class EMazePinType : uint8;
@@ -20,6 +22,7 @@ public:
 	EMazePinType PinType;
 	EMazeDirection PinLocation;
 	FVector2D PinOffset;
+	UMazeGraphNodeBase* PinBase = nullptr;
 	
 protected:
 	
