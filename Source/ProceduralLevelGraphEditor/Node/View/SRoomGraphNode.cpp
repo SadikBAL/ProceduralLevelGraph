@@ -31,12 +31,12 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	    [
 	        SNew(SBorder)
 	        .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
-	        .BorderBackgroundColor(GetNodeBackgroundColor())
+	    	.BorderBackgroundColor(this, &SRoomGraphNode::GetNodeBackgroundColor)
 	        .HAlign(HAlign_Center)
 	        .VAlign(VAlign_Center)
 	        [
 	            SNew(STextBlock)
-	            .Text(GetNodeName())
+	        	.Text(this, &SRoomGraphNode::GetNodeName)
 	            .Font(TitleFont)
 	        ]
 	    ]
