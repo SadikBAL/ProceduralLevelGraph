@@ -67,6 +67,10 @@ void UHallGraphNode::OnHallDataAssetChanged()
 			}
 		}
 	}
+	if (HasAnyFlags(RF_ClassDefaultObject | RF_NeedLoad))
+	{
+		return;
+	}
 	if (UEdGraph* MyGraph = GetGraph())
 	{
 		MyGraph->NotifyGraphChanged();
