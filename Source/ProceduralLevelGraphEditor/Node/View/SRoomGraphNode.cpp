@@ -168,6 +168,10 @@ TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 void SRoomGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
 {
 	SMazeGraphNodeBase::GetAllPinWidgets(OutPinWidgets);
+	for (const auto& Pin : RoomPins)
+	{
+		OutPinWidgets.AddUnique(Pin);
+	}
 }
 
 FOptionalSize SRoomGraphNode::GetNodeHeight() const

@@ -20,7 +20,8 @@ public:
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
     virtual void PostLoad() override;
     virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin) override;
-    
+    int32 GetIndexFromPinName(const FName& PinName);
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomWidth;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
