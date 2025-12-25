@@ -15,8 +15,6 @@ public:
 	FVector2D GetPinPositionInGraphSpace(const TSharedPtr<SGraphPanel>& GraphPanel, const UEdGraphPin* Pin);
 	virtual FOptionalSize GetNodeHeight() const;
 	virtual FOptionalSize GetNodeWidth() const;
-	virtual FText GetNodeName() const;
-	virtual FSlateColor GetNodeBackgroundColor() const;
 	
 protected:
 	

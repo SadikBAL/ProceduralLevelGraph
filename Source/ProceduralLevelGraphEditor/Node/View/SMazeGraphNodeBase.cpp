@@ -151,14 +151,4 @@ FOptionalSize SMazeGraphNodeBase::GetNodeWidth() const
     return FOptionalSize(5.0f);   
 }
 
-FText SMazeGraphNodeBase::GetNodeName() const
-{
-    return FText::FromString("Base");
-}
-
-FSlateColor SMazeGraphNodeBase::GetNodeBackgroundColor() const
-{
-    return FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f));
-}
-
 #undef LOCTEXT_NAMESPACE

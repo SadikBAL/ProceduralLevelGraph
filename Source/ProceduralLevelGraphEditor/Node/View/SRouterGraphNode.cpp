@@ -14,9 +14,4 @@ void SRouterGraphNode::Construct(const FArguments& InArgs, URouterGraphNode* InN
 	SRoomGraphNode::Construct(ParentArgs, Cast<URoomGraphNode>(InNode));
 }
 
-FText SRouterGraphNode::GetNodeName() const
-{
-	return FText::FromString("Router");
-}
-
 #undef LOCTEXT_NAMESPACE

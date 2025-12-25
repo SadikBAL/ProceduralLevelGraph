@@ -92,107 +92,145 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 		ButtonRotateBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
     constexpr float EdgePadding = 10.0f;
 	const bool bIsVertical = (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180);
-	GetOrAddSlot(ENodeZone::Center)
-		.HAlign(HAlign_Center)
-		.VAlign(VAlign_Center)
-		[
-			SNew(SOverlay)
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Center)
-			.VAlign(VAlign_Center)
-		   [
-			  SNew(SBox)
-			  .WidthOverride(GetNodeWidth())
-			  .HeightOverride(GetNodeHeight())
-			  [
-				 SNew(SBorder)
-				 .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
-				 .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
-				 .HAlign(HAlign_Center)
-				   .VAlign(VAlign_Center)
-				 [
-					SNew(STextBlock)
-					.Text(FText::FromString("HALL"))
-					 .Font(TitleFont)
-				 ]
-			  ]
-		   ]
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Center).VAlign(VAlign_Top).Padding(0,PinPadding,0,0)
-			[
-				(UpPin.IsValid() && UpPin->PinType != EMazePinType::Hidden)
-				? UpPin.ToSharedRef()
-				: SNullWidget::NullWidget
-			]
+	TSharedPtr<SOverlay> PinOverlay;
+	SAssignNew(PinOverlay, SOverlay)
+	+ SOverlay::Slot()
+	.HAlign(HAlign_Center)
+	.VAlign(VAlign_Center)
+	[
+	    SNew(SBox)
+	    .WidthOverride(this, &SHallGraphNode::GetNodeWidth)
+	    .HeightOverride(this, &SHallGraphNode::GetNodeHeight)
+	    [
+	        SNew(SBorder)
+	        .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
+	    	.BorderBackgroundColor(HallGraphNodeRef->GetNodeBackgroundColor())
+	        .HAlign(HAlign_Center)
+	        .VAlign(VAlign_Center)
+	        [
+	            SNew(STextBlock)
+	        	.Text(HallGraphNodeRef->GetNodeName())
+	            .Font(TitleFont)
+	        ]
+	    ]
+	]
+	+ SOverlay::Slot()
+	.HAlign(bIsVertical ? HAlign_Center : HAlign_Left)
+	.VAlign(bIsVertical ? VAlign_Top : VAlign_Center)
+	.Padding(bIsVertical ? FMargin(0, EdgePadding, 0, 0) : FMargin(EdgePadding, 0, 0, 0))
+	[
+		CreateButtonGroup(bIsVertical,true)
+	]
 
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Center).VAlign(VAlign_Bottom).Padding(0,0,0,PinPadding)
-			[
-				(DownPin.IsValid() && DownPin->PinType != EMazePinType::Hidden)
-				? DownPin.ToSharedRef()
-				: SNullWidget::NullWidget
-			]
+	+ SOverlay::Slot()
+	.HAlign(bIsVertical ? HAlign_Center : HAlign_Right)
+	.VAlign(bIsVertical ? VAlign_Bottom : VAlign_Center)
+	.Padding(bIsVertical ? FMargin(0, 0, 0, EdgePadding) : FMargin(0, 0, EdgePadding, 0))
+	[
+		CreateButtonGroup(bIsVertical,false)
+	];
+	for (int32 i = 0; i < Pins.Num(); ++i)
+	{
+	    TSharedPtr<SRoomGraphNodePin> CurrentPinWidget = Pins[i];
+	    if (CurrentPinWidget.IsValid())
+	    {
+	        UEdGraphPin* PinObj = CurrentPinWidget->GetPinObj();
+	        EHorizontalAlignment HAlign = HAlign_Center;
+	        EVerticalAlignment VAlign = VAlign_Center;
+	        FMargin Padding(0);
+	    	int32 LocalOffset = 0;
+	    	int32 LocalMult = 1;
+	    	if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Up) {
+	    		//Up
+	            VAlign = VAlign_Top;
+	    		LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
+	    		? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
+				if (CurrentPinWidget->PinLocation == EMazeDirection::Down 
+					|| CurrentPinWidget->PinLocation == EMazeDirection::Left)
+				{
+					LocalMult = -1;
+				}
+	            Padding = FMargin(LocalOffset * LocalMult * TILE_EDITOR_SCALE, PinPadding, 0, 0);
+	        }
+	    	else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Right) {
+	    		//Right
+	    		HAlign = HAlign_Right;
+	    		LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
+				? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
+	    		if (CurrentPinWidget->PinLocation == EMazeDirection::Down 
+					||CurrentPinWidget->PinLocation == EMazeDirection::Left)
+	    		{
+	    			LocalMult = -1;
+	    		}
+	    		Padding = FMargin(0, LocalOffset * LocalMult  * TILE_EDITOR_SCALE, PinPadding, 0);
+	    	}
+	        else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Down) {
+	            //Left
+	        	VAlign = VAlign_Bottom;
+	        	LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
+				? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
+	        	if (CurrentPinWidget->PinLocation == EMazeDirection::Right 
+					|| CurrentPinWidget->PinLocation == EMazeDirection::Up)
+	        	{
+	        		LocalMult = -1;
+	        	}
+	        	Padding = FMargin(LocalOffset * LocalMult  * TILE_EDITOR_SCALE, 0, 2, PinPadding);
+	        }
+	        else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Left) {
+	            //Down
+	        	HAlign = HAlign_Left;
+	        	LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
+				? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
+	        	if (CurrentPinWidget->PinLocation == EMazeDirection::Right
+	        		|| CurrentPinWidget->PinLocation == EMazeDirection::Up)
+	        	{
+	        		LocalMult = -1;
+	        	}
+	        	Padding = FMargin(PinPadding-4, LocalOffset * LocalMult  * TILE_EDITOR_SCALE,0 , 0);
+	        }
 
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Left).VAlign(VAlign_Center).Padding(PinPadding-4,0,0,0)
-			[
-				(LeftPin.IsValid() && LeftPin->PinType != EMazePinType::Hidden)
-				? LeftPin.ToSharedRef()
-				: SNullWidget::NullWidget
-			]
-
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Right).VAlign(VAlign_Center).Padding(0,0,PinPadding,0)
-			[
-				(RightPin.IsValid() && RightPin->PinType != EMazePinType::Hidden)
-				? RightPin.ToSharedRef()
-				: SNullWidget::NullWidget
-			]
-			
-			+ SOverlay::Slot()
-			.HAlign(bIsVertical ? HAlign_Center : HAlign_Left)
-			.VAlign(bIsVertical ? VAlign_Top : VAlign_Center)
-			.Padding(bIsVertical ? FMargin(0, EdgePadding, 0, 0) : FMargin(EdgePadding, 0, 0, 0))
-			[
-				CreateButtonGroup(bIsVertical,true)
-			]
-
-			+ SOverlay::Slot()
-			.HAlign(bIsVertical ? HAlign_Center : HAlign_Right)
-			.VAlign(bIsVertical ? VAlign_Bottom : VAlign_Center)
-			.Padding(bIsVertical ? FMargin(0, 0, 0, EdgePadding) : FMargin(0, 0, EdgePadding, 0))
-			[
-				CreateButtonGroup(bIsVertical,false)
-			]
-			
-		];
+	        PinOverlay->AddSlot()
+	        .HAlign(HAlign)
+	        .VAlign(VAlign)
+	        .Padding(Padding)
+	        [
+	            CurrentPinWidget.ToSharedRef()
+	        ];
+	    }
+	}
+	this->GetOrAddSlot(ENodeZone::Center)
+	.HAlign(HAlign_Center)
+	.VAlign(VAlign_Center)
+	[
+	    PinOverlay.ToSharedRef()
+	];
 }
 
 void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
-	const FName PinName = PinToAdd->GetPinObj()->GetFName();
+	UEdGraphPin* PinObj = PinToAdd->GetPinObj();
 	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
-	if (PinName == FName("Up"))
+	if (HallGraphNodeRef && HallGraphNodeRef->DoorDatas.Num() > 0)
 	{
-		UpPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		UpPin->PinDirection = EMazeOrientation::Vertical;
+		TSharedPtr<SRoomGraphNodePin> TempPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		
+		int32 Index = HallGraphNodeRef->Pins.IndexOfByKey(PinObj);
+		if (Index != INDEX_NONE && Index >= 0 && Index < HallGraphNodeRef->DoorDatas.Num())
+		{
+			TempPin->PinLocation = HallGraphNodeRef->DoorDatas [Index].DoorType;
+			TempPin->PinOffset = HallGraphNodeRef->DoorDatas [Index].DoorOffset;
+			if (HallGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Up 
+				|| HallGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Down)
+			{
+				TempPin->PinDirection = EMazeOrientation::Vertical;
+			}
+			else
+			{
+				TempPin->PinDirection = EMazeOrientation::Horizontal;
+			}
+			Pins.Add(TempPin);
+		}
 	}
-	else if (PinName == FName("Down"))
-	{
-		DownPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		DownPin->PinDirection = EMazeOrientation::Vertical;
-	}
-	else if (PinName == FName("Left"))
-	{
-		LeftPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		LeftPin->PinDirection = EMazeOrientation::Horizontal;
-	}
-	else if (PinName == FName("Right"))
-	{
-		RightPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
-		RightPin->PinDirection = EMazeOrientation::Horizontal;
-	}
-	
 	SGraphNode::AddPin(PinToAdd);
 }
 
@@ -213,11 +251,11 @@ TSharedPtr<SGraphPin> SHallGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 
 void SHallGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
 {
-	if(UpPin.IsValid()) OutPinWidgets.Add(UpPin);
-	if(DownPin.IsValid()) OutPinWidgets.Add(DownPin);
-	if(LeftPin.IsValid()) OutPinWidgets.Add(LeftPin);
-	if(RightPin.IsValid()) OutPinWidgets.Add(RightPin);
 	SMazeGraphNodeBase::GetAllPinWidgets(OutPinWidgets);
+	for (const auto& Pin : Pins)
+	{
+		OutPinWidgets.AddUnique(Pin);
+	}
 }
 
 FOptionalSize SHallGraphNode::GetNodeHeight() const

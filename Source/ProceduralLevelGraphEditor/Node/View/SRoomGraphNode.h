@@ -17,6 +17,8 @@ public:
 	virtual void GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const override;
 	virtual FOptionalSize GetNodeHeight() const override;
 	virtual FOptionalSize GetNodeWidth() const override;
-	virtual FText GetNodeName() const override;
+	
+protected:
+	
 	TObjectPtr<URoomGraphNode> RoomGraphNodeRef;
 };

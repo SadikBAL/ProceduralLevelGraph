@@ -20,6 +20,8 @@ public:
 	virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin);
 	virtual EMazePinType GetPinType();
 	virtual EMazeDirection GetRotatedPinDirection(EMazeDirection Unrotated);
+	virtual FText GetNodeName() const;
+	virtual FSlateColor GetNodeBackgroundColor() const;
 
 	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Right")
 	void RotateRoomToRight();

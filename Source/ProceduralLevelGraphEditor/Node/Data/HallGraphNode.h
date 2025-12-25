@@ -16,8 +16,10 @@ public:
     
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual void AllocateDefaultPins() override;
-	virtual EMazePinType GetPinType() override;
 	virtual void PostLoad() override;
+	virtual FText GetNodeName() const override;
+	virtual FSlateColor GetNodeBackgroundColor() const override;
+	virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin) override;
 	
 	void OnHallDataAssetChanged();
 	void UpdateHallLength(int Value);
@@ -29,4 +31,6 @@ public:
 	int HallLength;
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
 	TObjectPtr<UHallData> HallData;
+	UPROPERTY(VisibleAnywhere, Category = "Hall")
+	TArray<FDoorData> DoorDatas;
 };

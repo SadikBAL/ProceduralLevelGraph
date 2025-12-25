@@ -22,6 +22,7 @@ public:
     virtual void PostLoad() override;
     virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin) override;
     int32 GetIndexFromPinName(const FName& PinName);
+    virtual FText GetNodeName() const override;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomWidth;

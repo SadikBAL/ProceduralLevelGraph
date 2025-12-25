@@ -25,17 +25,17 @@ void URoomGraphNode::AllocateDefaultPins()
         FName PinName;
         switch (DoorDatas[i].DoorType)
         {
-        case EMazeDirection::Up:    PinName = FName(*FString::Printf(TEXT("Up_%d_Pin"), i)); break;
-        case EMazeDirection::Down:  PinName = FName(*FString::Printf(TEXT("Down_%d_Pin"), i)); break;
-        case EMazeDirection::Left:  PinName = FName(*FString::Printf(TEXT("Left_%d_Pin"), i)); break;
-        case EMazeDirection::Right: PinName = FName(*FString::Printf(TEXT("Right_%d_Pin"), i)); break;
-        default: continue;
+            case EMazeDirection::Up:    PinName = FName(*FString::Printf(TEXT("Up_%d_Pin"), i)); break;
+            case EMazeDirection::Down:  PinName = FName(*FString::Printf(TEXT("Down_%d_Pin"), i)); break;
+            case EMazeDirection::Left:  PinName = FName(*FString::Printf(TEXT("Left_%d_Pin"), i)); break;
+            case EMazeDirection::Right: PinName = FName(*FString::Printf(TEXT("Right_%d_Pin"), i)); break;
+            default: continue;
         }
         if (FindPin(PinName)) continue;
 
         PinParams.Index = i;
         UEdGraphPin* TempPin = CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName, PinParams);
-        
+        //Pins.Add(TempPin);
         if (DoorDatas[i].DoorVisibility == EMazePinType::Hidden && TempPin != nullptr)
         {
             TempPin->bHidden = true;
@@ -142,6 +142,11 @@ int32 URoomGraphNode::GetIndexFromPinName(const FName& PinName)
         return FCString::Atoi(*Parts[1]);
     }
     return INDEX_NONE;
+}
+
+FText URoomGraphNode::GetNodeName() const
+{
+    return FText::FromString("ROOM");
 }
 
 #undef LOCTEXT_NAMESPACE

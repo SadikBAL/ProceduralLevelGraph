@@ -14,14 +14,4 @@ void SEntranceGraphNode::Construct(const FArguments& InArgs, UEntranceGraphNode*
 	SRoomGraphNode::Construct(ParentArgs, Cast<URoomGraphNode>(InNode));
 }
 
-FText SEntranceGraphNode::GetNodeName() const
-{
-	return FText::FromString("ENTRANCE");
-}
-
-FSlateColor SEntranceGraphNode::GetNodeBackgroundColor() const
-{
-	return FSlateColor(FLinearColor(0.5f, 0.7f, 0.5f, 0.6f));
-}
-
 #undef LOCTEXT_NAMESPACE

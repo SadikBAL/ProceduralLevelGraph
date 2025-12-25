@@ -6,7 +6,17 @@
 UHallGraphNode::UHallGraphNode()
 {
 	HallLength = 5.0f;
-	//OnHallDataAssetChanged();
+	FDoorData UpDoor;
+	UpDoor.DoorType = EMazeDirection::Up;
+	UpDoor.DoorVisibility = EMazePinType::Tier1;
+	UpDoor.DoorOffset = FVector2D(0,0);
+	DoorDatas.Add(UpDoor);
+	FDoorData DownDoor;
+	DownDoor.DoorType = EMazeDirection::Down;
+	DownDoor.DoorVisibility = EMazePinType::Tier1;
+	DownDoor.DoorOffset = FVector2D(0,0);
+	DoorDatas.Add(DownDoor);
+	OnHallDataAssetChanged();
 }
 
 FText UHallGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
@@ -16,15 +26,10 @@ FText UHallGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 
 void UHallGraphNode::AllocateDefaultPins()
 {
-	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Up"));
-	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Down"));
-	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Left"));
-	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Right"));
-}
-
-EMazePinType UHallGraphNode::GetPinType()
-{
-	return Super::GetPinType();
+	UEdGraphPin* TempPin = CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Up"));
+	//Pins.Add(TempPin);
+	TempPin = CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, FName("Down"));
+	//Pins.Add(TempPin);
 }
 
 void UHallGraphNode::PostLoad()
@@ -35,6 +40,29 @@ void UHallGraphNode::PostLoad()
 		HallData->OnHallDataChanged.RemoveAll(this);
 		HallData->OnHallDataChanged.AddUObject(this, &UHallGraphNode::OnHallDataAssetChanged);
 	}
+}
+
+FText UHallGraphNode::GetNodeName() const
+{
+	return FText::FromString("HALL");
+}
+
+FSlateColor UHallGraphNode::GetNodeBackgroundColor() const
+{
+	return FSlateColor(FLinearColor(0.8f, 0.2f, 0.2f, 0.2f));
+}
+
+EMazeDirection UHallGraphNode::GetMazePinDirection(const UEdGraphPin* Pin)
+{
+	if (Pin->GetName().StartsWith(TEXT("Up")))
+	{
+		return GetRotatedPinDirection(DoorDatas[0].DoorType);
+	}
+	else if (Pin->GetName().StartsWith(TEXT("Down")))
+	{
+		return GetRotatedPinDirection(DoorDatas[1].DoorType);
+	}
+	return EMazeDirection::None;
 }
 
 void UHallGraphNode::OnHallDataAssetChanged()

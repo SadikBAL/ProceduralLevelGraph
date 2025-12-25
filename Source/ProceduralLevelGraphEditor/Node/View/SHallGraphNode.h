@@ -19,11 +19,6 @@ public:
 	virtual FOptionalSize GetNodeHeight() const override;
 	virtual FOptionalSize GetNodeWidth() const override;
 	
-	TSharedPtr<SRoomGraphNodePin> UpPin;
-	TSharedPtr<SRoomGraphNodePin> DownPin;
-	TSharedPtr<SRoomGraphNodePin> LeftPin;
-	TSharedPtr<SRoomGraphNodePin> RightPin;
-	
 protected:
 	
 	UHallGraphNode* HallGraphNodeRef = nullptr;

@@ -17,7 +17,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	this->GraphNode = InNode;
 	this->RoomGraphNodeRef =  Cast<URoomGraphNode>(GraphNode);
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 24;
+	TitleFont.Size = 12;
 	UpdateGraphNode();
 	TSharedPtr<SOverlay> PinOverlay;
 	SAssignNew(PinOverlay, SOverlay)
@@ -31,12 +31,12 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	    [
 	        SNew(SBorder)
 	        .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
-	    	.BorderBackgroundColor(this, &SMazeGraphNodeBase::GetNodeBackgroundColor)
+	    	.BorderBackgroundColor(RoomGraphNodeRef->GetNodeBackgroundColor())
 	        .HAlign(HAlign_Center)
 	        .VAlign(VAlign_Center)
 	        [
 	            SNew(STextBlock)
-	        	.Text(this, &SMazeGraphNodeBase::GetNodeName)
+	        	.Text(RoomGraphNodeRef->GetNodeName())
 	            .Font(TitleFont)
 	        ]
 	    ]
@@ -120,7 +120,6 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 
 void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
-	const FName PinName = PinToAdd->GetPinObj()->GetFName();
 	UEdGraphPin* PinObj = PinToAdd->GetPinObj();
 	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
 	if (RoomGraphNodeRef && RoomGraphNodeRef->DoorDatas.Num() > 0)
@@ -201,11 +200,6 @@ FOptionalSize SRoomGraphNode::GetNodeWidth() const
 		}
 	}
 	return 5.0f;
-}
-
-FText SRoomGraphNode::GetNodeName() const
-{
-	return FText::FromString("Room");
 }
 
 #undef LOCTEXT_NAMESPACE

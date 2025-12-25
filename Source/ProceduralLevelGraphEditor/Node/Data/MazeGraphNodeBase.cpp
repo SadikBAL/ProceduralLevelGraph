@@ -73,6 +73,16 @@ EMazeDirection UMazeGraphNodeBase::GetRotatedPinDirection(EMazeDirection Unrotat
 	return static_cast<EMazeDirection>(Value);
 }
 
+FText UMazeGraphNodeBase::GetNodeName() const
+{
+	return FText::FromString("BASE");
+}
+
+FSlateColor UMazeGraphNodeBase::GetNodeBackgroundColor() const
+{
+	return FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f));
+}
+
 void UMazeGraphNodeBase::RotateRoomToRight()
 {
 	RoomRotation += 90;
