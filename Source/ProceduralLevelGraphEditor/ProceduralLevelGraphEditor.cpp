@@ -368,7 +368,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 RuntimeRouter->RoomHeight = RouterEdNode->RoomHeight;
                 RuntimeRouter->RoomWidth = RouterEdNode->RoomWidth;
                 RuntimeRouter->RoomRotation = RouterEdNode->RoomRotation;
-                RuntimeRouter->RouterInstanceRef = RouterEdNode->RouterLevelInstanceRef;
+                //RuntimeRouter->RouterInstanceRef = RouterEdNode->RouterLevelInstanceRef;
                 NewRuntimeNode = RuntimeRouter;
             }
             else if (UEntranceGraphNode* EntranceEdNode = Cast<UEntranceGraphNode>(EdNode))
@@ -377,8 +377,8 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 RuntimeEntrance->RoomHeight = EntranceEdNode->RoomHeight;
                 RuntimeEntrance->RoomWidth = EntranceEdNode->RoomWidth;
                 RuntimeEntrance->RoomRotation = EntranceEdNode->RoomRotation;
-                RuntimeEntrance->RoomPosition = EntranceEdNode->RoomPosition;
-                RuntimeEntrance->EntranceInstanceRef = EntranceEdNode->EntranceLevelInstanceRef;
+                //RuntimeEntrance->RoomPosition = EntranceEdNode->RoomPosition;
+                //RuntimeEntrance->EntranceInstanceRef = EntranceEdNode->EntranceLevelInstanceRef;
                 NewRuntimeNode = RuntimeEntrance;
                 // Start Location its special node.
                 GraphAsset->StartNode = NewRuntimeNode;

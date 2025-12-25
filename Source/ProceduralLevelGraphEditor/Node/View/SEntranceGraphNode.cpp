@@ -6,11 +6,22 @@
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/Input/SEditableTextBox.h"
 
-#include "SGraphPin.h"
-#include "SRoomGraphNodePin.h"
-#include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
-#include "ProceduralLevelGraphRuntime/Node/EntranceRoom.h"
-
 #define LOCTEXT_NAMESPACE "SEntranceGraphNode"
+
+void SEntranceGraphNode::Construct(const FArguments& InArgs, UEntranceGraphNode* InNode)
+{
+	SRoomGraphNode::FArguments ParentArgs;
+	SRoomGraphNode::Construct(ParentArgs, Cast<URoomGraphNode>(InNode));
+}
+
+FText SEntranceGraphNode::GetNodeName() const
+{
+	return FText::FromString("ENTRANCE");
+}
+
+FSlateColor SEntranceGraphNode::GetNodeBackgroundColor() const
+{
+	return FSlateColor(FLinearColor(0.5f, 0.7f, 0.5f, 0.6f));
+}
 
 #undef LOCTEXT_NAMESPACE

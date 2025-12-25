@@ -31,12 +31,12 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	    [
 	        SNew(SBorder)
 	        .BorderImage(FAppStyle::GetBrush("Graph.StateNode.Body"))
-	        .BorderBackgroundColor(FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f)))
+	        .BorderBackgroundColor(GetNodeBackgroundColor())
 	        .HAlign(HAlign_Center)
 	        .VAlign(VAlign_Center)
 	        [
 	            SNew(STextBlock)
-	            .Text(FText::FromString("ROOM"))
+	            .Text(GetNodeName())
 	            .Font(TitleFont)
 	        ]
 	    ]
@@ -202,4 +202,10 @@ FOptionalSize SRoomGraphNode::GetNodeWidth() const
 	}
 	return 5.0f;
 }
+
+FText SRoomGraphNode::GetNodeName() const
+{
+	return FText::FromString("Room");
+}
+
 #undef LOCTEXT_NAMESPACE

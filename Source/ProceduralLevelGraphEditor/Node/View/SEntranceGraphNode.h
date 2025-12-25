@@ -9,4 +9,7 @@ public:
 	SLATE_BEGIN_ARGS(SEntranceGraphNode) {}
 	SLATE_END_ARGS()
 	
+	void Construct(const FArguments& InArgs, UEntranceGraphNode* InNode);
+	virtual FText GetNodeName() const override;
+	virtual FSlateColor GetNodeBackgroundColor() const override;
 };
