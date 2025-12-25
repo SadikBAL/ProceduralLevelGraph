@@ -50,7 +50,10 @@ void UMazeGraphNodeBase::RotateRoomToLeft()
 	RoomRotation -= 90;
 	if (RoomRotation < 0)
 		RoomRotation = 270;
-    
+	for (auto& Pin : Pins)
+	{
+		Pin->BreakAllPinLinks();
+	}
 	if (UEdGraph* MyGraph = GetGraph())
 	{
 		MyGraph->NotifyGraphChanged();
@@ -74,6 +77,10 @@ void UMazeGraphNodeBase::RotateRoomToRight()
 {
 	RoomRotation += 90;
 	RoomRotation = RoomRotation % 360;
+	for (auto& Pin : Pins)
+	{
+		Pin->BreakAllPinLinks();
+	}
 	if (UEdGraph* MyGraph = GetGraph())
 	{
 		MyGraph->NotifyGraphChanged();
