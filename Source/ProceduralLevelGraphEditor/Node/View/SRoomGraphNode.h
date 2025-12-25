@@ -3,8 +3,7 @@
 #include "CoreMinimal.h"
 #include "SMazeGraphNodeBase.h"
 #include "SRoomGraphNodePin.h"
-
-class URoomGraphNode;
+#include "ProceduralLevelGraphEditor/Node/Data/RoomGraphNode.h"
 
 class SRoomGraphNode : public SMazeGraphNodeBase
 {
@@ -19,5 +18,4 @@ public:
 	virtual FOptionalSize GetNodeHeight() const override;
 	virtual FOptionalSize GetNodeWidth() const override;
 	TObjectPtr<URoomGraphNode> RoomGraphNodeRef;
-	TArray<TSharedPtr<SRoomGraphNodePin>> RoomPins;
 };

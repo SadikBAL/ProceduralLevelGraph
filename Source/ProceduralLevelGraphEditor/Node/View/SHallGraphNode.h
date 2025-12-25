@@ -18,7 +18,11 @@ public:
 	virtual void GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const override;
 	virtual FOptionalSize GetNodeHeight() const override;
 	virtual FOptionalSize GetNodeWidth() const override;
-	virtual void UpdatePinTypes() override;
+	
+	TSharedPtr<SRoomGraphNodePin> UpPin;
+	TSharedPtr<SRoomGraphNodePin> DownPin;
+	TSharedPtr<SRoomGraphNodePin> LeftPin;
+	TSharedPtr<SRoomGraphNodePin> RightPin;
 	
 protected:
 	

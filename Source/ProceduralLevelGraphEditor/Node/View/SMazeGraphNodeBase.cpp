@@ -12,6 +12,7 @@
 #include "EdGraph/EdGraphNode.h"
 
 #define LOCTEXT_NAMESPACE "SMazeGraphNodeBase"
+
 void SMazeGraphNodeBase::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
 {
 }
@@ -148,26 +149,6 @@ FOptionalSize SMazeGraphNodeBase::GetNodeHeight() const
 FOptionalSize SMazeGraphNodeBase::GetNodeWidth() const
 {
     return FOptionalSize(5.0f);   
-}
-
-void SMazeGraphNodeBase::UpdatePinTypes()
-{
-    if (UpPin.IsValid())
-    {
-        UpPin->PinType = EMazePinType::Tier1;
-    }
-    if (DownPin.IsValid())
-    {
-        DownPin->PinType = EMazePinType::Tier1;
-    }
-    if (LeftPin.IsValid())
-    {
-        LeftPin->PinType = EMazePinType::Tier1;
-    }
-    if (RightPin.IsValid())
-    {
-        RightPin->PinType = EMazePinType::Tier1;
-    }
 }
 
 #undef LOCTEXT_NAMESPACE

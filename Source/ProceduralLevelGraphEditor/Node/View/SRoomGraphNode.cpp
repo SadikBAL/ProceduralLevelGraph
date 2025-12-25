@@ -15,11 +15,10 @@
 void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 {
 	this->GraphNode = InNode;
-	this->RoomGraphNodeRef = Cast<URoomGraphNode>(GraphNode);
+	this->RoomGraphNodeRef =  Cast<URoomGraphNode>(GraphNode);
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
 	TitleFont.Size = 24;
 	UpdateGraphNode();
-	InNode->AllocateDefaultPins();
 	TSharedPtr<SOverlay> PinOverlay;
 	SAssignNew(PinOverlay, SOverlay)
 	+ SOverlay::Slot()
@@ -42,10 +41,9 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	        ]
 	    ]
 	];
-	
-	for (int32 i = 0; i < RoomPins.Num(); ++i)
+	for (int32 i = 0; i < Pins.Num(); ++i)
 	{
-	    TSharedPtr<SRoomGraphNodePin> CurrentPinWidget = RoomPins[i];
+	    TSharedPtr<SRoomGraphNodePin> CurrentPinWidget = Pins[i];
 	    if (CurrentPinWidget.IsValid())
 	    {
 	        UEdGraphPin* PinObj = CurrentPinWidget->GetPinObj();
@@ -112,7 +110,6 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	        ];
 	    }
 	}
-
 	this->GetOrAddSlot(ENodeZone::Center)
 	.HAlign(HAlign_Center)
 	.VAlign(VAlign_Center)
@@ -144,7 +141,7 @@ void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 			{
 				TempPin->PinDirection = EMazeOrientation::Horizontal;
 			}
-			RoomPins.Add(TempPin);
+			Pins.Add(TempPin);
 		}
 	}
 	SGraphNode::AddPin(PinToAdd);
@@ -168,7 +165,7 @@ TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 void SRoomGraphNode::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
 {
 	SMazeGraphNodeBase::GetAllPinWidgets(OutPinWidgets);
-	for (const auto& Pin : RoomPins)
+	for (const auto& Pin : Pins)
 	{
 		OutPinWidgets.AddUnique(Pin);
 	}

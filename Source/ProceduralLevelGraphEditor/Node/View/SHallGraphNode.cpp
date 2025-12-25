@@ -83,7 +83,6 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
 	TitleFont.Size = 12;
 	UpdateGraphNode();
-	UpdatePinTypes();
 	const FVector2D IconSize(22.0f, 22.0f);
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icon/T_Button_Icon_Minus.T_Button_Icon_Minus")))
 		ButtonMinusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
@@ -251,43 +250,6 @@ FOptionalSize SHallGraphNode::GetNodeWidth() const
 		}
 	}
 	return 0.0f;
-}
-
-void SHallGraphNode::UpdatePinTypes()
-{
-	if (UpPin.IsValid() && (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180))
-	{
-		UpPin->PinType = EMazePinType::Tier1;
-	}
-	else if(UpPin.IsValid())
-	{
-		UpPin->PinType = EMazePinType::Hidden;
-	}
-	
-	if (DownPin.IsValid() && (HallGraphNodeRef->RoomRotation == 0 || HallGraphNodeRef->RoomRotation == 180))
-	{
-		DownPin->PinType = EMazePinType::Tier1;
-	}
-	else if(DownPin.IsValid())
-	{
-		DownPin->PinType = EMazePinType::Hidden;
-	}
-	if (LeftPin.IsValid() && (HallGraphNodeRef->RoomRotation == 90 || HallGraphNodeRef->RoomRotation == 270))
-	{
-		LeftPin->PinType = EMazePinType::Tier1;
-	}
-	else if(LeftPin.IsValid())
-	{
-		LeftPin->PinType = EMazePinType::Hidden;
-	}
-	if (RightPin.IsValid() && (HallGraphNodeRef->RoomRotation == 90 || HallGraphNodeRef->RoomRotation == 270))
-	{
-		RightPin->PinType = EMazePinType::Tier1;
-	}
-	else if(RightPin.IsValid())
-	{
-		RightPin->PinType = EMazePinType::Hidden;
-	}
 }
 
 TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, bool bIsUpOrLeft)
