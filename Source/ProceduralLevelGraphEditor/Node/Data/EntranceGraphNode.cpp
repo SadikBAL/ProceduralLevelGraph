@@ -7,7 +7,19 @@
 
 UEntranceGraphNode::UEntranceGraphNode() : URoomGraphNode()
 {
-	
+	static ConstructorHelpers::FClassFinder<ALevelInstance> BP_LevelInstance_Finder(
+		TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Specials/BP_Entrance.BP_Entrance_C'")
+	);
+	if (BP_LevelInstance_Finder.Succeeded())
+	{
+		TSubclassOf<ARoomLevelInstance> DefaultLevelInstance {BP_LevelInstance_Finder.Class};
+		RoomLevelInstanceRefs.Add(DefaultLevelInstance);
+	}
+	else
+	{
+		UE_LOG_EDITOR(LogTemp, Error, TEXT("UEntranceGraphNode constructor: BP_Entrance class not found!"));
+	}
+	OnTileBlueprintsChanged();
 }
 
 FText UEntranceGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
