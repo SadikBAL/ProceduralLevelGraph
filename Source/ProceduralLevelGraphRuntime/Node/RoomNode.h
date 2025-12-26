@@ -10,9 +10,9 @@ UCLASS(BlueprintType)
 class PROCEDURALLEVELGRAPHRUNTIME_API URoomNode : public UMazeNodeBase
 {
 	GENERATED_BODY()
-	URoomNode();
-public:
 	
+public:
+	URoomNode();
 	UPROPERTY(BlueprintReadOnly, Category = "Room Node")
 	float RoomWidth;
 	UPROPERTY(BlueprintReadOnly, Category = "Room Node")

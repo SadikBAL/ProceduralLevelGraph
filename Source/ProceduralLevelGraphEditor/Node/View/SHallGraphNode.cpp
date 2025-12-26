@@ -210,17 +210,17 @@ void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	UEdGraphPin* PinObj = PinToAdd->GetPinObj();
 	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
-	if (HallGraphNodeRef && HallGraphNodeRef->DoorDatas.Num() > 0)
+	if (HallGraphNodeRef && HallGraphNodeRef->DoorData.Num() > 0)
 	{
 		TSharedPtr<SRoomGraphNodePin> TempPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
 		
 		int32 Index = HallGraphNodeRef->Pins.IndexOfByKey(PinObj);
-		if (Index != INDEX_NONE && Index >= 0 && Index < HallGraphNodeRef->DoorDatas.Num())
+		if (Index != INDEX_NONE && Index >= 0 && Index < HallGraphNodeRef->DoorData.Num())
 		{
-			TempPin->PinLocation = HallGraphNodeRef->DoorDatas [Index].DoorType;
-			TempPin->PinOffset = HallGraphNodeRef->DoorDatas [Index].DoorOffset;
-			if (HallGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Up 
-				|| HallGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Down)
+			TempPin->PinLocation = HallGraphNodeRef->DoorData [Index].DoorType;
+			TempPin->PinOffset = HallGraphNodeRef->DoorData [Index].DoorOffset;
+			if (HallGraphNodeRef->DoorData [Index].DoorType == EMazeDirection::Up 
+				|| HallGraphNodeRef->DoorData [Index].DoorType == EMazeDirection::Down)
 			{
 				TempPin->PinDirection = EMazeOrientation::Vertical;
 			}
@@ -271,7 +271,7 @@ FOptionalSize SHallGraphNode::GetNodeHeight() const
 			return HallGraphNodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
-	return 0.0f;
+	return EMPTY_SIZE;
 }
 
 FOptionalSize SHallGraphNode::GetNodeWidth() const
@@ -287,7 +287,7 @@ FOptionalSize SHallGraphNode::GetNodeWidth() const
 			return HallGraphNodeRef->HallLength * TILE_EDITOR_SCALE;
 		}
 	}
-	return 0.0f;
+	return EMPTY_SIZE;
 }
 
 TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, bool bIsUpOrLeft)

@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+
 #include "ProceduralLevelGraphTypes.generated.h"
 
 constexpr float TILE_SCALE = 100.0f;
@@ -7,13 +8,14 @@ constexpr float TILE_EDITOR_SCALE = 25.0f;
 constexpr float GRID_SNAP_SCALE = 25.0f;
 constexpr float TILE_EDITOR_PIN_SCALE = 24.0f;
 constexpr int   MAZE_DIRECTION_MAX = 4;
+constexpr int	EMPTY_SIZE = 5;
 
 #if WITH_EDITOR
 #define UE_LOG_EDITOR(CategoryName, Verbosity, Format, ...) UE_LOG(CategoryName, Verbosity, Format, ##__VA_ARGS__)
 #else
 #define UE_LOG_EDITOR(CategoryName, Verbosity, Format, ...)
-
 #endif
+
 UENUM(BlueprintType)
 enum class EMazeDirection : uint8
 {
@@ -71,4 +73,6 @@ struct FDoorData
 	EMazePinType DoorVisibility;
 	UPROPERTY(EditAnywhere, Category = "Door Data")
 	FVector2D DoorOffset;
+	UPROPERTY()
+	TObjectPtr<class UMazeNodeBase> LinkedNode;
 };

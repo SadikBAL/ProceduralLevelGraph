@@ -97,75 +97,82 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		int RandomPartIndex = FMath::RandRange(0, HallLevelInstanceRefs.Num() - 1);
 		TSubclassOf<AMazeTileLevelInstance> RandomPartSpawnClass = HallLevelInstanceRefs[RandomPartIndex];
 		const AMazeTileLevelInstance* RandomPartTile = GetDefault<AMazeTileLevelInstance>(RandomPartSpawnClass);
+
 		if (LocalDeltaHeight > 0)
 		{
 			int HallPartCount = LocalDeltaHeight;
-			if (UpNode && HallPartCount > 0)
+			for (int i = 0; i < DoorData.Num(); ++i)
 			{
-				for (int i = 0; i < HallPartCount; ++i)
+				if (DoorData[i].DoorType == EMazeDirection::Up && HallPartCount > 0)
 				{
-					FRotator Rotator = FRotator::ZeroRotator;
-					Rotator.Yaw = 0;
-					AActor* TempActor = World->SpawnActor<AActor>(
-						RandomPartSpawnClass,
-						GetEdgePosition(EMazeDirection::Up) + FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * i),0),
-						Rotator,
-						SpawnParams
-					);
-					AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(TempActor);
-					SpawnedLevelInstance->SetNodeData(this);
+					for (int j = 0; j < HallPartCount; ++j)
+					{
+						FRotator Rotator = FRotator::ZeroRotator;
+						Rotator.Yaw = 0;
+						AActor* TempActor = World->SpawnActor<AActor>(
+							RandomPartSpawnClass,
+							GetEdgePosition(EMazeDirection::Up) + FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * j),0),
+							Rotator,
+							SpawnParams
+						);
+						AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(TempActor);
+						SpawnedLevelInstance->SetNodeData(this);
+					}
 				}
-			}
-			if (DownNode && HallPartCount > 0)
-			{
-				for (int i = 0; i < HallPartCount; ++i)
+				if (DoorData[i].DoorType == EMazeDirection::Down && HallPartCount > 0)
 				{
-					FRotator Rotator = FRotator::ZeroRotator;
-					Rotator.Yaw = 0;
-					AActor* TempActor = World->SpawnActor<AActor>(
-						RandomPartSpawnClass,
-						GetEdgePosition(EMazeDirection::Down) - FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * i),0),
-						Rotator,
-						SpawnParams
-					);
-					AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(TempActor);
-					SpawnedLevelInstance->SetNodeData(this);
+					for (int j = 0; j < HallPartCount; ++j)
+					{
+						FRotator Rotator = FRotator::ZeroRotator;
+						Rotator.Yaw = 0;
+						AActor* TempActor = World->SpawnActor<AActor>(
+							RandomPartSpawnClass,
+							GetEdgePosition(EMazeDirection::Down) - FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * i),0),
+							Rotator,
+							SpawnParams
+						);
+						AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(TempActor);
+						SpawnedLevelInstance->SetNodeData(this);
+					}
 				}
 			}
 		}
 		if (LocalDeltaWidth > 0)
 		{
-			int HallPartCount = LocalDeltaWidth;
-			if (LeftNode && HallPartCount > 0)
+			for (int i = 0; i < DoorData.Num(); ++i)
 			{
-				for (int i = 0; i < HallPartCount; ++i)
+				int HallPartCount = LocalDeltaWidth;
+				if (DoorData[i].DoorType == EMazeDirection::Left && HallPartCount > 0)
 				{
-					FRotator Rotator = FRotator::ZeroRotator;
-					Rotator.Yaw = 90;
-					AActor* TempActor = World->SpawnActor<AActor>(
-						RandomPartSpawnClass,
-						GetEdgePosition(EMazeDirection::Left) + FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,0),
-						Rotator,
-						SpawnParams
-					);
-					AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(TempActor);
-					SpawnedLevelInstance->SetNodeData(this);
+					for (int j = 0; j < HallPartCount; ++j)
+					{
+						FRotator Rotator = FRotator::ZeroRotator;
+						Rotator.Yaw = 90;
+						AActor* TempActor = World->SpawnActor<AActor>(
+							RandomPartSpawnClass,
+							GetEdgePosition(EMazeDirection::Left) + FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,0),
+							Rotator,
+							SpawnParams
+						);
+						AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(TempActor);
+						SpawnedLevelInstance->SetNodeData(this);
+					}
 				}
-			}
-			if (RightNode && HallPartCount > 0)
-			{
-				for (int i = 0; i < HallPartCount; ++i)
+				if (DoorData[i].DoorType == EMazeDirection::Right && HallPartCount > 0)
 				{
-					FRotator Rotator = FRotator::ZeroRotator;
-					Rotator.Yaw = 90;
-					AActor* TempActor = World->SpawnActor<AActor>(
-						RandomPartSpawnClass,
-						GetEdgePosition(EMazeDirection::Right) - FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,0),
-						Rotator,
-						SpawnParams
-					);
-					AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(TempActor);
-					SpawnedLevelInstance->SetNodeData(this);
+					for (int j = 0; j < HallPartCount; ++j)
+					{
+						FRotator Rotator = FRotator::ZeroRotator;
+						Rotator.Yaw = 90;
+						AActor* TempActor = World->SpawnActor<AActor>(
+							RandomPartSpawnClass,
+							GetEdgePosition(EMazeDirection::Right) - FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,0),
+							Rotator,
+							SpawnParams
+						);
+						AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(TempActor);
+						SpawnedLevelInstance->SetNodeData(this);
+					}
 				}
 			}
 		}

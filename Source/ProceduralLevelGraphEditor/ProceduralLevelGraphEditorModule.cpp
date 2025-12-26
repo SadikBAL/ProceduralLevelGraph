@@ -27,12 +27,12 @@ void FProceduralLevelGraphEditorModule::OnObjectPreSave(UObject* Object, FObject
     {
         UE_LOG(LogTemp, Log, TEXT("Updated Map Name : %s"), *WorldToScan->GetName());
         TArray<AActor*> IgnoreList;
-        UpdateMazeLevelInstanceBluprintsDoorReferances(WorldToScan->GetName(),IgnoreList);
+        UpdateMazeLevelInstanceBlueprintsDoorRef(WorldToScan->GetName(),IgnoreList);
         
     }
 }
 
-void FProceduralLevelGraphEditorModule::UpdateMazeLevelInstanceBluprintsDoorReferances(FString LevelInstanceName, TArray<AActor*>& IgnoreList)
+void FProceduralLevelGraphEditorModule::UpdateMazeLevelInstanceBlueprintsDoorRef(FString LevelInstanceName, TArray<AActor*>& IgnoreList)
 {
     FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
     FARFilter Filter;
@@ -112,7 +112,7 @@ void FProceduralLevelGraphEditorModule::OnDeleteActorsBegin()
             {
                 TArray<AActor*> IgnoreList;
                 IgnoreList.Add(Actor);
-                UpdateMazeLevelInstanceBluprintsDoorReferances(Actor->GetWorld()->GetName(),IgnoreList);
+                UpdateMazeLevelInstanceBlueprintsDoorRef(Actor->GetWorld()->GetName(),IgnoreList);
             }
         }
     }

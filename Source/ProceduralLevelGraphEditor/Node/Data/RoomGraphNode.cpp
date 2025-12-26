@@ -7,8 +7,6 @@
 
 URoomGraphNode::URoomGraphNode()
 {
-    RoomHeight = 5;
-    RoomWidth = 5;
     OnTileBlueprintsChanged();
 }
 
@@ -20,10 +18,10 @@ FText URoomGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
 void URoomGraphNode::AllocateDefaultPins()
 {
     FCreatePinParams PinParams;
-    for (int i = 0; i < DoorDatas.Num(); i++)
+    for (int i = 0; i < DoorData.Num(); i++)
     {
         FName PinName;
-        switch (DoorDatas[i].DoorType)
+        switch (DoorData[i].DoorType)
         {
             case EMazeDirection::Up:    PinName = FName(*FString::Printf(TEXT("Up_%d_Pin"), i)); break;
             case EMazeDirection::Down:  PinName = FName(*FString::Printf(TEXT("Down_%d_Pin"), i)); break;
@@ -36,7 +34,7 @@ void URoomGraphNode::AllocateDefaultPins()
         PinParams.Index = i;
         UEdGraphPin* TempPin = CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName, PinParams);
         //Pins.Add(TempPin);
-        if (DoorDatas[i].DoorVisibility == EMazePinType::Hidden && TempPin != nullptr)
+        if (DoorData[i].DoorVisibility == EMazePinType::Hidden && TempPin != nullptr)
         {
             TempPin->bHidden = true;
         }
@@ -53,10 +51,10 @@ void URoomGraphNode::OnTileBlueprintsChanged()
             Pin->BreakAllPinLinks();
         }
     }
-    DoorDatas.Empty();
-    RoomWidth = 0;
-    RoomHeight = 0;
-    for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRefs)
+    DoorData.Empty();
+    RoomWidth = EMPTY_SIZE;
+    RoomHeight = EMPTY_SIZE;
+    for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRef)
     {
         if (TileClass)
         {
@@ -72,7 +70,7 @@ void URoomGraphNode::OnTileBlueprintsChanged()
                 {
                     RoomHeight = DefaultTile->Height;
                 }
-                DoorDatas.Append(DefaultTile->DoorDatas);
+                DoorData.Append(DefaultTile->DoorDatas);
             }
         }
     }
@@ -92,9 +90,9 @@ void URoomGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
     const FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
                        ? PropertyChangedEvent.Property->GetFName() 
                        : NAME_None;
-    if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomGraphNode, RoomLevelInstanceRefs))
+    if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomGraphNode, RoomLevelInstanceRef))
     {
-        for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRefs)
+        for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRef)
         {
             if (TileClass)
             {
@@ -111,7 +109,7 @@ void URoomGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
 void URoomGraphNode::PostLoad()
 {
     Super::PostLoad();
-    for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRefs)
+    for (const TSubclassOf<ARoomLevelInstance>& TileClass : RoomLevelInstanceRef)
     {
         if (TileClass)
         {
@@ -125,9 +123,9 @@ void URoomGraphNode::PostLoad()
 EMazeDirection URoomGraphNode::GetMazePinDirection(const UEdGraphPin* Pin)
 {
     int32 Index = GetIndexFromPinName(Pin->PinName);
-    if (Index >= 0 && Index < DoorDatas.Num())
+    if (Index >= 0 && Index < DoorData.Num())
     {
-        return GetRotatedPinDirection(DoorDatas[Index].DoorType);
+        return GetRotatedPinDirection(DoorData[Index].DoorType);
     }
     return EMazeDirection::None;
 }
@@ -147,6 +145,13 @@ int32 URoomGraphNode::GetIndexFromPinName(const FName& PinName)
 FText URoomGraphNode::GetNodeName() const
 {
     return FText::FromString("ROOM");
+}
+
+FSlateColor URoomGraphNode::GetNodeBackgroundColor() const
+{
+    if (DoorData.Num() > 0)
+        return FSlateColor(FLinearColor(0.1f, 0.1f, 0.1f, 1.0f));
+    return FSlateColor(FLinearColor(1.0f, 0.1f, 0.1f, 0.6f));
 }
 
 #undef LOCTEXT_NAMESPACE

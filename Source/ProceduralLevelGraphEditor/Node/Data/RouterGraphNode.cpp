@@ -21,7 +21,9 @@ FText URouterGraphNode::GetNodeName() const
 
 FSlateColor URouterGraphNode::GetNodeBackgroundColor() const
 {
-	return FSlateColor(FLinearColor(0.4f, 0.4f, 0.9f, 0.3f));
+	if (DoorData.Num() > 0)
+		return FSlateColor(FLinearColor(0.4f, 0.4f, 0.9f, 0.3f));
+	return FSlateColor(FLinearColor(1.0f, 0.1f, 0.1f, 0.6f));
 }
 
 #undef LOCTEXT_NAMESPACE

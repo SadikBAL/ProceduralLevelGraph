@@ -30,6 +30,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Node Process")
 	int RoomRotation = 0;
+	UPROPERTY(VisibleAnywhere, Category = "Node Process")
+	TArray<FDoorData> DoorData;
 
 protected:
 	UPROPERTY()

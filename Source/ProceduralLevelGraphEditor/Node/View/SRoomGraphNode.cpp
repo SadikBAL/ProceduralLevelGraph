@@ -122,17 +122,17 @@ void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 {
 	UEdGraphPin* PinObj = PinToAdd->GetPinObj();
 	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
-	if (RoomGraphNodeRef && RoomGraphNodeRef->DoorDatas.Num() > 0)
+	if (RoomGraphNodeRef && RoomGraphNodeRef->DoorData.Num() > 0)
 	{
 		TSharedPtr<SRoomGraphNodePin> TempPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
 		
 		int32 Index = RoomGraphNodeRef->Pins.IndexOfByKey(PinObj);
-		if (Index != INDEX_NONE && Index >= 0 && Index < RoomGraphNodeRef->DoorDatas.Num())
+		if (Index != INDEX_NONE && Index >= 0 && Index < RoomGraphNodeRef->DoorData.Num())
 		{
-			TempPin->PinLocation = RoomGraphNodeRef->DoorDatas [Index].DoorType;
-			TempPin->PinOffset = RoomGraphNodeRef->DoorDatas [Index].DoorOffset;
-			if (RoomGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Up 
-				|| RoomGraphNodeRef->DoorDatas [Index].DoorType == EMazeDirection::Down)
+			TempPin->PinLocation = RoomGraphNodeRef->DoorData [Index].DoorType;
+			TempPin->PinOffset = RoomGraphNodeRef->DoorData [Index].DoorOffset;
+			if (RoomGraphNodeRef->DoorData [Index].DoorType == EMazeDirection::Up 
+				|| RoomGraphNodeRef->DoorData [Index].DoorType == EMazeDirection::Down)
 			{
 				TempPin->PinDirection = EMazeOrientation::Vertical;
 			}
@@ -183,7 +183,7 @@ FOptionalSize SRoomGraphNode::GetNodeHeight() const
 			return RoomGraphNodeRef->RoomWidth * TILE_EDITOR_SCALE;
 		}
 	}
-	return 5.0f;
+	return EMPTY_SIZE;
 }
 
 FOptionalSize SRoomGraphNode::GetNodeWidth() const
@@ -199,7 +199,7 @@ FOptionalSize SRoomGraphNode::GetNodeWidth() const
 			return RoomGraphNodeRef->RoomHeight * TILE_EDITOR_SCALE;
 		}
 	}
-	return 5.0f;
+	return EMPTY_SIZE;
 }
 
 #undef LOCTEXT_NAMESPACE

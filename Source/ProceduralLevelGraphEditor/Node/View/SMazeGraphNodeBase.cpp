@@ -22,11 +22,11 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     bOnDrag = FSlateApplication::Get().GetPressedMouseButtons().Contains(EKeys::LeftMouseButton);
     float DirectionX = GraphNode->GetNodePosX() - NewPosition.X;
     float DirectionY = GraphNode->GetNodePosY() - NewPosition.Y;
-    if (DirectionX > 15)
+    if (DirectionX > (GRID_SNAP_SCALE * 0.5))
     {
         DirectionX = GRID_SNAP_SCALE;
     }
-    else if (DirectionX < -15)
+    else if (DirectionX < ((GRID_SNAP_SCALE * 0.5) * -1))
     {
         DirectionX = GRID_SNAP_SCALE * -1;
     }
@@ -34,11 +34,11 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     {
         DirectionX = 0;
     }
-    if (DirectionY > 15)
+    if (DirectionY > (GRID_SNAP_SCALE * 0.5))
     {
         DirectionY = GRID_SNAP_SCALE;
     }
-    else if (DirectionY < -15)
+    else if (DirectionY < ((GRID_SNAP_SCALE * 0.5) * -1))
     {
         DirectionY = GRID_SNAP_SCALE * -1;
     }
@@ -143,12 +143,12 @@ FVector2D SMazeGraphNodeBase::GetPinPositionInGraphSpace(const TSharedPtr<SGraph
 
 FOptionalSize SMazeGraphNodeBase::GetNodeHeight() const
 {
-    return FOptionalSize(5.0f);
+    return EMPTY_SIZE;
 }
 
 FOptionalSize SMazeGraphNodeBase::GetNodeWidth() const
 {
-    return FOptionalSize(5.0f);   
+    return EMPTY_SIZE;
 }
 
 #undef LOCTEXT_NAMESPACE

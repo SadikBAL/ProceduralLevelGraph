@@ -31,6 +31,6 @@ public:
 	int HallLength;
 	UPROPERTY(EditDefaultsOnly, Category = "Hall")
 	TObjectPtr<UHallData> HallData;
-	UPROPERTY(VisibleAnywhere, Category = "Hall")
-	TArray<FDoorData> DoorDatas;
+	UPROPERTY()
+	bool bHallData = false;
 };

@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Engine/LevelStreamingDynamic.h"
 #include "LevelInstance/LevelInstanceActor.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"

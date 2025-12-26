@@ -13,7 +13,7 @@ UEntranceGraphNode::UEntranceGraphNode() : URoomGraphNode()
 	if (BP_LevelInstance_Finder.Succeeded())
 	{
 		TSubclassOf<ARoomLevelInstance> DefaultLevelInstance {BP_LevelInstance_Finder.Class};
-		RoomLevelInstanceRefs.Add(DefaultLevelInstance);
+		RoomLevelInstanceRef.Add(DefaultLevelInstance);
 	}
 	else
 	{
@@ -34,7 +34,19 @@ FText UEntranceGraphNode::GetNodeName() const
 
 FSlateColor UEntranceGraphNode::GetNodeBackgroundColor() const
 {
-	return FSlateColor(FLinearColor(0.5f, 0.7f, 0.5f, 0.45f));
+	if (DoorData.Num() > 0)
+		return FSlateColor(FLinearColor(0.5f, 0.7f, 0.5f, 0.45f));
+	return FSlateColor(FLinearColor(1.0f, 0.1f, 0.1f, 0.6f));
+}
+
+bool UEntranceGraphNode::CanUserCopyNode() const
+{
+	return false;
+}
+
+bool UEntranceGraphNode::CanUserDeleteNode() const
+{
+	return false;
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -17,13 +17,17 @@ public:
     UProceduralLevelGraphRuntime();
 
 #if WITH_EDITORONLY_DATA
+    
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debug Settings")
     bool bShowRoutes = false;
     
     UPROPERTY()
     TObjectPtr<UEdGraph> EdGraph;
+    
 #endif
+    
 #if WITH_EDITOR
+    
     UFUNCTION()
     void SpawnMazeToEditor();
     
@@ -35,6 +39,7 @@ public:
 
     UFUNCTION(CallInEditor, Category = "Procedural Level Graph",DisplayName="Recreate Maze")
     void RecreateMaze();
+    
 #endif
     
     UFUNCTION()
@@ -47,7 +52,7 @@ public:
     TObjectPtr<UMazeNodeBase> StartNode;
 
     UPROPERTY()
-    TArray<UMazeNodeBase*> Nodes;
+    TArray<UMazeNodeBase*> SpawnedNodes;
 
     UFUNCTION(BlueprintCallable, Category = "Procedural Level Graph")
     void SpawnMaze(UObject* WorldContextObject);

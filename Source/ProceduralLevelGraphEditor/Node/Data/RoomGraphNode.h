@@ -23,15 +23,14 @@ public:
     virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin) override;
     int32 GetIndexFromPinName(const FName& PinName);
     virtual FText GetNodeName() const override;
+    virtual FSlateColor GetNodeBackgroundColor() const override;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomWidth;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Room")
     int RoomHeight;
     UPROPERTY(EditDefaultsOnly, Category = "Room")
-    TArray<TSubclassOf<ARoomLevelInstance>> RoomLevelInstanceRefs;
+    TArray<TSubclassOf<ARoomLevelInstance>> RoomLevelInstanceRef;
     UPROPERTY(EditDefaultsOnly, Category = "Room")
-    TArray<TSubclassOf<AHallLevelInstance>> HallLevelInstanceRefs;
-    UPROPERTY(VisibleAnywhere, Category = "Room")
-    TArray<FDoorData> DoorDatas;
+    TArray<TSubclassOf<AHallLevelInstance>> HallLevelInstanceRef;
 };

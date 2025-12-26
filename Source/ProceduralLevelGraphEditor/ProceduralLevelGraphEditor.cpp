@@ -313,19 +313,6 @@ void FProceduralLevelGraphEditor::SaveAsset_Execute()
 bool FProceduralLevelGraphEditor::IsPinVisible(UEdGraphPin* Pin)
 {
     if (!Pin) return false;
-    if (const UHallGraphNode* NodeRef = Cast<UHallGraphNode>(Pin->GetOwningNode()))
-    {
-        const FName PinName = Pin->GetFName();
-        const int32 Rotation = NodeRef->RoomRotation;
-        if (PinName == FName("Up") || PinName == FName("Down"))
-        {
-            return (Rotation == 0 || Rotation == 180);
-        }
-        else if (PinName == FName("Left") || PinName == FName("Right"))
-        {
-            return (Rotation == 90 || Rotation == 270);
-        }
-    }
     return true;
 }
 
@@ -343,14 +330,25 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
         {
             UMazeNodeBase* NewRuntimeNode = nullptr;
             
-            if (URoomGraphNode* RoomEdNode = Cast<URoomGraphNode>(EdNode))
+            if (UEntranceGraphNode* EntranceEdNode = Cast<UEntranceGraphNode>(EdNode))
+            {
+                UEntranceNode* RuntimeEntrance = NewObject<UEntranceNode>(GraphAsset);
+                RuntimeEntrance->RoomHeight = EntranceEdNode->RoomHeight;
+                RuntimeEntrance->RoomWidth = EntranceEdNode->RoomWidth;
+                RuntimeEntrance->RoomPosition = EntranceEdNode->RoomPosition;
+                RuntimeEntrance->RoomLevelInstanceRefs = EntranceEdNode->RoomLevelInstanceRef;
+                RuntimeEntrance->HallLevelInstanceRefs = EntranceEdNode->HallLevelInstanceRef;
+                NewRuntimeNode = RuntimeEntrance;
+                // Start Location its special node.
+                GraphAsset->StartNode = NewRuntimeNode;
+            }
+            else if (URoomGraphNode* RoomEdNode = Cast<URoomGraphNode>(EdNode))
             {
                 URoomNode* RuntimeRoom = NewObject<URoomNode>(GraphAsset);
                 RuntimeRoom->RoomHeight = RoomEdNode->RoomHeight;
                 RuntimeRoom->RoomWidth = RoomEdNode->RoomWidth;
-                RuntimeRoom->RoomRotation = RoomEdNode->RoomRotation;
-                RuntimeRoom->RoomLevelInstanceRefs = RoomEdNode->RoomLevelInstanceRefs;
-                RuntimeRoom->HallLevelInstanceRefs = RoomEdNode->HallLevelInstanceRefs;
+                RuntimeRoom->RoomLevelInstanceRefs = RoomEdNode->RoomLevelInstanceRef;
+                RuntimeRoom->HallLevelInstanceRefs = RoomEdNode->HallLevelInstanceRef;
                 NewRuntimeNode = RuntimeRoom;
             }
             else if (UHallGraphNode* HallEdNode = Cast<UHallGraphNode>(EdNode))
@@ -367,84 +365,38 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 URouterNode* RuntimeRouter = NewObject<URouterNode>(GraphAsset);
                 RuntimeRouter->RoomHeight = RouterEdNode->RoomHeight;
                 RuntimeRouter->RoomWidth = RouterEdNode->RoomWidth;
-                RuntimeRouter->RoomRotation = RouterEdNode->RoomRotation;
-                //RuntimeRouter->RouterInstanceRef = RouterEdNode->RouterLevelInstanceRef;
+                RuntimeRouter->RoomLevelInstanceRefs = RouterEdNode->RoomLevelInstanceRef;
+                RuntimeRouter->HallLevelInstanceRefs = RouterEdNode->HallLevelInstanceRef;
                 NewRuntimeNode = RuntimeRouter;
             }
-            else if (UEntranceGraphNode* EntranceEdNode = Cast<UEntranceGraphNode>(EdNode))
-            {
-                UEntranceNode* RuntimeEntrance = NewObject<UEntranceNode>(GraphAsset);
-                RuntimeEntrance->RoomHeight = EntranceEdNode->RoomHeight;
-                RuntimeEntrance->RoomWidth = EntranceEdNode->RoomWidth;
-                RuntimeEntrance->RoomRotation = EntranceEdNode->RoomRotation;
-                //RuntimeEntrance->RoomPosition = EntranceEdNode->RoomPosition;
-                //RuntimeEntrance->EntranceInstanceRef = EntranceEdNode->EntranceLevelInstanceRef;
-                NewRuntimeNode = RuntimeEntrance;
-                // Start Location its special node.
-                GraphAsset->StartNode = NewRuntimeNode;
-            }
+            
             if (NewRuntimeNode)
             {
-                //NewRuntimeNode->GameplayTags = MazeEdNode->GameplayTags;
+                NewRuntimeNode->RoomRotation = MazeEdNode->RoomRotation;
+                NewRuntimeNode->DoorData = MazeEdNode->DoorData;
                 NewRuntimeNode->NodeGuid = MazeEdNode->NodeGuid;
+                NewRuntimeNode->DoorData = MazeEdNode->DoorData;
                 NodeMap.Add(EdNode, NewRuntimeNode);
             }
-        }
-    }
-    for (UMazeNodeBase* Node : GraphAsset->AllNodes)
-    {
-        if (Node)
-        {
-            Node->UpNode = nullptr;
-            Node->DownNode = nullptr;
-            Node->LeftNode = nullptr;
-            Node->RightNode = nullptr;
-            Node->Others.Empty(); 
         }
     }
     for (const auto Map : NodeMap)
     {
         UEdGraphNode* EdGraph = Map.Key;
         UMazeNodeBase* RuntimeNode = Map.Value;
-        for (UEdGraphPin* LinkedPin : EdGraph->Pins)
+        for (int i = 0; i < EdGraph->Pins.Num(); i++)
         {
-            if (LinkedPin->GetName() == FName("Up"))
+            RuntimeNode->DoorData[i].LinkedNode = nullptr;
+            if (UEdGraphPin* LinkedPin = EdGraph->Pins[i])
             {
-                for (const UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
+                if (LinkedPin->LinkedTo.Num() > 0)
                 {
-                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
+                    if (UEdGraphPin* LinkedTo = LinkedPin->LinkedTo[0])
                     {
-                        RuntimeNode->UpNode = NodeMap[LinkedTo->GetOwningNode()];
-                    }
-                }
-            }
-            else if (LinkedPin->GetName() == FName("Down"))
-            {
-                for (const UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
-                {
-                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
-                    {
-                        RuntimeNode->DownNode = NodeMap[LinkedTo->GetOwningNode()];
-                    }
-                }
-            }
-            else if (LinkedPin->GetName() == FName("Left"))
-            {
-                for (const UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
-                {
-                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
-                    {
-                        RuntimeNode->LeftNode = NodeMap[LinkedTo->GetOwningNode()];
-                    }
-                }
-            }
-            else if (LinkedPin->GetName() == FName("Right"))
-            {
-                for (const UEdGraphPin* LinkedTo : LinkedPin->LinkedTo)
-                {
-                    if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
-                    {
-                        RuntimeNode->RightNode = NodeMap[LinkedTo->GetOwningNode()];
+                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
+                        {
+                            RuntimeNode->DoorData[i].LinkedNode = NodeMap[LinkedTo->GetOwningNode()];
+                        }
                     }
                 }
             }

@@ -1,10 +1,8 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/LevelStreamingDynamic.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "MazeNodeBase.generated.h"
-
 
 class AMazeTileLevelInstance;
 
@@ -18,16 +16,9 @@ public:
 	FGuid NodeGuid;
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	int RoomRotation = 0;
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
-	TObjectPtr<UMazeNodeBase> DownNode;
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
-	TObjectPtr<UMazeNodeBase> LeftNode;
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
-	TObjectPtr<UMazeNodeBase> RightNode;
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
-	TObjectPtr<UMazeNodeBase> UpNode;
-	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
-	TArray<UMazeNodeBase*> Others;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Node Process")
+	TArray<FDoorData> DoorData;
 
 	UFUNCTION(BlueprintCallable)
 	virtual  void SpawnMazeObject(UWorld* World,FVector Position, EMazeDirection Direction);

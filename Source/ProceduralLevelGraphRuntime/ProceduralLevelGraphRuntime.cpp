@@ -23,9 +23,9 @@ void UProceduralLevelGraphRuntime::SpawnMazeToEditor()
 {
 	if (UEntranceNode* Entrance = Cast<UEntranceNode>(StartNode))
 	{
-		Nodes.Empty();
+		SpawnedNodes.Empty();
 		SpawnNode(GEditor->GetEditorWorldContext().World(),Entrance,EMazeDirection::None,Entrance->RoomPosition);
-		Nodes.Empty();
+		SpawnedNodes.Empty();
 	}
 }
 
@@ -106,26 +106,21 @@ void UProceduralLevelGraphRuntime::RecreateMaze()
 
 void UProceduralLevelGraphRuntime:: SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location)
 {
-	if (Nodes.Find(MazeNodeBase) == INDEX_NONE)
+	if (MazeNodeBase == nullptr)
 	{
-		Nodes.Add(MazeNodeBase);
+		UE_LOG(LogTemp,Warning,TEXT("SpawnNode MazeNodeBase == nullptr"));
+		return;
+	}
+	if (SpawnedNodes.Find(MazeNodeBase) == INDEX_NONE)
+	{
+		SpawnedNodes.Add(MazeNodeBase);
 		MazeNodeBase->SpawnMazeObject(World,Location,Direction);
-		
-		if (MazeNodeBase->UpNode)
+		for (int i = 0; i < MazeNodeBase->DoorData.Num(); i++)
 		{
-			SpawnNode(World,MazeNodeBase->UpNode,EMazeDirection::Up,MazeNodeBase->GetEdgePosition(EMazeDirection::Up));
-		}
-		if (MazeNodeBase->DownNode)
-		{
-			SpawnNode(World,MazeNodeBase->DownNode,EMazeDirection::Down,MazeNodeBase->GetEdgePosition(EMazeDirection::Down));
-		}
-		if (MazeNodeBase->LeftNode)
-		{
-			SpawnNode(World,MazeNodeBase->LeftNode,EMazeDirection::Left,MazeNodeBase->GetEdgePosition(EMazeDirection::Left));
-		}
-		if (MazeNodeBase->RightNode)
-		{
-			SpawnNode(World,MazeNodeBase->RightNode,EMazeDirection::Right,MazeNodeBase->GetEdgePosition(EMazeDirection::Right));
+			if (MazeNodeBase->DoorData[i].LinkedNode)
+			{
+				SpawnNode(World,MazeNodeBase->DoorData[i].LinkedNode,MazeNodeBase->DoorData[i].DoorType,MazeNodeBase->GetEdgePosition(MazeNodeBase->DoorData[i].DoorType));
+			}
 		}
 	}
 }
@@ -135,7 +130,7 @@ void UProceduralLevelGraphRuntime::SpawnMaze(UObject* WorldContextObject)
 	if (UEntranceNode* Entrance = Cast<UEntranceNode>(StartNode))
 	{
 		UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
-		Nodes.Empty();
+		SpawnedNodes.Empty();
 		//Its Recursive and Create all Maze of Parts
 		SpawnNode(GEngine->GetWorldFromContextObject(World, EGetWorldErrorMode::LogAndReturnNull),Entrance,EMazeDirection::None,Entrance->RoomPosition);
 		//Spawn Navmesh

@@ -15,4 +15,9 @@ public:
 	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
 	virtual FText GetNodeName() const override;
 	virtual FSlateColor GetNodeBackgroundColor() const override;
+	virtual bool CanUserCopyNode() const override;
+	virtual bool CanUserDeleteNode() const override;
+	
+	UPROPERTY(EditAnywhere, Category = "Entrance Node")
+	FVector RoomPosition;
 };

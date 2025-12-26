@@ -25,5 +25,5 @@ private:
     
     void OnDeleteActorsBegin();
     void OnObjectPreSave(UObject* Object, FObjectPreSaveContext ObjectPreSaveContext);
-    void UpdateMazeLevelInstanceBluprintsDoorReferances(FString LevelInstanceName,TArray<AActor*>& IgnoreList);
+    void UpdateMazeLevelInstanceBlueprintsDoorRef(FString LevelInstanceName,TArray<AActor*>& IgnoreList);
 };

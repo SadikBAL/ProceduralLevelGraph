@@ -10,12 +10,12 @@ UHallGraphNode::UHallGraphNode()
 	UpDoor.DoorType = EMazeDirection::Up;
 	UpDoor.DoorVisibility = EMazePinType::Tier1;
 	UpDoor.DoorOffset = FVector2D(0,0);
-	DoorDatas.Add(UpDoor);
+	DoorData.Add(UpDoor);
 	FDoorData DownDoor;
 	DownDoor.DoorType = EMazeDirection::Down;
 	DownDoor.DoorVisibility = EMazePinType::Tier1;
 	DownDoor.DoorOffset = FVector2D(0,0);
-	DoorDatas.Add(DownDoor);
+	DoorData.Add(DownDoor);
 	OnHallDataAssetChanged();
 }
 
@@ -49,27 +49,30 @@ FText UHallGraphNode::GetNodeName() const
 
 FSlateColor UHallGraphNode::GetNodeBackgroundColor() const
 {
-	return FSlateColor(FLinearColor(0.8f, 0.2f, 0.2f, 0.2f));
+	if (bHallData)
+		return FSlateColor(FLinearColor(0.8f, 0.4f, 0.4f, 0.4f));
+	return FSlateColor(FLinearColor(1.0f, 0.1f, 0.1f, 0.6f));
 }
 
 EMazeDirection UHallGraphNode::GetMazePinDirection(const UEdGraphPin* Pin)
 {
 	if (Pin->GetName().StartsWith(TEXT("Up")))
 	{
-		return GetRotatedPinDirection(DoorDatas[0].DoorType);
+		return GetRotatedPinDirection(DoorData[0].DoorType);
 	}
 	else if (Pin->GetName().StartsWith(TEXT("Down")))
 	{
-		return GetRotatedPinDirection(DoorDatas[1].DoorType);
+		return GetRotatedPinDirection(DoorData[1].DoorType);
 	}
 	return EMazeDirection::None;
 }
 
 void UHallGraphNode::OnHallDataAssetChanged()
 {
+	bHallData = false;
+	RoomWidth = EMPTY_SIZE;
 	if (HallData)
 	{
-		RoomWidth = 0;
 		if (HallData->HallEndTile)
 		{
 			if (HallData->HallEndTile->GetDefaultObject<AMazeTileLevelInstance>()->Width > RoomWidth)
@@ -86,6 +89,7 @@ void UHallGraphNode::OnHallDataAssetChanged()
 		}
 		if (HallData->HallTiles.Num() > 0)
 		{
+			bHallData = true;
 			for (auto Element : HallData->HallTiles)
 			{
 				if (Element && Element->GetDefaultObject<AMazeTileLevelInstance>()->Width > RoomWidth)
