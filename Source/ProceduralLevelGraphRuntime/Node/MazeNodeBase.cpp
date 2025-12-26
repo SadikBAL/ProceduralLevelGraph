@@ -6,6 +6,7 @@ void UMazeNodeBase::SpawnMazeObject(UWorld* World,FVector Position, EMazeDirecti
 {
 	UE_LOG(LogTemp, Error, TEXT("UMazeNodeBase SpawnMazeObject: you could not spawn any object on base class."));
 }
+
 FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
 {
 	switch (Direction)
@@ -26,5 +27,66 @@ FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
 float UMazeNodeBase::GetHalfDistanceOfRoom(EMazeOrientation Orientation)
 {
 	return 0.0f;
+}
+
+EMazeDirection UMazeNodeBase::GetRotatedPinDirection(EMazeDirection Unrotated)
+{
+	int32 Value = static_cast<int32>(Unrotated);
+	Value += (RoomRotation / 90);
+	Value = Value % MAZE_DIRECTION_MAX;
+	return static_cast<EMazeDirection>(Value);
+}
+
+FVector UMazeNodeBase::GetDoorPosition(EMazeDirection Direction, FDoorData Door)
+{
+
+		EMazeDirection DoorDirection = Door.DoorType;
+		int32 LocalOffset = 0;
+	    int32 LocalMult = 1;
+	    if (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Up) {
+		    //Up
+		    LocalOffset = (DoorDirection == EMazeDirection::Left || DoorDirection == EMazeDirection::Right) 
+		    ? Door.DoorOffset.Y : Door.DoorOffset.X;
+			if (DoorDirection == EMazeDirection::Down 
+				|| DoorDirection == EMazeDirection::Left)
+			{
+				LocalMult = -1;
+			}
+	    	return GetEdgePosition(Direction) + FVector(LocalOffset * LocalMult * TILE_SCALE,0.0f,0.0f);
+	    }
+	    else if (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Right) {
+		    //Right
+		    LocalOffset = (DoorDirection == EMazeDirection::Left || DoorDirection == EMazeDirection::Right) 
+			? Door.DoorOffset.Y : Door.DoorOffset.X;
+		    if (DoorDirection == EMazeDirection::Down 
+				||DoorDirection == EMazeDirection::Left)
+		    {
+	    		LocalMult = -1;
+		    }
+	    	return GetEdgePosition(Direction) + FVector(0.0f,LocalOffset * LocalMult * TILE_SCALE,0.0f);
+	    }
+	    else if (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Down) {
+	        //Left
+	        LocalOffset = (DoorDirection == EMazeDirection::Left || DoorDirection == EMazeDirection::Right) 
+			? Door.DoorOffset.Y : Door.DoorOffset.X;
+	        if (DoorDirection == EMazeDirection::Right 
+				||DoorDirection == EMazeDirection::Up)
+	        {
+		        LocalMult = -1;
+	        }
+	    	return GetEdgePosition(Direction) + FVector(LocalOffset * LocalMult * TILE_SCALE,0.0f,0.0f);
+	    }
+	    else if (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Left) {
+	        //Down
+	        LocalOffset = (DoorDirection == EMazeDirection::Left || DoorDirection == EMazeDirection::Right) 
+			? Door.DoorOffset.Y : Door.DoorOffset.X;
+	        if (DoorDirection == EMazeDirection::Right
+		        || DoorDirection == EMazeDirection::Up)
+	        {
+		        LocalMult = -1;
+	        }
+	    	return GetEdgePosition(Direction) + FVector(0.0f,LocalOffset * LocalMult * TILE_SCALE,0.0f);
+	    }
+	return GetEdgePosition(Direction);
 }
 

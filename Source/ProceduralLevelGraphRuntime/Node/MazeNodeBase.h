@@ -26,6 +26,10 @@ public:
 	virtual FVector GetEdgePosition(EMazeDirection Direction);
 	UFUNCTION(BlueprintCallable)
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation);
+	UFUNCTION(BlueprintCallable)
+	EMazeDirection GetRotatedPinDirection(EMazeDirection Unrotated);
+	UFUNCTION(BlueprintCallable)
+	FVector GetDoorPosition(EMazeDirection Direction,FDoorData Door);
 	
 protected:
 	UPROPERTY()
