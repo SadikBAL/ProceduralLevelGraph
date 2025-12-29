@@ -104,7 +104,7 @@ void UProceduralLevelGraphRuntime::RecreateMaze()
 
 #endif
 
-void UProceduralLevelGraphRuntime:: SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location)
+void UProceduralLevelGraphRuntime:: SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location, UMazeNodeBase* LinkedNode)
 {
 	if (MazeNodeBase == nullptr)
 	{
@@ -114,13 +114,13 @@ void UProceduralLevelGraphRuntime:: SpawnNode(UWorld* World, UMazeNodeBase* Maze
 	if (SpawnedNodes.Find(MazeNodeBase) == INDEX_NONE)
 	{
 		SpawnedNodes.Add(MazeNodeBase);
-		MazeNodeBase->SpawnMazeObject(World,Location,Direction);
+		MazeNodeBase->SpawnMazeObjectFromNode(World,Location,Direction,LinkedNode);
 		for (int i = 0; i < MazeNodeBase->DoorData.Num(); i++)
 		{
 			if (MazeNodeBase->DoorData[i].LinkedNode)
 			{
 				EMazeDirection RotatedDirection = MazeNodeBase->GetRotatedPinDirection(MazeNodeBase->DoorData[i].DoorType);
-				SpawnNode(World,MazeNodeBase->DoorData[i].LinkedNode,RotatedDirection,MazeNodeBase->GetDoorPosition(RotatedDirection,MazeNodeBase->DoorData[i]));
+				SpawnNode(World,MazeNodeBase->DoorData[i].LinkedNode,RotatedDirection,MazeNodeBase->GetDoorPosition(RotatedDirection,MazeNodeBase->DoorData[i]),MazeNodeBase);
 			}
 		}
 	}

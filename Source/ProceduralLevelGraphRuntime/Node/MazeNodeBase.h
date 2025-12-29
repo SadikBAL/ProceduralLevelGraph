@@ -23,6 +23,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual  void SpawnMazeObject(UWorld* World,FVector Position, EMazeDirection Direction);
 	UFUNCTION(BlueprintCallable)
+	virtual  void SpawnMazeObjectFromNode(UWorld* World,FVector Position, EMazeDirection Direction, UMazeNodeBase* LinkedNode);
+	UFUNCTION(BlueprintCallable)
 	virtual FVector GetEdgePosition(EMazeDirection Direction);
 	UFUNCTION(BlueprintCallable)
 	virtual float GetHalfDistanceOfRoom(EMazeOrientation Orientation);
@@ -30,6 +32,8 @@ public:
 	EMazeDirection GetRotatedPinDirection(EMazeDirection Unrotated);
 	UFUNCTION(BlueprintCallable)
 	FVector GetDoorPosition(EMazeDirection Direction,FDoorData Door);
+	UFUNCTION(BlueprintCallable)
+	FVector GetDoorOffset(FDoorData Door);
 	
 protected:
 	UPROPERTY()

@@ -43,7 +43,7 @@ public:
 #endif
     
     UFUNCTION()
-    void SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location);
+    void SpawnNode(UWorld* World, UMazeNodeBase* MazeNodeBase, EMazeDirection Direction, FVector Location, UMazeNodeBase* LinkedNode = nullptr);
     
     UPROPERTY(BlueprintReadOnly, Category = "Procedural Level Graph")
     TArray<TObjectPtr<UMazeNodeBase>> AllNodes;

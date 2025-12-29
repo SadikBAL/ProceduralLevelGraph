@@ -7,6 +7,26 @@ void UMazeNodeBase::SpawnMazeObject(UWorld* World,FVector Position, EMazeDirecti
 	UE_LOG(LogTemp, Error, TEXT("UMazeNodeBase SpawnMazeObject: you could not spawn any object on base class."));
 }
 
+void UMazeNodeBase::SpawnMazeObjectFromNode(UWorld* World, FVector Position, EMazeDirection Direction,
+	UMazeNodeBase* LinkedNode)
+{
+	bool bSpawned = false;
+	if (LinkedNode)
+	{
+		for (auto Door : DoorData)
+		{
+			if (Door.LinkedNode == LinkedNode)
+			{
+				bSpawned = true;
+				SpawnMazeObject(World, Position + (GetDoorOffset(Door) * - 1), Direction);
+				break;
+			}
+		}
+	}
+	if (!bSpawned)
+		SpawnMazeObject(World, Position, Direction);
+}
+
 FVector UMazeNodeBase::GetEdgePosition(EMazeDirection Direction)
 {
 	switch (Direction)
@@ -39,11 +59,15 @@ EMazeDirection UMazeNodeBase::GetRotatedPinDirection(EMazeDirection Unrotated)
 
 FVector UMazeNodeBase::GetDoorPosition(EMazeDirection Direction, FDoorData Door)
 {
+	return GetEdgePosition(Direction) + GetDoorOffset(Door);
+}
 
+FVector UMazeNodeBase::GetDoorOffset(FDoorData Door)
+{
 		EMazeDirection DoorDirection = Door.DoorType;
 		int32 LocalOffset = 0;
 	    int32 LocalMult = 1;
-	    if (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Up) {
+	    if      (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Up) {
 		    //Up
 		    LocalOffset = (DoorDirection == EMazeDirection::Left || DoorDirection == EMazeDirection::Right) 
 		    ? Door.DoorOffset.Y : Door.DoorOffset.X;
@@ -52,7 +76,7 @@ FVector UMazeNodeBase::GetDoorPosition(EMazeDirection Direction, FDoorData Door)
 			{
 				LocalMult = -1;
 			}
-	    	return GetEdgePosition(Direction) + FVector(LocalOffset * LocalMult * TILE_SCALE,0.0f,0.0f);
+	    	return FVector(LocalOffset * LocalMult * TILE_SCALE,0.0f,0.0f);
 	    }
 	    else if (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Right) {
 		    //Right
@@ -63,7 +87,7 @@ FVector UMazeNodeBase::GetDoorPosition(EMazeDirection Direction, FDoorData Door)
 		    {
 	    		LocalMult = -1;
 		    }
-	    	return GetEdgePosition(Direction) + FVector(0.0f,LocalOffset * LocalMult * TILE_SCALE,0.0f);
+	    	return FVector(0.0f,LocalOffset * LocalMult * TILE_SCALE,0.0f);
 	    }
 	    else if (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Down) {
 	        //Left
@@ -74,7 +98,7 @@ FVector UMazeNodeBase::GetDoorPosition(EMazeDirection Direction, FDoorData Door)
 	        {
 		        LocalMult = -1;
 	        }
-	    	return GetEdgePosition(Direction) + FVector(LocalOffset * LocalMult * TILE_SCALE,0.0f,0.0f);
+	    	return FVector(LocalOffset * LocalMult * TILE_SCALE,0.0f,0.0f);
 	    }
 	    else if (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Left) {
 	        //Down
@@ -85,8 +109,8 @@ FVector UMazeNodeBase::GetDoorPosition(EMazeDirection Direction, FDoorData Door)
 	        {
 		        LocalMult = -1;
 	        }
-	    	return GetEdgePosition(Direction) + FVector(0.0f,LocalOffset * LocalMult * TILE_SCALE,0.0f);
+	    	return FVector(0.0f,LocalOffset * LocalMult * TILE_SCALE,0.0f);
 	    }
-	return GetEdgePosition(Direction);
+	return FVector(0.0f,0.0f,0.0f);
 }
 
