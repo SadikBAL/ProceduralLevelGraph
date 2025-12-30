@@ -386,16 +386,19 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
         UMazeNodeBase* RuntimeNode = Map.Value;
         for (int i = 0; i < EdGraph->Pins.Num(); i++)
         {
-            RuntimeNode->DoorData[i].LinkedNode = nullptr;
-            if (UEdGraphPin* LinkedPin = EdGraph->Pins[i])
+            if (!RuntimeNode->DoorData.IsEmpty() && i < RuntimeNode->DoorData.Num())
             {
-                if (LinkedPin->LinkedTo.Num() > 0)
+                RuntimeNode->DoorData[i].LinkedNode = nullptr;
+                if (UEdGraphPin* LinkedPin = EdGraph->Pins[i])
                 {
-                    if (UEdGraphPin* LinkedTo = LinkedPin->LinkedTo[0])
+                    if (LinkedPin->LinkedTo.Num() > 0)
                     {
-                        if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
+                        if (UEdGraphPin* LinkedTo = LinkedPin->LinkedTo[0])
                         {
-                            RuntimeNode->DoorData[i].LinkedNode = NodeMap[LinkedTo->GetOwningNode()];
+                            if (NodeMap.Contains(LinkedTo->GetOwningNode()) && LinkedPin != LinkedTo && IsPinVisible(LinkedPin))
+                            {
+                                RuntimeNode->DoorData[i].LinkedNode = NodeMap[LinkedTo->GetOwningNode()];
+                            }
                         }
                     }
                 }
