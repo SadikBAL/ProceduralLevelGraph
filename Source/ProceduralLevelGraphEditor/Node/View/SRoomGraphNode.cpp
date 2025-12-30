@@ -141,7 +141,11 @@ void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 			{
 				TempPin->PinData.DoorDirection = EMazeOrientation::Horizontal;
 			}
-			TempPin->SetToolTipText((LOCTEXT("TooltipText", "Opens Material Analyzer tool.")));
+			TempPin->SetToolTipText(
+				TAttribute<FText>::Create(
+					TAttribute<FText>::FGetter::CreateSP(TempPin.ToSharedRef(), &SRoomGraphNodePin::GetCustomToolTipText)
+				)
+			);
 			Pins.Add(TempPin);
 		}
 	}

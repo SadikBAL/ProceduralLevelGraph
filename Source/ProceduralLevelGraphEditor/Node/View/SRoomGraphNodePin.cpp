@@ -9,15 +9,25 @@
 #include "Widgets/Colors/SColorBlock.h"
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNodePin"
+FText SRoomGraphNodePin::GetCustomToolTipText()
+{
+	FString FloorName = StaticEnum<EMazeFloor>()->GetNameStringByValue((int64)PinData.DoorFloor);
+	int32 Height = GetFloorHeight(PinData.DoorFloor);
+	FString ToolTipString = FString::Printf(TEXT("Floor : %s\nHeight : %d \nStatus: %s"), 
+		*FloorName, 
+		Height, 
+		IsConnected() ? TEXT("Connect") : TEXT("Disconnect"));
 
+	return FText::FromString(ToolTipString);
+}
 void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
 {
 
 	GraphPinObj = InPin;
-	//this->SetCursor(EMouseCursor::None);
-	//this->bShowLabel = false;
-	//this->SetDiffHighlighted(false);
-	//this->SetIsEditable(false);
+	this->SetCursor(EMouseCursor::None);
+	this->bShowLabel = false;
+	this->SetDiffHighlighted(false);
+	this->SetIsEditable(false);
 	check(GraphPinObj != nullptr);
 	PinBrushVertical = MakeShareable(new FSlateColorBrush(FLinearColor::White));
 	PinBrushVertical->ImageSize = FVector2D(TILE_EDITOR_PIN_SCALE, 8.0f);
@@ -84,6 +94,21 @@ FSlateColor SRoomGraphNodePin::GetPinColor() const
 	{
 		return GetPinColorWithHeight(PinData.DoorFloor);
 	}
+}
+
+FCursorReply SRoomGraphNodePin::OnCursorQuery(const FGeometry& MyGeometry, const FPointerEvent& CursorEvent) const
+{
+	return FCursorReply::Cursor(EMouseCursor::Default);
+}
+
+void SRoomGraphNodePin::OnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+{
+	SCompoundWidget::OnMouseEnter(MyGeometry, MouseEvent);
+}
+
+void SRoomGraphNodePin::OnMouseLeave(const FPointerEvent& MouseEvent)
+{
+	SCompoundWidget::OnMouseLeave(MouseEvent);
 }
 
 #undef LOCTEXT_NAMESPACE
