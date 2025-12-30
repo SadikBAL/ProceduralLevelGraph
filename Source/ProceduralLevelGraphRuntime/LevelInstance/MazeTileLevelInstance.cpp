@@ -39,7 +39,7 @@ void AMazeTileLevelInstance::PreSave(FObjectPreSaveContext SaveContext)
 void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 {
 	UE_LOG(LogTemp, Log, TEXT("AMazeTileLevelInstance::LoadMapData()"));
-	DoorDatas.Empty();
+	DoorData.Empty();
 	if (UPackage* Package = LoadPackage(nullptr, *LevelName, LOAD_None))
 	{
 		if (const UWorld* World = UWorld::FindWorldInPackage(Package))
@@ -53,35 +53,38 @@ void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 				if (const APassagePoint* PassagePoint = Cast<APassagePoint>(Actor))
 				{
 					FDoorData TempData;
+					TempData.DoorFloor = EMazeFloor::Floor0;
 					if (PassagePoint->GetActorRotation().Yaw == 0)
 					{
-						TempData.DoorVisibility = EMazePinType::Tier1;
+						TempData.DoorDirection = EMazeOrientation::Vertical;
+						TempData.DoorStatus = EMazePinType::Closed;
 						TempData.DoorOffset.X = PassagePoint->GetActorLocation().X / 100.0f;;
 						TempData.DoorOffset.Y = 0;
 						if (PassagePoint->GetActorLocation().Y > 0)
 						{
-							TempData.DoorType = EMazeDirection::Down;
+							TempData.DoorLocation = EMazeDirection::Down;
 						}
 						else
 						{
-							TempData.DoorType = EMazeDirection::Up;
+							TempData.DoorLocation = EMazeDirection::Up;
 						}
 					}
 					else
 					{
-						TempData.DoorVisibility = EMazePinType::Tier1;
+						TempData.DoorDirection = EMazeOrientation::Horizontal;
+						TempData.DoorStatus = EMazePinType::Closed;
 						TempData.DoorOffset.Y = PassagePoint->GetActorLocation().Y / 100.0f;;
 						TempData.DoorOffset.X = 0;
 						if (PassagePoint->GetActorLocation().X > 0)
 						{
-							TempData.DoorType = EMazeDirection::Right;
+							TempData.DoorLocation = EMazeDirection::Right;
 						}
 						else
 						{
-							TempData.DoorType = EMazeDirection::Left;
+							TempData.DoorLocation = EMazeDirection::Left;
 						}
 					}
-					DoorDatas.Add(TempData);
+					DoorData.Add(TempData);
 				}
 			}
 		}

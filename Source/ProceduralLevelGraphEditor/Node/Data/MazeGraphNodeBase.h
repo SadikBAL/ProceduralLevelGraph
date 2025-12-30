@@ -28,9 +28,11 @@ public:
 	UFUNCTION(CallInEditor, Category = "Node Process",DisplayName="Rotate Left")
 	void RotateRoomToLeft();
 
+	UPROPERTY(EditAnywhere, Category = "Node Process")
+	EMazeFloor RoomFloor = EMazeFloor::Floor0;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Node Process")
 	int RoomRotation = 0;
-	UPROPERTY(VisibleAnywhere, Category = "Node Process")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Node Process")
 	TArray<FDoorData> DoorData;
 
 protected:

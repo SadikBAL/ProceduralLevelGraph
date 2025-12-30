@@ -103,7 +103,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 			int HallPartCount = LocalDeltaHeight;
 			for (int i = 0; i < DoorData.Num(); ++i)
 			{
-				if (DoorData[i].DoorType == EMazeDirection::Up && HallPartCount > 0)
+				if (DoorData[i].DoorLocation == EMazeDirection::Up && HallPartCount > 0)
 				{
 					for (int j = 0; j < HallPartCount; ++j)
 					{
@@ -119,7 +119,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 						SpawnedLevelInstance->SetNodeData(this);
 					}
 				}
-				if (DoorData[i].DoorType == EMazeDirection::Down && HallPartCount > 0)
+				if (DoorData[i].DoorLocation == EMazeDirection::Down && HallPartCount > 0)
 				{
 					for (int j = 0; j < HallPartCount; ++j)
 					{
@@ -142,7 +142,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 			for (int i = 0; i < DoorData.Num(); ++i)
 			{
 				int HallPartCount = LocalDeltaWidth;
-				if (DoorData[i].DoorType == EMazeDirection::Left && HallPartCount > 0)
+				if (DoorData[i].DoorLocation == EMazeDirection::Left && HallPartCount > 0)
 				{
 					for (int j = 0; j < HallPartCount; ++j)
 					{
@@ -158,7 +158,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 						SpawnedLevelInstance->SetNodeData(this);
 					}
 				}
-				if (DoorData[i].DoorType == EMazeDirection::Right && HallPartCount > 0)
+				if (DoorData[i].DoorLocation == EMazeDirection::Right && HallPartCount > 0)
 				{
 					for (int j = 0; j < HallPartCount; ++j)
 					{

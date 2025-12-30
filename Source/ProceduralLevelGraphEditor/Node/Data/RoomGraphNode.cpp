@@ -21,7 +21,7 @@ void URoomGraphNode::AllocateDefaultPins()
     for (int i = 0; i < DoorData.Num(); i++)
     {
         FName PinName;
-        switch (DoorData[i].DoorType)
+        switch (DoorData[i].DoorLocation)
         {
             case EMazeDirection::Up:    PinName = FName(*FString::Printf(TEXT("Up_%d_Pin"), i)); break;
             case EMazeDirection::Down:  PinName = FName(*FString::Printf(TEXT("Down_%d_Pin"), i)); break;
@@ -34,7 +34,7 @@ void URoomGraphNode::AllocateDefaultPins()
         PinParams.Index = i;
         UEdGraphPin* TempPin = CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, PinName, PinParams);
         //Pins.Add(TempPin);
-        if (DoorData[i].DoorVisibility == EMazePinType::Hidden && TempPin != nullptr)
+        if (DoorData[i].DoorStatus == EMazePinType::Hidden && TempPin != nullptr)
         {
             TempPin->bHidden = true;
         }
@@ -70,7 +70,7 @@ void URoomGraphNode::OnTileBlueprintsChanged()
                 {
                     RoomHeight = DefaultTile->Height;
                 }
-                DoorData.Append(DefaultTile->DoorDatas);
+                DoorData.Append(DefaultTile->DoorData);
             }
         }
     }
@@ -125,7 +125,7 @@ EMazeDirection URoomGraphNode::GetMazePinDirection(const UEdGraphPin* Pin)
     int32 Index = GetIndexFromPinName(Pin->PinName);
     if (Index >= 0 && Index < DoorData.Num())
     {
-        return GetRotatedPinDirection(DoorData[Index].DoorType);
+        return GetRotatedPinDirection(DoorData[Index].DoorLocation);
     }
     return EMazeDirection::None;
 }

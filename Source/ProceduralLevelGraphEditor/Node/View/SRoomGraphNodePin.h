@@ -18,10 +18,11 @@ public:
 	void Construct(const FArguments& InArgs, UEdGraphPin* InPin);
 	virtual FReply OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 
-	EMazeOrientation PinDirection;
-	EMazePinType PinType;
-	EMazeDirection PinLocation;
-	FVector2D PinOffset;
+	
+	//EMazePinType PinType;
+	//EMazeDirection PinLocation;
+	//FVector2D PinOffset;
+	FDoorData PinData;
 	UMazeGraphNodeBase* PinBase = nullptr;
 	
 protected:

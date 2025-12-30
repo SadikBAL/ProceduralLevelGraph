@@ -119,7 +119,7 @@ void UProceduralLevelGraphRuntime:: SpawnNode(UWorld* World, UMazeNodeBase* Maze
 		{
 			if (MazeNodeBase->DoorData[i].LinkedNode)
 			{
-				EMazeDirection RotatedDirection = MazeNodeBase->GetRotatedPinDirection(MazeNodeBase->DoorData[i].DoorType);
+				EMazeDirection RotatedDirection = MazeNodeBase->GetRotatedPinDirection(MazeNodeBase->DoorData[i].DoorLocation);
 				SpawnNode(World,MazeNodeBase->DoorData[i].LinkedNode,RotatedDirection,MazeNodeBase->GetDoorPosition(RotatedDirection,MazeNodeBase->DoorData[i]),MazeNodeBase);
 			}
 		}

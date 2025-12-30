@@ -60,5 +60,5 @@ public:
 	UPROPERTY()
 	ULevelStreamingDynamic* LevelStreamingDynamic = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Level")
-	TArray<FDoorData> DoorDatas;
+	TArray<FDoorData> DoorData;
 };

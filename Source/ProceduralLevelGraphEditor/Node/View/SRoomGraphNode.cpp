@@ -52,49 +52,49 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	        FMargin Padding(0);
 	    	int32 LocalOffset = 0;
 	    	int32 LocalMult = 1;
-	    	if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Up) {
+	    	if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Up) {
 	    		//Up
 	            VAlign = VAlign_Top;
-	    		LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
-	    		? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
-				if (CurrentPinWidget->PinLocation == EMazeDirection::Down 
-					|| CurrentPinWidget->PinLocation == EMazeDirection::Left)
+	    		LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
+	    		? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
+				if (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Down 
+					|| CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left)
 				{
 					LocalMult = -1;
 				}
 	            Padding = FMargin(LocalOffset * LocalMult * TILE_EDITOR_SCALE, PinPadding, 0, 0);
 	        }
-	    	else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Right) {
+	    	else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Right) {
 	    		//Right
 	    		HAlign = HAlign_Right;
-	    		LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
-				? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
-	    		if (CurrentPinWidget->PinLocation == EMazeDirection::Down 
-					||CurrentPinWidget->PinLocation == EMazeDirection::Left)
+	    		LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
+				? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
+	    		if (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Down 
+					||CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left)
 	    		{
 	    			LocalMult = -1;
 	    		}
 	    		Padding = FMargin(0, LocalOffset * LocalMult  * TILE_EDITOR_SCALE, PinPadding, 0);
 	    	}
-	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Down) {
+	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Down) {
 	            //Left
 	        	VAlign = VAlign_Bottom;
-	        	LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
-				? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
-	        	if (CurrentPinWidget->PinLocation == EMazeDirection::Right 
-					|| CurrentPinWidget->PinLocation == EMazeDirection::Up)
+	        	LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
+				? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
+	        	if (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right 
+					|| CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Up)
 	        	{
 	        		LocalMult = -1;
 	        	}
 	        	Padding = FMargin(LocalOffset * LocalMult  * TILE_EDITOR_SCALE, 0, 2, PinPadding);
 	        }
-	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Left) {
+	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Left) {
 	            //Down
 	        	HAlign = HAlign_Left;
-	        	LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
-				? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
-	        	if (CurrentPinWidget->PinLocation == EMazeDirection::Right
-	        		|| CurrentPinWidget->PinLocation == EMazeDirection::Up)
+	        	LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
+				? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
+	        	if (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right
+	        		|| CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Up)
 	        	{
 	        		LocalMult = -1;
 	        	}
@@ -129,16 +129,17 @@ void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 		int32 Index = RoomGraphNodeRef->Pins.IndexOfByKey(PinObj);
 		if (Index != INDEX_NONE && Index >= 0 && Index < RoomGraphNodeRef->DoorData.Num())
 		{
-			TempPin->PinLocation = RoomGraphNodeRef->DoorData [Index].DoorType;
-			TempPin->PinOffset = RoomGraphNodeRef->DoorData [Index].DoorOffset;
-			if (RoomGraphNodeRef->DoorData [Index].DoorType == EMazeDirection::Up 
-				|| RoomGraphNodeRef->DoorData [Index].DoorType == EMazeDirection::Down)
+			TempPin->PinData = RoomGraphNodeRef->DoorData[Index];
+			//TempPin->PinLocation = RoomGraphNodeRef->DoorData [Index].DoorLocation;
+			//TempPin->PinOffset = RoomGraphNodeRef->DoorData [Index].DoorOffset;
+			if (RoomGraphNodeRef->DoorData [Index].DoorLocation == EMazeDirection::Up 
+				|| RoomGraphNodeRef->DoorData [Index].DoorLocation == EMazeDirection::Down)
 			{
-				TempPin->PinDirection = EMazeOrientation::Vertical;
+				TempPin->PinData.DoorDirection = EMazeOrientation::Vertical;
 			}
 			else
 			{
-				TempPin->PinDirection = EMazeOrientation::Horizontal;
+				TempPin->PinData.DoorDirection = EMazeOrientation::Horizontal;
 			}
 			Pins.Add(TempPin);
 		}

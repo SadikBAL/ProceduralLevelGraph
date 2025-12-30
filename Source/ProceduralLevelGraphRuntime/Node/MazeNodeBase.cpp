@@ -64,7 +64,7 @@ FVector UMazeNodeBase::GetDoorPosition(EMazeDirection Direction, FDoorData Door)
 
 FVector UMazeNodeBase::GetDoorOffset(FDoorData Door)
 {
-		EMazeDirection DoorDirection = Door.DoorType;
+		EMazeDirection DoorDirection = Door.DoorLocation;
 		int32 LocalOffset = 0;
 	    int32 LocalMult = 1;
 	    if      (GetRotatedPinDirection(DoorDirection) == EMazeDirection::Up) {

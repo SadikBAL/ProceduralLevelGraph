@@ -140,49 +140,49 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	        FMargin Padding(0);
 	    	int32 LocalOffset = 0;
 	    	int32 LocalMult = 1;
-	    	if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Up) {
+	    	if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Up) {
 	    		//Up
 	            VAlign = VAlign_Top;
-	    		LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
-	    		? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
-				if (CurrentPinWidget->PinLocation == EMazeDirection::Down 
-					|| CurrentPinWidget->PinLocation == EMazeDirection::Left)
+	    		LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
+	    		? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
+				if (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Down 
+					|| CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left)
 				{
 					LocalMult = -1;
 				}
 	            Padding = FMargin(LocalOffset * LocalMult * TILE_EDITOR_SCALE, PinPadding, 0, 0);
 	        }
-	    	else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Right) {
+	    	else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Right) {
 	    		//Right
 	    		HAlign = HAlign_Right;
-	    		LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
-				? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
-	    		if (CurrentPinWidget->PinLocation == EMazeDirection::Down 
-					||CurrentPinWidget->PinLocation == EMazeDirection::Left)
+	    		LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
+				? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
+	    		if (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Down 
+					||CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left)
 	    		{
 	    			LocalMult = -1;
 	    		}
 	    		Padding = FMargin(0, LocalOffset * LocalMult  * TILE_EDITOR_SCALE, PinPadding, 0);
 	    	}
-	        else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Down) {
+	        else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Down) {
 	            //Left
 	        	VAlign = VAlign_Bottom;
-	        	LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
-				? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
-	        	if (CurrentPinWidget->PinLocation == EMazeDirection::Right 
-					|| CurrentPinWidget->PinLocation == EMazeDirection::Up)
+	        	LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
+				? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
+	        	if (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right 
+					|| CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Up)
 	        	{
 	        		LocalMult = -1;
 	        	}
 	        	Padding = FMargin(LocalOffset * LocalMult  * TILE_EDITOR_SCALE, 0, 2, PinPadding);
 	        }
-	        else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinLocation) == EMazeDirection::Left) {
+	        else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Left) {
 	            //Down
 	        	HAlign = HAlign_Left;
-	        	LocalOffset = (CurrentPinWidget->PinLocation == EMazeDirection::Left || CurrentPinWidget->PinLocation == EMazeDirection::Right) 
-				? CurrentPinWidget->PinOffset.Y : CurrentPinWidget->PinOffset.X;
-	        	if (CurrentPinWidget->PinLocation == EMazeDirection::Right
-	        		|| CurrentPinWidget->PinLocation == EMazeDirection::Up)
+	        	LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
+				? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
+	        	if (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right
+	        		|| CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Up)
 	        	{
 	        		LocalMult = -1;
 	        	}
@@ -217,16 +217,17 @@ void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 		int32 Index = HallGraphNodeRef->Pins.IndexOfByKey(PinObj);
 		if (Index != INDEX_NONE && Index >= 0 && Index < HallGraphNodeRef->DoorData.Num())
 		{
-			TempPin->PinLocation = HallGraphNodeRef->DoorData [Index].DoorType;
-			TempPin->PinOffset = HallGraphNodeRef->DoorData [Index].DoorOffset;
-			if (HallGraphNodeRef->DoorData [Index].DoorType == EMazeDirection::Up 
-				|| HallGraphNodeRef->DoorData [Index].DoorType == EMazeDirection::Down)
+			TempPin->PinData = HallGraphNodeRef->DoorData[Index];
+			//TempPin->PinLocation = HallGraphNodeRef->DoorData [Index].DoorLocation;
+			//TempPin->PinOffset = HallGraphNodeRef->DoorData [Index].DoorOffset;
+			if (HallGraphNodeRef->DoorData [Index].DoorLocation == EMazeDirection::Up 
+				|| HallGraphNodeRef->DoorData [Index].DoorLocation == EMazeDirection::Down)
 			{
-				TempPin->PinDirection = EMazeOrientation::Vertical;
+				TempPin->PinData.DoorDirection = EMazeOrientation::Vertical;
 			}
 			else
 			{
-				TempPin->PinDirection = EMazeOrientation::Horizontal;
+				TempPin->PinData.DoorDirection = EMazeOrientation::Horizontal;
 			}
 			Pins.Add(TempPin);
 		}

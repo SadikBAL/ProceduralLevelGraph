@@ -62,7 +62,7 @@ void UMazeGraphNodeBase::RotateRoomToLeft()
 
 EMazePinType UMazeGraphNodeBase::GetPinType()
 {
-	return EMazePinType::Tier1;
+	return EMazePinType::Closed;
 }
 
 EMazeDirection UMazeGraphNodeBase::GetRotatedPinDirection(EMazeDirection Unrotated)

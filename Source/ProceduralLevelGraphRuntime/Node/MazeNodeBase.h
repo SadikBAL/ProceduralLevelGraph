@@ -17,7 +17,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	int RoomRotation = 0;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Node Process")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Node Process")
 	TArray<FDoorData> DoorData;
 
 	UFUNCTION(BlueprintCallable)

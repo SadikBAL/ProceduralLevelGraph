@@ -36,32 +36,32 @@ const FSlateBrush* SRoomGraphNodePin::GetPinIcon() const
 	{
 		if (PinBase->RoomRotation == 0 || PinBase->RoomRotation == 180)
 		{
-			if (PinDirection == EMazeOrientation::Vertical)
+			if (PinData.DoorDirection == EMazeOrientation::Vertical)
 			{
 				return PinBrushVertical.Get();
 			}
-			else if (PinDirection == EMazeOrientation::Horizontal)
+			else if (PinData.DoorDirection == EMazeOrientation::Horizontal)
 			{
 				return PinBrushHorizontal.Get();
 			}
 		}
 		else
 		{
-			if (PinDirection == EMazeOrientation::Horizontal)
+			if (PinData.DoorDirection == EMazeOrientation::Horizontal)
 			{
 				return PinBrushVertical.Get();
 			}
-			else if (PinDirection == EMazeOrientation::Vertical)
+			else if (PinData.DoorDirection == EMazeOrientation::Vertical)
 			{
 				return PinBrushHorizontal.Get();
 			}
 		}
 	}
-	if (PinDirection == EMazeOrientation::Vertical)
+	if (PinData.DoorDirection == EMazeOrientation::Vertical)
 	{
 		return PinBrushVertical.Get();
 	}
-	else if (PinDirection == EMazeOrientation::Horizontal)
+	else if (PinData.DoorDirection == EMazeOrientation::Horizontal)
 	{
 		return PinBrushHorizontal.Get();
 	}
@@ -80,6 +80,6 @@ FSlateColor SRoomGraphNodePin::GetPinColor() const
 	}
 	else
 	{
-		return FSlateColor(FLinearColor(0.9f, 0.2f, 0.1f));
+		return GetPinColorWithHeight(PinData.DoorFloor);
 	}
 }
