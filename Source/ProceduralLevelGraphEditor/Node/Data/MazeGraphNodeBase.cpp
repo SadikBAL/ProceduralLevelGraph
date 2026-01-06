@@ -45,6 +45,11 @@ EMazeDirection UMazeGraphNodeBase::GetMazePinDirection(const UEdGraphPin* Pin)
 	return EMazeDirection::None;
 }
 
+EMazeFloor UMazeGraphNodeBase::GetMazePinFloor(const UEdGraphPin* Pin)
+{
+	return EMazeFloor::Floor0;
+}
+
 void UMazeGraphNodeBase::RotateRoomToLeft()
 {
 	RoomRotation -= 90;

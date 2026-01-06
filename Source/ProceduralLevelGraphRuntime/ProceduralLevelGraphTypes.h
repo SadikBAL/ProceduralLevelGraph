@@ -44,13 +44,14 @@ enum class EMazePinType : uint8
 UENUM(BlueprintType)
 enum class EMazeFloor : uint8
 {
-	FloorP3,
-	FloorP2,
-	FloorP1,
-	Floor0,
-	Floor1,
-	Floor2,
-	Floor3
+	FloorP3 = 0,
+	FloorP2 = 1,
+	FloorP1 = 2,
+	Floor0 = 3,
+	Floor1 = 4,
+	Floor2 = 5,
+	Floor3 = 6,
+	Error
 };
 UENUM(BlueprintType)
 enum class ERouteType : uint8
@@ -81,15 +82,15 @@ struct FDoorData
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(VisibleAnywhere, Category = "Door Data")
+	UPROPERTY()
 	EMazeDirection DoorLocation;
 	UPROPERTY(EditAnywhere, Category = "Door Data")
 	EMazePinType DoorStatus;
-	UPROPERTY(VisibleAnywhere, Category = "Door Data")
+	UPROPERTY()
 	FVector2D DoorOffset;
-	UPROPERTY(EditAnywhere, Category = "Door Data")
-	EMazeFloor DoorFloor;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
+	EMazeFloor DoorFloor;
+	UPROPERTY()
 	EMazeOrientation DoorDirection;
 	UPROPERTY()
 	TObjectPtr<class UMazeNodeBase> LinkedNode;
@@ -103,19 +104,29 @@ static int32 GetFloorHeight(EMazeFloor FloorType)
 {
 	switch (FloorType)
 	{
-		case EMazeFloor::Floor0:		return 0;
-		case EMazeFloor::Floor1:     return 6000;
-		case EMazeFloor::Floor2:		return 12000;
-		case EMazeFloor::Floor3:     return 18000;
-		case EMazeFloor::FloorP1:	return -6000;
-		case EMazeFloor::FloorP2:	return -12000;
-		case EMazeFloor::FloorP3:	return -18000;
-		default: return 0;
+		case EMazeFloor::Floor0:	return 0;
+		case EMazeFloor::Floor1:    return 600;
+		case EMazeFloor::Floor2:	return 1200;
+		case EMazeFloor::Floor3:    return 1800;
+		case EMazeFloor::FloorP1:	return -600;
+		case EMazeFloor::FloorP2:	return -1200;
+		case EMazeFloor::FloorP3:	return -1800;
+		default: return 9999;
 	}
+}
+static EMazeFloor AddFloor(EMazeFloor RoomFloor, EMazeFloor DoorFloor)
+{
+	int32 FloorA = static_cast<int32>(RoomFloor);
+	int32 FloorB = static_cast<int32>(DoorFloor);
+	int32 FloorCenter = static_cast<int32>(EMazeFloor::Floor0);
+	int32 FloorResult = FloorA + (FloorB - FloorCenter);
+	return static_cast<EMazeFloor>(FloorResult);
 }
 static FSlateColor GetPinColorWithHeight(EMazeFloor FloorType)
 {
 	float Height = GetFloorHeight(FloorType);
+	if (Height >= 9999)
+		return FSlateColor(FLinearColor::Black);
 	float Alpha = (Height + PROCEDURAL_HEIGHT_MAX) / PROCEDURAL_HEIGHT_MAX * 2;
 	FLinearColor FinalColor;
 

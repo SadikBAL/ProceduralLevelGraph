@@ -3,21 +3,16 @@
 #include "ConnectionDrawingPolicy.h"
 #include "ProceduralLevelGraphEditor/Node/Data/MazeGraphNodeBase.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
-#include "Widgets/Layout/SBox.h"
-#include "Widgets/Images/SImage.h"
-#include "Styling/SlateTypes.h"
-#include "Widgets/Colors/SColorBlock.h"
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNodePin"
 FText SRoomGraphNodePin::GetCustomToolTipText()
 {
-	FString FloorName = StaticEnum<EMazeFloor>()->GetNameStringByValue((int64)PinData.DoorFloor);
+	FString FloorName = StaticEnum<EMazeFloor>()->GetNameStringByValue(static_cast<int64>(AddFloor(PinBase->RoomFloor,PinData.DoorFloor)));
 	int32 Height = GetFloorHeight(PinData.DoorFloor);
 	FString ToolTipString = FString::Printf(TEXT("Floor : %s\nHeight : %d \nStatus: %s"), 
 		*FloorName, 
 		Height, 
 		IsConnected() ? TEXT("Connect") : TEXT("Disconnect"));
-
 	return FText::FromString(ToolTipString);
 }
 void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
@@ -92,7 +87,7 @@ FSlateColor SRoomGraphNodePin::GetPinColor() const
 	}
 	else
 	{
-		return GetPinColorWithHeight(PinData.DoorFloor);
+		return GetPinColorWithHeight(AddFloor(PinBase->RoomFloor,PinData.DoorFloor));
 	}
 }
 

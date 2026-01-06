@@ -46,7 +46,6 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	    TSharedPtr<SRoomGraphNodePin> CurrentPinWidget = Pins[i];
 	    if (CurrentPinWidget.IsValid())
 	    {
-	        UEdGraphPin* PinObj = CurrentPinWidget->GetPinObj();
 	        EHorizontalAlignment HAlign = HAlign_Center;
 	        EVerticalAlignment VAlign = VAlign_Center;
 	        FMargin Padding(0);

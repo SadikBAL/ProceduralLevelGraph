@@ -20,6 +20,7 @@ public:
 	virtual FText GetNodeName() const override;
 	virtual FSlateColor GetNodeBackgroundColor() const override;
 	virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin) override;
+	virtual EMazeFloor GetMazePinFloor(const UEdGraphPin* Pin) override;
 	
 	void OnHallDataAssetChanged();
 	void UpdateHallLength(int Value);

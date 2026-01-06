@@ -9,12 +9,14 @@ UHallGraphNode::UHallGraphNode()
 	FDoorData UpDoor;
 	UpDoor.DoorLocation = EMazeDirection::Up;
 	UpDoor.DoorStatus = EMazePinType::Closed;
+	UpDoor.DoorFloor = EMazeFloor::Floor0;
 	UpDoor.DoorOffset = FVector2D(0,0);
 	DoorData.Add(UpDoor);
 	FDoorData DownDoor;
 	DownDoor.DoorLocation = EMazeDirection::Down;
 	DownDoor.DoorStatus = EMazePinType::Closed;
 	DownDoor.DoorOffset = FVector2D(0,0);
+	DownDoor.DoorFloor = EMazeFloor::Floor0;
 	DoorData.Add(DownDoor);
 	OnHallDataAssetChanged();
 }
@@ -65,6 +67,19 @@ EMazeDirection UHallGraphNode::GetMazePinDirection(const UEdGraphPin* Pin)
 		return GetRotatedPinDirection(DoorData[1].DoorLocation);
 	}
 	return EMazeDirection::None;
+}
+
+EMazeFloor UHallGraphNode::GetMazePinFloor(const UEdGraphPin* Pin)
+{
+	if (Pin->GetName().StartsWith(TEXT("Up")))
+	{
+		return AddFloor(this->RoomFloor,DoorData[0].DoorFloor);
+	}
+	else if (Pin->GetName().StartsWith(TEXT("Down")))
+	{
+		return AddFloor(this->RoomFloor,DoorData[0].DoorFloor);
+	}
+	return EMazeFloor::Error;
 }
 
 void UHallGraphNode::OnHallDataAssetChanged()

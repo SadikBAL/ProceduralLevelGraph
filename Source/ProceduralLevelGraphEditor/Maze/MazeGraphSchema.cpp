@@ -224,6 +224,7 @@ const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGrap
 
     UMazeGraphNodeBase* ABaseNode = Cast<UMazeGraphNodeBase>(A->GetOwningNode());
     UMazeGraphNodeBase* BBaseNode = Cast<UMazeGraphNodeBase>(B->GetOwningNode());
+    
     if (ABaseNode == nullptr || BBaseNode == nullptr)
     {
         return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
@@ -250,6 +251,12 @@ const FPinConnectionResponse UMazeGraphSchema::CanCreateConnection(const UEdGrap
     {
         return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionSameNode", "Cannot connect to the same node."));
     }
+    
+    if (ABaseNode->GetMazePinFloor(A) != BBaseNode->GetMazePinFloor(B))
+    {
+        return FPinConnectionResponse(CONNECT_RESPONSE_DISALLOW, LOCTEXT("ConnectionFloorMissMatch", "Cannot connect to the other floor."));
+    }
+    //To-Do Calculate Pin Floor Types.
     return FPinConnectionResponse(CONNECT_RESPONSE_MAKE, FText::GetEmpty());
 }
 

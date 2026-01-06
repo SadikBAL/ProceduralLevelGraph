@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "SGraphPin.h"
-#include "SMazeGraphNodeBase.h"
 #include "ProceduralLevelGraphEditor/Node/Data/MazeGraphNodeBase.h"
 #include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
 

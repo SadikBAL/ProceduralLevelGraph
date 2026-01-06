@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "MazeGraphNodeBase.generated.h"
 
@@ -18,6 +17,7 @@ public:
 	virtual void GetNodeContextMenuActions(class UToolMenu* Menu, class UGraphNodeContextMenuContext* Context) const override;
 	virtual void PinConnectionListChanged(UEdGraphPin* Pin) override;
 	virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin);
+	virtual EMazeFloor GetMazePinFloor(const UEdGraphPin* Pin);
 	virtual EMazePinType GetPinType();
 	virtual EMazeDirection GetRotatedPinDirection(EMazeDirection Unrotated);
 	virtual FText GetNodeName() const;

@@ -1,7 +1,10 @@
 ﻿#include "MazeTileLevelInstance.h"
+
+#include "LevelBound.h"
 #include "LevelInstanceManagerComponent.h"
 #include "PassagePoint.h"
 #include "Components/PointLightComponent.h"
+#include "Engine/LevelBounds.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 
 #if WITH_EDITOR
@@ -50,13 +53,20 @@ void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 				{
 					continue;
 				}
-				if (const APassagePoint* PassagePoint = Cast<APassagePoint>(Actor))
+				//Update LevelBound Data.
+				if (const ALevelBound* LevelBounds = Cast<ALevelBound>(Actor))
+				{
+					Width = LevelBounds->Width;
+					Height = LevelBounds->Height;
+				}
+				else if (const APassagePoint* PassagePoint = Cast<APassagePoint>(Actor))
 				{
 					FDoorData TempData;
-					TempData.DoorFloor = EMazeFloor::Floor0;
+					TempData.DoorFloor = PassagePoint->DoorFloor;
 					if (PassagePoint->GetActorRotation().Yaw == 0)
 					{
 						TempData.DoorDirection = EMazeOrientation::Vertical;
+						//To-Do DoorStatus must be remembered.
 						TempData.DoorStatus = EMazePinType::Closed;
 						TempData.DoorOffset.X = PassagePoint->GetActorLocation().X / 100.0f;;
 						TempData.DoorOffset.Y = 0;

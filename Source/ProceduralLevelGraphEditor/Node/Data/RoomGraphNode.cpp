@@ -130,6 +130,16 @@ EMazeDirection URoomGraphNode::GetMazePinDirection(const UEdGraphPin* Pin)
     return EMazeDirection::None;
 }
 
+EMazeFloor URoomGraphNode::GetMazePinFloor(const UEdGraphPin* Pin)
+{
+    int32 Index = GetIndexFromPinName(Pin->PinName);
+    if (Index >= 0 && Index < DoorData.Num())
+    {
+        return AddFloor(this->RoomFloor,DoorData[Index].DoorFloor);
+    }
+    return EMazeFloor::Error;
+}
+
 int32 URoomGraphNode::GetIndexFromPinName(const FName& PinName)
 {
     FString PinNameStr = PinName.ToString();

@@ -21,6 +21,7 @@ public:
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
     virtual void PostLoad() override;
     virtual EMazeDirection GetMazePinDirection(const UEdGraphPin* Pin) override;
+    virtual EMazeFloor GetMazePinFloor(const UEdGraphPin* Pin) override;
     int32 GetIndexFromPinName(const FName& PinName);
     virtual FText GetNodeName() const override;
     virtual FSlateColor GetNodeBackgroundColor() const override;

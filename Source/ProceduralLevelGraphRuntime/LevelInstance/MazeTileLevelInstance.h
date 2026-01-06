@@ -35,9 +35,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category="Level")
 	FString LevelName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Level", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Level", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
 	int Width;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Level", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Level", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1"))
 	int Height;
 
 	
