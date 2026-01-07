@@ -5,7 +5,7 @@
 
 #define LOCTEXT_NAMESPACE "EntranceGraphNode"
 
-UEntranceGraphNode::UEntranceGraphNode() : URoomGraphNode()
+	UEntranceGraphNode::UEntranceGraphNode() : URoomGraphNode()
 {
 	static ConstructorHelpers::FClassFinder<ALevelInstance> BP_LevelInstance_Finder(
 		TEXT("Blueprint'/Game/LevelPrototyping/MazeLevelInstances/Specials/BP_Entrance.BP_Entrance_C'")
@@ -19,7 +19,6 @@ UEntranceGraphNode::UEntranceGraphNode() : URoomGraphNode()
 	{
 		UE_LOG_EDITOR(LogTemp, Error, TEXT("UEntranceGraphNode constructor: BP_Entrance class not found!"));
 	}
-	OnTileBlueprintsChanged();
 }
 
 FText UEntranceGraphNode::GetNodeTitle(ENodeTitleType::Type TitleType) const

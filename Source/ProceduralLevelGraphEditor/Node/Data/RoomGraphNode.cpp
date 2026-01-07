@@ -59,7 +59,6 @@ void URoomGraphNode::OnTileBlueprintsChanged()
         if (TileClass)
         {
             const AMazeTileLevelInstance* DefaultTile = GetDefault<AMazeTileLevelInstance>(TileClass);
-          
             if (DefaultTile)
             {
                 if (DefaultTile->Width > RoomWidth )

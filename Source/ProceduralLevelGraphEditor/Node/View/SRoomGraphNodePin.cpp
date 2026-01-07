@@ -8,11 +8,13 @@
 FText SRoomGraphNodePin::GetCustomToolTipText()
 {
 	FString FloorName = StaticEnum<EMazeFloor>()->GetNameStringByValue(static_cast<int64>(AddFloor(PinBase->RoomFloor,PinData.DoorFloor)));
+	FString DirectionName = StaticEnum<EMazeDirection>()->GetNameStringByValue(static_cast<int64>(PinBase->GetRotatedPinDirection(PinData.DoorLocation)));
 	int32 Height = GetFloorHeight(PinData.DoorFloor);
-	FString ToolTipString = FString::Printf(TEXT("Floor : %s\nHeight : %d \nStatus: %s"), 
+	FString ToolTipString = FString::Printf(TEXT("Floor : %s\nHeight : %d \nStatus: %s \nDirection: %s" ), 
 		*FloorName, 
 		Height, 
-		IsConnected() ? TEXT("Connect") : TEXT("Disconnect"));
+		IsConnected() ? TEXT("Connect") : TEXT("Disconnect"),
+		*DirectionName);
 	return FText::FromString(ToolTipString);
 }
 void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
