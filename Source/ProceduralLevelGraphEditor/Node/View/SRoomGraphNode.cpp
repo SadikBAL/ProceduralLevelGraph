@@ -16,6 +16,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 {
 	this->GraphNode = InNode;
 	this->RoomGraphNodeRef =  Cast<URoomGraphNode>(GraphNode);
+	this->SetPixelSnapping(EWidgetPixelSnapping::SnapToPixel);
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
 	TitleFont.Size = 12;
 	UpdateGraphNode();

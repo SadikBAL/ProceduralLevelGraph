@@ -15,6 +15,7 @@
 
 void SMazeGraphNodeBase::GetAllPinWidgets(TArray<TSharedPtr<SGraphPin>>& OutPinWidgets) const
 {
+    
 }
 
 void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilter, bool bMarkDirty)

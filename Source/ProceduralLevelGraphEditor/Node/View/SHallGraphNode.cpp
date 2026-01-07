@@ -82,6 +82,7 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	this->HallGraphNodeRef = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
 	TitleFont.Size = 12;
+	this->SetPixelSnapping(EWidgetPixelSnapping::SnapToPixel);
 	UpdateGraphNode();
 	const FVector2D IconSize(22.0f, 22.0f);
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icon/T_Button_Icon_Minus.T_Button_Icon_Minus")))
