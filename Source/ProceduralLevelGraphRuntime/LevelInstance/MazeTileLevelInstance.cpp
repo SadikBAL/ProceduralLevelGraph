@@ -4,8 +4,8 @@
 #include "LevelInstanceManagerComponent.h"
 #include "PassagePoint.h"
 #include "Components/PointLightComponent.h"
-#include "Engine/LevelBounds.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
+#include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
 
 #if WITH_EDITOR
 #include "UObject/ObjectSaveContext.h"
@@ -63,6 +63,8 @@ void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 				{
 					FDoorData TempData;
 					TempData.DoorFloor = PassagePoint->DoorFloor;
+					TempData.Offset = PassagePoint->Offset;
+					//TempData.PassagePoint = PassagePoint;
 					if (PassagePoint->GetActorRotation().Yaw == 0)
 					{
 						TempData.DoorDirection = EMazeOrientation::Vertical;
@@ -111,11 +113,7 @@ void AMazeTileLevelInstance::PostEditChangeProperty(FPropertyChangedEvent& Prope
 
 void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)
 {
-	NodeData.RoomRotation = BaseNode->RoomRotation;
-	//NodeData.MazeDirectionMap.Add(EMazeDirection::Up,	   (BaseNode->UpNode    ? EMazePinType::Tier1 : EMazePinType::Hidden));
-	//NodeData.MazeDirectionMap.Add(EMazeDirection::Down,  (BaseNode->DownNode  ? EMazePinType::Tier1 : EMazePinType::Hidden));
-	//NodeData.MazeDirectionMap.Add(EMazeDirection::Left,  (BaseNode->LeftNode  ? EMazePinType::Tier1 : EMazePinType::Hidden));
-	//NodeData.MazeDirectionMap.Add(EMazeDirection::Right, (BaseNode->RightNode ? EMazePinType::Tier1 : EMazePinType::Hidden));
+	MazeNodeBaseRef = BaseNode;
 	LoadLevelAsync();
 }
 
@@ -245,7 +243,43 @@ TArray<FName> AMazeTileLevelInstance::GetMeshPartNames(EMazeDirection LocalDirec
 }
 
 void AMazeTileLevelInstance::ApplyMazeTileData()
-{	
+{
+	if (ULevel* LoadedLevel = LevelStreamingDynamic->GetLoadedLevel())
+	{
+		for (AActor* Actor : LoadedLevel->Actors)
+		{
+			if (APassagePoint* PassagePoint = Cast<APassagePoint>(Actor))
+			{
+				for (FDoorData Door : MazeNodeBaseRef->DoorData)
+				{
+					if (PassagePoint->IsPassageDataMatchDoorData(Door))
+					{
+						if (Door.LinkedNode)
+						{
+							PassagePoint->UpdatePassageStatus(EPassageType::Door);
+						}
+						else
+						{
+							PassagePoint->UpdatePassageStatus(EPassageType::Wall);
+						}
+					}
+				}
+				
+			}
+		}
+	}
+	/*for (auto& Element : DoorData)
+	{
+		if (Element.PassagePoint && Element.LinkedNode)
+		{
+			Element.PassagePoint->UpdatePassageStatus(EPassageType::Door);
+		}
+		else if (Element.PassagePoint)
+		{
+			Element.PassagePoint->UpdatePassageStatus(EPassageType::Wall);
+		}
+	}*/
+	/*
 	if (NodeData.MazeDirectionMap.Contains(EMazeDirection::Up) && NodeData.MazeDirectionMap[EMazeDirection::Up] != EMazePinType::Hidden)
 	{
 		TArray<FName> SearchedTags = GetMeshPartNames(EMazeDirection::Up,NodeData.RoomRotation);
@@ -327,6 +361,7 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 		SearchedTags.Add(FName("Door"));
 		UpdateMeshPartVisibilities(SearchedTags, false);
 	}
+	*/
 }
 
 void AMazeTileLevelInstance::GroupActors()

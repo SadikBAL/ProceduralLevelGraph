@@ -5,7 +5,7 @@
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "PassagePoint.generated.h"
 
-UCLASS()
+UCLASS(PrioritizeCategories = "Passage Point Data")
 class APassagePoint : public AActor
 {
 	GENERATED_BODY()
@@ -19,13 +19,21 @@ public:
 	ALevelBound* FindMyLevelBoundActor();
 #endif
 	
-	UPROPERTY(EditAnywhere, Category = "Door Data")
+	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	EMazeDirection DoorLocation;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Door Data", meta = (UIMin = "-50", UIMax = "50", ClampMin = "-50", ClampMax = "50", MultipleOf = "1"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Passage Point Data", meta = (UIMin = "-50", UIMax = "50", ClampMin = "-50", ClampMax = "50", MultipleOf = "1", DisplayPriority="-1"))
 	int Offset = 0;
-	UPROPERTY(EditAnywhere, Category = "Door Data")
+	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	EMazeFloor DoorFloor;
-	
+	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
+	EPassageType CurrentPassageStatus;
+	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
+	TMap<EPassageType, AActor*> PassageActorMap;
+	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
+	void UpdatePassageStatus(EPassageType Status) const;
+	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
+	bool IsPassageDataMatchDoorData(FDoorData Data);
+
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif

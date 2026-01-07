@@ -51,6 +51,10 @@ void URoomGraphNode::OnTileBlueprintsChanged()
             Pin->BreakAllPinLinks();
         }
     }
+    for (int32 i = Pins.Num() - 1; i >= 0; --i)
+    {
+        RemovePin(Pins[i]);
+    }
     DoorData.Empty();
     RoomWidth = EMPTY_SIZE;
     RoomHeight = EMPTY_SIZE;

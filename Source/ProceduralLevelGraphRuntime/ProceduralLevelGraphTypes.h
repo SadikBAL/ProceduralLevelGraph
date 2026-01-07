@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-
 #include "ProceduralLevelGraphTypes.generated.h"
 
+class APassagePoint;
 constexpr float TILE_SCALE = 100.0f;
 constexpr float TILE_EDITOR_SCALE = 25.0f;
 constexpr float GRID_SNAP_SCALE = 5.0f;
@@ -42,6 +42,13 @@ enum class EMazePinType : uint8
 	Destroyed
 };
 UENUM(BlueprintType)
+enum class EPassageType : uint8
+{
+	Wall,
+	Door,
+	Empty
+};
+UENUM(BlueprintType)
 enum class EMazeFloor : uint8
 {
 	FloorP3 = 0,
@@ -67,14 +74,14 @@ struct FMazeTileData
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(VisibleAnywhere, Category = "Maze Node")
-	TMap<EMazeDirection, EMazePinType> MazeDirectionMap;
+	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
+	//TMap<EMazeDirection, EMazePinType> MazeDirectionMap;
 
-	UPROPERTY(VisibleAnywhere, Category = "Maze Node")
-	int32 RoomRotation = 0;
+	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
+	//int32 RoomRotation = 0;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Maze Node")
-	FBox RoomBounds = FBox();
+	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
+	//FBox RoomBounds = FBox();
 };
 
 USTRUCT(BlueprintType)
@@ -82,18 +89,22 @@ struct FDoorData
 {
 	GENERATED_BODY()
 	
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	EMazeDirection DoorLocation;
 	UPROPERTY(EditAnywhere, Category = "Door Data")
 	EMazePinType DoorStatus;
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	FVector2D DoorOffset;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	EMazeFloor DoorFloor;
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	EMazeOrientation DoorDirection;
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	TObjectPtr<class UMazeNodeBase> LinkedNode;
+	UPROPERTY(VisibleAnywhere, Category = "Door Data")
+	int Offset;
+	//UPROPERTY(VisibleAnywhere, Category = "Door Data")
+	//TObjectPtr<const APassagePoint> PassagePoint;
 
 };
 

@@ -8,7 +8,7 @@
 #include "MazeTileLevelInstance.generated.h"
 class ULevelInstanceManagerComponent;
 
-UCLASS(Abstract, HideDropdown)
+UCLASS(Abstract, HideDropdown, PrioritizeCategories = "Level")
 class PROCEDURALLEVELGRAPHRUNTIME_API AMazeTileLevelInstance : public ALevelInstance
 {
 	GENERATED_BODY()
@@ -32,6 +32,9 @@ public:
 	void UpdateMeshPartVisibilities(TArray<FName> SearchedTags, bool bVisibility);
 	UFUNCTION()
 	TArray<FName> GetMeshPartNames(EMazeDirection LocalDirection, int LocalRotation);
+	
+	UPROPERTY(VisibleAnywhere, Category = "Level")
+	UMazeNodeBase* MazeNodeBaseRef = nullptr;
 	
 	UPROPERTY(VisibleAnywhere, Category="Level")
 	FString LevelName;
@@ -61,4 +64,5 @@ public:
 	ULevelStreamingDynamic* LevelStreamingDynamic = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Level")
 	TArray<FDoorData> DoorData;
+
 };

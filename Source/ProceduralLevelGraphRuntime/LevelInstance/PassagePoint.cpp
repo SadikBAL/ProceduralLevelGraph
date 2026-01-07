@@ -10,6 +10,7 @@ APassagePoint::APassagePoint()
 
 #if WITH_EDITOR
 
+
 void APassagePoint::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	const FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
@@ -40,12 +41,12 @@ void APassagePoint::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 				ActorRotation.Yaw = 0.0f;
 				break;
 			case EMazeDirection::Left:
-				ActorLocation.X = LevelBound->Width * 0.5 * 100;
+				ActorLocation.X = LevelBound->Width * 0.5 * -1 * 100;
 				ActorLocation.Y = Offset * 100;
 				ActorRotation.Yaw = 90.0f;
 				break;
 			case EMazeDirection::Right:
-				ActorLocation.X = LevelBound->Width * 0.5 * -1 * 100;
+				ActorLocation.X = LevelBound->Width * 0.5 * 100;
 				ActorLocation.Y = Offset * 100;
 				ActorRotation.Yaw = 90.0f;
 				break;
@@ -60,6 +61,10 @@ void APassagePoint::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 			SetActorLocation(ActorLocation);
 			SetActorRotation(ActorRotation);
 		}
+	}
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(APassagePoint, CurrentPassageStatus))
+	{
+		UpdatePassageStatus(CurrentPassageStatus);
 	}
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
@@ -85,3 +90,67 @@ void APassagePoint::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void APassagePoint::UpdatePassageStatus(EPassageType Status) const
+{
+	for (auto Element : PassageActorMap)
+	{
+		if (Status == Element.Key)
+		{
+			if (Element.Value)
+			{
+				TInlineComponentArray<UStaticMeshComponent*> MeshComponents;
+				Element.Value->GetComponents(MeshComponents);
+				for (UStaticMeshComponent* MeshComp : MeshComponents)
+				{
+					MeshComp->SetVisibility(true);
+					if (Element.Key == EPassageType::Door)
+					{
+						MeshComp->SetCollisionProfileName(FName("Interactable_BlockDynamic"));
+					}
+					else
+					{
+						MeshComp->SetCollisionProfileName(FName("QueryAndPhysics"));
+					}
+				}
+			}
+		}
+		else
+		{
+			if (Element.Value)
+			{
+				if (Element.Value)
+				{
+					TInlineComponentArray<UStaticMeshComponent*> MeshComponents;
+					Element.Value->GetComponents(MeshComponents);
+					for (UStaticMeshComponent* MeshComp : MeshComponents)
+					{
+						MeshComp->SetVisibility(false);
+						MeshComp->SetCollisionProfileName(FName("NoCollision"));
+					}
+				}
+			}
+		}
+	}
+}
+
+bool APassagePoint::IsPassageDataMatchDoorData(FDoorData Data)
+{
+	if (Data.DoorLocation != DoorLocation)
+	{
+		return false;
+	}
+	if (Data.DoorFloor != DoorFloor)
+	{
+		return false;
+	}
+	if (Data.Offset != Offset)
+	{
+		return false;
+	}
+	return true;
+}
+
+
+
+

@@ -18,6 +18,18 @@ UHallGraphNode::UHallGraphNode()
 	DownDoor.DoorOffset = FVector2D(0,0);
 	DownDoor.DoorFloor = EMazeFloor::Floor0;
 	DoorData.Add(DownDoor);
+	for (int32 i = Pins.Num() - 1; i >= 0; --i)
+	{
+		if (UEdGraphPin* Pin = Pins[i])
+		{
+			Pin->BreakAllPinLinks();
+		}
+	}
+	for (int32 i = Pins.Num() - 1; i >= 0; --i)
+	{
+		RemovePin(Pins[i]);
+	}
+	AllocateDefaultPins();
 	OnHallDataAssetChanged();
 }
 
