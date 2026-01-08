@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "SMazeGraphNodeBase.h"
-#include "SRoomGraphNodePin.h"
+#include "SPassageGraphNodePin.h"
 
 class UHallGraphNode;
 

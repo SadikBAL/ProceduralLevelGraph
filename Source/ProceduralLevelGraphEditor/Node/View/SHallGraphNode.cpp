@@ -6,7 +6,7 @@
 #include "Widgets/Text/STextBlock.h"
 #include "Widgets/Input/SEditableTextBox.h"
 #include "SGraphPin.h"
-#include "SRoomGraphNodePin.h"
+#include "SPassageGraphNodePin.h"
 #include "ProceduralLevelGraphEditor/ProceduralLevelGraphEditor.h"
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNode"
@@ -132,7 +132,7 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	];
 	for (int32 i = 0; i < Pins.Num(); ++i)
 	{
-	    TSharedPtr<SRoomGraphNodePin> CurrentPinWidget = Pins[i];
+	    TSharedPtr<SPassageGraphNodePin> CurrentPinWidget = Pins[i];
 	    if (CurrentPinWidget.IsValid())
 	    {
 	        UEdGraphPin* PinObj = CurrentPinWidget->GetPinObj();
@@ -213,7 +213,7 @@ void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
 	if (HallGraphNodeRef && HallGraphNodeRef->DoorData.Num() > 0)
 	{
-		TSharedPtr<SRoomGraphNodePin> TempPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		TSharedPtr<SPassageGraphNodePin> TempPin = StaticCastSharedPtr<SPassageGraphNodePin>(BasePinPtr);
 		
 		int32 Index = HallGraphNodeRef->Pins.IndexOfByKey(PinObj);
 		if (Index != INDEX_NONE && Index >= 0 && Index < HallGraphNodeRef->DoorData.Num())
@@ -244,7 +244,7 @@ TSharedPtr<SGraphPin> SHallGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 	}
 	else
 	{
-		TSharedPtr<SGraphPin> PinWidget = SNew(SRoomGraphNodePin, Pin);
+		TSharedPtr<SGraphPin> PinWidget = SNew(SPassageGraphNodePin, Pin);
 		PinWidget->SetShowLabel(false);
 		return PinWidget;
 	}

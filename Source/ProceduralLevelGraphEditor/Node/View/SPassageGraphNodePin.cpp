@@ -1,11 +1,11 @@
-﻿#include "SRoomGraphNodePin.h"
+﻿#include "SPassageGraphNodePin.h"
 
 #include "ConnectionDrawingPolicy.h"
 #include "ProceduralLevelGraphEditor/Node/Data/MazeGraphNodeBase.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNodePin"
-FText SRoomGraphNodePin::GetCustomToolTipText()
+FText SPassageGraphNodePin::GetCustomToolTipText()
 {
 	FString FloorName = StaticEnum<EMazeFloor>()->GetNameStringByValue(static_cast<int64>(AddFloor(PinBase->RoomFloor,PinData.DoorFloor)));
 	FString DirectionName = StaticEnum<EMazeDirection>()->GetNameStringByValue(static_cast<int64>(PinBase->GetRotatedPinDirection(PinData.DoorLocation)));
@@ -17,7 +17,7 @@ FText SRoomGraphNodePin::GetCustomToolTipText()
 		*DirectionName);
 	return FText::FromString(ToolTipString);
 }
-void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
+void SPassageGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
 {
 
 	GraphPinObj = InPin;
@@ -34,12 +34,12 @@ void SRoomGraphNodePin::Construct(const FArguments& InArgs, UEdGraphPin* InPin)
 	SGraphPin::Construct(SGraphPin::FArguments(), InPin);
 }
 
-FReply SRoomGraphNodePin::OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+FReply SPassageGraphNodePin::OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
 {
 	return FReply::Handled();
 }
 
-const FSlateBrush* SRoomGraphNodePin::GetPinIcon() const
+const FSlateBrush* SPassageGraphNodePin::GetPinIcon() const
 {
 	if (PinBase)
 	{
@@ -81,7 +81,7 @@ const FSlateBrush* SRoomGraphNodePin::GetPinIcon() const
 	
 }
 
-FSlateColor SRoomGraphNodePin::GetPinColor() const
+FSlateColor SPassageGraphNodePin::GetPinColor() const
 {
 	if (IsConnected())
 	{
@@ -93,17 +93,17 @@ FSlateColor SRoomGraphNodePin::GetPinColor() const
 	}
 }
 
-FCursorReply SRoomGraphNodePin::OnCursorQuery(const FGeometry& MyGeometry, const FPointerEvent& CursorEvent) const
+FCursorReply SPassageGraphNodePin::OnCursorQuery(const FGeometry& MyGeometry, const FPointerEvent& CursorEvent) const
 {
 	return FCursorReply::Cursor(EMouseCursor::Default);
 }
 
-void SRoomGraphNodePin::OnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+void SPassageGraphNodePin::OnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
 {
 	SCompoundWidget::OnMouseEnter(MyGeometry, MouseEvent);
 }
 
-void SRoomGraphNodePin::OnMouseLeave(const FPointerEvent& MouseEvent)
+void SPassageGraphNodePin::OnMouseLeave(const FPointerEvent& MouseEvent)
 {
 	SCompoundWidget::OnMouseLeave(MouseEvent);
 }

@@ -7,11 +7,11 @@
 
 enum class EMazePinType : uint8;
 
-class SRoomGraphNodePin : public SGraphPin
+class SPassageGraphNodePin : public SGraphPin
 {
 public:
 	
-	SLATE_BEGIN_ARGS(SRoomGraphNodePin) {}
+	SLATE_BEGIN_ARGS(SPassageGraphNodePin) {}
 	SLATE_END_ARGS()
 
 	FText GetCustomToolTipText();

@@ -7,7 +7,7 @@
 #include "Widgets/Input/SEditableTextBox.h"
 
 #include "SGraphPin.h"
-#include "SRoomGraphNodePin.h"
+#include "SPassageGraphNodePin.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 
 #define LOCTEXT_NAMESPACE "SRoomGraphNode"
@@ -44,7 +44,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	];
 	for (int32 i = 0; i < Pins.Num(); ++i)
 	{
-	    TSharedPtr<SRoomGraphNodePin> CurrentPinWidget = Pins[i];
+	    TSharedPtr<SPassageGraphNodePin> CurrentPinWidget = Pins[i];
 	    if (CurrentPinWidget.IsValid())
 	    {
 	        EHorizontalAlignment HAlign = HAlign_Center;
@@ -124,7 +124,7 @@ void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 	const TSharedPtr<SGraphPin> BasePinPtr = PinToAdd;
 	if (RoomGraphNodeRef && RoomGraphNodeRef->DoorData.Num() > 0)
 	{
-		TSharedPtr<SRoomGraphNodePin> TempPin = StaticCastSharedPtr<SRoomGraphNodePin>(BasePinPtr);
+		TSharedPtr<SPassageGraphNodePin> TempPin = StaticCastSharedPtr<SPassageGraphNodePin>(BasePinPtr);
 		
 		int32 Index = RoomGraphNodeRef->Pins.IndexOfByKey(PinObj);
 		if (Index != INDEX_NONE && Index >= 0 && Index < RoomGraphNodeRef->DoorData.Num())
@@ -143,7 +143,7 @@ void SRoomGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 			}
 			TempPin->SetToolTipText(
 				TAttribute<FText>::Create(
-					TAttribute<FText>::FGetter::CreateSP(TempPin.ToSharedRef(), &SRoomGraphNodePin::GetCustomToolTipText)
+					TAttribute<FText>::FGetter::CreateSP(TempPin.ToSharedRef(), &SPassageGraphNodePin::GetCustomToolTipText)
 				)
 			);
 			Pins.Add(TempPin);
@@ -160,7 +160,7 @@ TSharedPtr<SGraphPin> SRoomGraphNode::CreatePinWidget(UEdGraphPin* Pin) const
 	}
 	else
 	{
-		TSharedPtr<SGraphPin> PinWidget = SNew(SRoomGraphNodePin, Pin);
+		TSharedPtr<SGraphPin> PinWidget = SNew(SPassageGraphNodePin, Pin);
 		PinWidget->SetShowLabel(false);
 		return PinWidget;
 	}

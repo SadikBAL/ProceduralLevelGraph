@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "SGraphNode.h"
-#include "SRoomGraphNodePin.h"
+#include "SPassageGraphNodePin.h"
 
 class SMazeGraphNodeBase : public SGraphNode
 {
@@ -20,5 +20,5 @@ protected:
 	
 	int PinPadding = -4;
 	bool bOnDrag = false;
-	TArray<TSharedPtr<SRoomGraphNodePin>> Pins;
+	TArray<TSharedPtr<SPassageGraphNodePin>> Pins;
 };

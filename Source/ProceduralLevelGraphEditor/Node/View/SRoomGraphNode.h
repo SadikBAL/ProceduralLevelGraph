@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "SMazeGraphNodeBase.h"
-#include "SRoomGraphNodePin.h"
+#include "SPassageGraphNodePin.h"
 #include "ProceduralLevelGraphEditor/Node/Data/RoomGraphNode.h"
 
 class SRoomGraphNode : public SMazeGraphNodeBase
