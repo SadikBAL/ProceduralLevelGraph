@@ -28,7 +28,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	EPassageType CurrentPassageStatus;
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
-	TMap<EPassageType, AActor*> PassageActorMap;
+	TMap<EPassageType, FPassageActorList> PassageActorMap;
 	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	void UpdatePassageStatus(EPassageType Status) const;
 	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))

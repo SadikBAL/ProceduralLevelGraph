@@ -97,10 +97,12 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 	{
 		if (Status == Element.Key)
 		{
-			if (Element.Value)
+			for (AActor* ActorTemp : Element.Value.Actors)
 			{
+				if (!ActorTemp)
+					continue;
 				TInlineComponentArray<UStaticMeshComponent*> MeshComponents;
-				Element.Value->GetComponents(MeshComponents);
+				ActorTemp->GetComponents(MeshComponents);
 				for (UStaticMeshComponent* MeshComp : MeshComponents)
 				{
 					MeshComp->SetVisibility(true);
@@ -117,17 +119,16 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 		}
 		else
 		{
-			if (Element.Value)
+			for (AActor* ActorTemp : Element.Value.Actors)
 			{
-				if (Element.Value)
+				if (!ActorTemp)
+					continue;
+				TInlineComponentArray<UStaticMeshComponent*> MeshComponents;
+				ActorTemp->GetComponents(MeshComponents);
+				for (UStaticMeshComponent* MeshComp : MeshComponents)
 				{
-					TInlineComponentArray<UStaticMeshComponent*> MeshComponents;
-					Element.Value->GetComponents(MeshComponents);
-					for (UStaticMeshComponent* MeshComp : MeshComponents)
-					{
-						MeshComp->SetVisibility(false);
-						MeshComp->SetCollisionProfileName(FName("NoCollision"));
-					}
+					MeshComp->SetVisibility(false);
+					MeshComp->SetCollisionProfileName(FName("NoCollision"));
 				}
 			}
 		}

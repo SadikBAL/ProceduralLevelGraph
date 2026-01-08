@@ -48,6 +48,14 @@ enum class EPassageType : uint8
 	Door,
 	Empty
 };
+USTRUCT(BlueprintType)
+struct FPassageActorList
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Passage")
+	TArray<AActor*> Actors;
+};
 UENUM(BlueprintType)
 enum class EMazeFloor : uint8
 {
