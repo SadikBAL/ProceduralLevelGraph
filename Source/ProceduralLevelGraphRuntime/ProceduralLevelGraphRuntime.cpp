@@ -24,7 +24,7 @@ void UProceduralLevelGraphRuntime::SpawnMazeToEditor()
 	if (UEntranceNode* Entrance = Cast<UEntranceNode>(StartNode))
 	{
 		SpawnedNodes.Empty();
-		SpawnNode(GEditor->GetEditorWorldContext().World(),Entrance,EMazeDirection::None,Entrance->RoomPosition);
+		SpawnNode(GEditor->GetEditorWorldContext().World(),Entrance,EMazeDirection::None,Entrance->GetRoomPosition());
 		SpawnedNodes.Empty();
 	}
 }
@@ -133,7 +133,7 @@ void UProceduralLevelGraphRuntime::SpawnMaze(UObject* WorldContextObject)
 		UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
 		SpawnedNodes.Empty();
 		//Its Recursive and Create all Maze of Parts
-		SpawnNode(GEngine->GetWorldFromContextObject(World, EGetWorldErrorMode::LogAndReturnNull),Entrance,EMazeDirection::None,Entrance->RoomPosition);
+		SpawnNode(GEngine->GetWorldFromContextObject(World, EGetWorldErrorMode::LogAndReturnNull),Entrance,EMazeDirection::None,Entrance->GetRoomPosition());
 		//Spawn Navmesh
 		if (World)
 	    {

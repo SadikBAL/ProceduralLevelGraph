@@ -16,6 +16,8 @@ public:
 	FGuid NodeGuid;
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	int RoomRotation = 0;
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	EMazeFloor RoomFloor = EMazeFloor::Floor0;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Node Process")
 	TArray<FDoorData> DoorData;

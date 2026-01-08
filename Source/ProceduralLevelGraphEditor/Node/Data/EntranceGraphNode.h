@@ -19,5 +19,5 @@ public:
 	virtual bool CanUserDeleteNode() const override;
 	
 	UPROPERTY(EditAnywhere, Category = "Entrance Node")
-	FVector RoomPosition;
+	FVector2D RoomPosition;
 };

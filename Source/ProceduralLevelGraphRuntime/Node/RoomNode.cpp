@@ -54,6 +54,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		UE_LOG(LogTemp, Warning, TEXT("RoomNode->SpawnMazeObject: there is no World!"));
 		return;
 	}
+	
 	switch (Direction)
 	{
 	case EMazeDirection::Up:
@@ -71,6 +72,8 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 	default:
 		break;
 	}
+	
+	SpawnLocation.Z = GetFloorHeight(RoomFloor);
 	
 	FRotator RoomRotator = FRotator::ZeroRotator;
 	RoomRotator.Yaw = RoomRotation;
@@ -111,7 +114,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 						Rotator.Yaw = 0;
 						AActor* TempActor = World->SpawnActor<AActor>(
 							RandomPartSpawnClass,
-							GetEdgePosition(EMazeDirection::Up) + FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * j),0),
+							GetEdgePosition(EMazeDirection::Up) + FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * j),GetFloorHeight(RoomFloor)),
 							Rotator,
 							SpawnParams
 						);
@@ -127,7 +130,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 						Rotator.Yaw = 0;
 						AActor* TempActor = World->SpawnActor<AActor>(
 							RandomPartSpawnClass,
-							GetEdgePosition(EMazeDirection::Down) - FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * i),0),
+							GetEdgePosition(EMazeDirection::Down) - FVector(0,(TILE_SCALE * 0.5) + (TILE_SCALE * i),GetFloorHeight(RoomFloor)),
 							Rotator,
 							SpawnParams
 						);
@@ -150,7 +153,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 						Rotator.Yaw = 90;
 						AActor* TempActor = World->SpawnActor<AActor>(
 							RandomPartSpawnClass,
-							GetEdgePosition(EMazeDirection::Left) + FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,0),
+							GetEdgePosition(EMazeDirection::Left) + FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,GetFloorHeight(RoomFloor)),
 							Rotator,
 							SpawnParams
 						);
@@ -166,7 +169,7 @@ void URoomNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 						Rotator.Yaw = 90;
 						AActor* TempActor = World->SpawnActor<AActor>(
 							RandomPartSpawnClass,
-							GetEdgePosition(EMazeDirection::Right) - FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,0),
+							GetEdgePosition(EMazeDirection::Right) - FVector((TILE_SCALE * 0.5) + (TILE_SCALE * i),0,GetFloorHeight(RoomFloor)),
 							Rotator,
 							SpawnParams
 						);

@@ -6,4 +6,10 @@
 
 UEntranceNode::UEntranceNode() : URoomNode()
 {
+	
+}
+
+FVector UEntranceNode::GetRoomPosition() const
+{
+	return FVector( RoomPosition.X, RoomPosition.Y, GetFloorHeight(RoomFloor));
 }

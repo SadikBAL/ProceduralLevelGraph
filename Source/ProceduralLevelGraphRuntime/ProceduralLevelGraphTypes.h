@@ -69,20 +69,7 @@ enum class ERouteType : uint8
 	RouteD
 };
 
-USTRUCT(BlueprintType)
-struct FMazeTileData
-{
-	GENERATED_BODY()
-	
-	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
-	//TMap<EMazeDirection, EMazePinType> MazeDirectionMap;
 
-	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
-	//int32 RoomRotation = 0;
-	
-	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
-	//FBox RoomBounds = FBox();
-};
 
 USTRUCT(BlueprintType)
 struct FDoorData
@@ -99,7 +86,7 @@ struct FDoorData
 	EMazeFloor DoorFloor;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	EMazeOrientation DoorDirection;
-	UPROPERTY(VisibleAnywhere, Category = "Door Data")
+	UPROPERTY(Transient,VisibleAnywhere, Category = "Door Data")
 	TObjectPtr<class UMazeNodeBase> LinkedNode;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	int Offset;
@@ -107,7 +94,22 @@ struct FDoorData
 	//TObjectPtr<const APassagePoint> PassagePoint;
 
 };
+USTRUCT(BlueprintType)
+struct FMazeTileData
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Maze Nodes")
+	TArray<FDoorData> DoorData;
+	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
+	//TMap<EMazeDirection, EMazePinType> MazeDirectionMap;
 
+	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
+	//int32 RoomRotation = 0;
+	
+	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
+	//FBox RoomBounds = FBox();
+};
 constexpr int	PROCEDURAL_HEIGHT_MIN = -18000;
 constexpr int	PROCEDURAL_HEIGHT_MAX =  18000;
 

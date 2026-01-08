@@ -92,6 +92,7 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 			default:
 				break;
 		}
+		TileSpawnLocation.Z = GetFloorHeight(RoomFloor);
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AActor* MazeObject = World->SpawnActor<AActor>(
@@ -156,6 +157,7 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 				default:
 					break;
 				}
+				TileSpawnLocation.Z = GetFloorHeight(RoomFloor);
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 				AActor* MazeObject = World->SpawnActor<AActor>(
@@ -227,6 +229,7 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		default:
 			break;
 		}
+		TileSpawnLocation.Z = GetFloorHeight(RoomFloor);
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AActor* MazeObject = World->SpawnActor<AActor>(

@@ -17,6 +17,7 @@ public:
 	UEntranceNode();
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Entrance Node")
-	FVector RoomPosition;
-
+	FVector2D RoomPosition;
+	UFUNCTION()
+	FVector GetRoomPosition() const;
 };

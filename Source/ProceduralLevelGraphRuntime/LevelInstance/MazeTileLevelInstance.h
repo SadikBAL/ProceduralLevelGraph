@@ -28,13 +28,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetNodeData(UMazeNodeBase* BaseNode);
-	UFUNCTION()
-	void UpdateMeshPartVisibilities(TArray<FName> SearchedTags, bool bVisibility);
-	UFUNCTION()
-	TArray<FName> GetMeshPartNames(EMazeDirection LocalDirection, int LocalRotation);
 	
-	UPROPERTY(VisibleAnywhere, Category = "Level")
-	UMazeNodeBase* MazeNodeBaseRef = nullptr;
+	UPROPERTY(VisibleAnywhere, Category="Level")
+	FMazeTileData TileData;
 	
 	UPROPERTY(VisibleAnywhere, Category="Level")
 	FString LevelName;

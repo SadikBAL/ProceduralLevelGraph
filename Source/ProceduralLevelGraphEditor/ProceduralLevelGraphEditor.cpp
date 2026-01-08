@@ -373,9 +373,9 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
             if (NewRuntimeNode)
             {
                 NewRuntimeNode->RoomRotation = MazeEdNode->RoomRotation;
+                NewRuntimeNode->RoomFloor = MazeEdNode->RoomFloor;
                 NewRuntimeNode->DoorData = MazeEdNode->DoorData;
                 NewRuntimeNode->NodeGuid = MazeEdNode->NodeGuid;
-                NewRuntimeNode->DoorData = MazeEdNode->DoorData;
                 NodeMap.Add(EdNode, NewRuntimeNode);
             }
         }
