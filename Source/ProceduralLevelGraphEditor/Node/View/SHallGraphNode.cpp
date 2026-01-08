@@ -230,6 +230,11 @@ void SHallGraphNode::AddPin(const TSharedRef<SGraphPin>& PinToAdd)
 			{
 				TempPin->PinData.DoorDirection = EMazeOrientation::Horizontal;
 			}
+			TempPin->SetToolTipText(
+				TAttribute<FText>::Create(
+					TAttribute<FText>::FGetter::CreateSP(TempPin.ToSharedRef(), &SPassageGraphNodePin::GetCustomToolTipText)
+				)
+			);
 			Pins.Add(TempPin);
 		}
 	}
