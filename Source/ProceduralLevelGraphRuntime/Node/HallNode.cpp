@@ -136,6 +136,8 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		while (NeededHeight > 0 && RetryCounter > 0 && HallData->HallTiles.Num() != 0)
 		{
 			int RandomIndex = FMath::RandRange(0, HallData->HallTiles.Num() - 1);
+			if (HallData->HallTiles[RandomIndex] == nullptr)
+				continue;
 			int RandomTileHeight = HallData->HallTiles[RandomIndex]->GetDefaultObject<AHallLevelInstance>()->Height;
 			if (NeededHeight - RandomTileHeight >= 0)
 			{
