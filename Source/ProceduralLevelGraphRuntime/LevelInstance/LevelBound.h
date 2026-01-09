@@ -12,11 +12,11 @@ public:
 	
 	ALevelBound();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Level Bound Data", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1", DisplayPriority="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Level Bound Data", meta = (UIMin = "1", UIMax = "1000", ClampMin = "1", ClampMax = "1000", MultipleOf = "1", DisplayPriority="0"))
 	float Width = 6.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Level Bound Data", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1", DisplayPriority="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Level Bound Data", meta = (UIMin = "1", UIMax = "1000", ClampMin = "1", ClampMax = "1000", MultipleOf = "1", DisplayPriority="0"))
 	float Height = 6.0f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Level Bound Data", meta = (UIMin = "1", UIMax = "100", ClampMin = "1", ClampMax = "100", MultipleOf = "1", DisplayPriority="0"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Level Bound Data", meta = (UIMin = "1", UIMax = "1000", ClampMin = "1", ClampMax = "1000", MultipleOf = "1", DisplayPriority="0"))
 	float Depth = 6.0f;
 
 

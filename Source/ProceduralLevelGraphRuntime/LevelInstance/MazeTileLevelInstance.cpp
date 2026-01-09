@@ -1,5 +1,6 @@
 ﻿#include "MazeTileLevelInstance.h"
 
+#include "FileHelpers.h"
 #include "LevelBound.h"
 #include "LevelInstanceManagerComponent.h"
 #include "PassagePoint.h"
@@ -101,6 +102,7 @@ void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 			}
 		}
 	}
+	MarkPackageDirty();
 	OnMazeTileLevelInstanceUpdated.Broadcast();
 }
 
