@@ -23,7 +23,7 @@ void FProceduralLevelGraphEditorModule::OnObjectPreSave(UObject* Object, FObject
     {
         WorldToScan = SavedActor->GetWorld();
     }
-    if (WorldToScan && (WorldToScan->WorldType == EWorldType::Editor || WorldToScan->WorldType == EWorldType::EditorPreview))
+    if (WorldToScan &&    WorldToScan->GetMapName().Contains("LI_") && (WorldToScan->WorldType == EWorldType::Editor || WorldToScan->WorldType == EWorldType::EditorPreview))
     {
         UE_LOG(LogTemp, Log, TEXT("Updated Map Name : %s"), *WorldToScan->GetName());
         TArray<AActor*> IgnoreList;
