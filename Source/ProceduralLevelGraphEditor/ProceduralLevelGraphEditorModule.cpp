@@ -43,7 +43,6 @@ void FProceduralLevelGraphEditorModule::UpdateMazeLevelInstanceBlueprintsDoorRef
     AssetRegistryModule.Get().GetAssets(Filter, AssetList);
     UClass* TargetBaseClass = AMazeTileLevelInstance::StaticClass();
 
-    UE_LOG(LogTemp, Log, TEXT("--- AMazeTileLevelInstance Turevi Blueprintler Araniyor ---"));
     for (const FAssetData& AssetData : AssetList)
     {
         UBlueprint* BlueprintAsset = Cast<UBlueprint>(AssetData.GetAsset());

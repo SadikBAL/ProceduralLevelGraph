@@ -1,6 +1,8 @@
 ﻿#include "PassagePoint.h"
 
 #include "EngineUtils.h"
+#include "Components/LightComponent.h"
+#include "Components/PointLightComponent.h"
 
 APassagePoint::APassagePoint()
 {
@@ -115,6 +117,12 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 						MeshComp->SetCollisionProfileName(FName("QueryAndPhysics"));
 					}
 				}
+				TInlineComponentArray<UPointLightComponent*> LightComponents;
+				ActorTemp->GetComponents(LightComponents);
+				for (UPointLightComponent* LightComp : LightComponents)
+				{
+					LightComp->SetVisibility(true);
+				}
 			}
 		}
 		else
@@ -129,6 +137,12 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 				{
 					MeshComp->SetVisibility(false);
 					MeshComp->SetCollisionProfileName(FName("NoCollision"));
+				}
+				TInlineComponentArray<UPointLightComponent*> LightComponents;
+				ActorTemp->GetComponents(LightComponents);
+				for (UPointLightComponent* LightComp : LightComponents)
+				{
+					LightComp->SetVisibility(false);
 				}
 			}
 		}
