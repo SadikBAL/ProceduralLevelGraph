@@ -26,17 +26,17 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 	}
 	int HallStartTileHeight = 0;
 	int HallEndTileHeight  = 0;
-	if (HallData->HallStartTile)
+	if (HallData->HallCapTile)
 	{
-		HallStartTileHeight = HallData->HallStartTile->GetDefaultObject<AHallLevelInstance>()->Height;
+		HallStartTileHeight = HallData->HallCapTile->GetDefaultObject<AHallLevelInstance>()->Height;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("HallNode->SpawnMazeObject: there is no HallStartTile!"));
 	}
-	if (HallData->HallEndTile)
+	if (HallData->HallCapTile)
 	{
-		HallEndTileHeight	= HallData->HallEndTile->GetDefaultObject<AHallLevelInstance>()->Height;
+		HallEndTileHeight	= HallData->HallCapTile->GetDefaultObject<AHallLevelInstance>()->Height;
 	}
 	else
 	{
@@ -68,7 +68,7 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 	FRotator Rotator = FRotator::ZeroRotator;
 	Rotator.Yaw = RoomRotation;
 	
-	if (HallData->HallStartTile)
+	if (HallData->HallCapTile)
 	{
 		FRotator HallTileRotator = FRotator::ZeroRotator;
 		switch (Direction)
@@ -96,7 +96,7 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AActor* MazeObject = World->SpawnActor<AActor>(
-			HallData->HallStartTile,
+			HallData->HallCapTile,
 			TileSpawnLocation,
 			HallTileRotator,
 			SpawnParams
@@ -207,7 +207,7 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		}
 
 	}
-	if (HallData->HallEndTile)
+	if (HallData->HallCapTile)
 	{
 		FRotator HallTileRotator = FRotator::ZeroRotator;
 		switch (Direction)
@@ -235,7 +235,7 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AActor* MazeObject = World->SpawnActor<AActor>(
-			HallData->HallEndTile,
+			HallData->HallCapTile,
 			TileSpawnLocation,
 			HallTileRotator,
 			SpawnParams

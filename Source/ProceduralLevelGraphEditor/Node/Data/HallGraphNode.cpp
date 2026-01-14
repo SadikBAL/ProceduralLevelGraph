@@ -100,18 +100,11 @@ void UHallGraphNode::OnHallDataAssetChanged()
 	RoomWidth = EMPTY_SIZE;
 	if (HallData)
 	{
-		if (HallData->HallEndTile)
+		if (HallData->HallCapTile)
 		{
-			if (HallData->HallEndTile->GetDefaultObject<AMazeTileLevelInstance>()->Width > RoomWidth)
+			if (HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>()->Width > RoomWidth)
 			{
-				RoomWidth = HallData->HallEndTile->GetDefaultObject<AMazeTileLevelInstance>()->Width;
-			}
-		}
-		if (HallData->HallStartTile)
-		{
-			if (HallData->HallStartTile->GetDefaultObject<AMazeTileLevelInstance>()->Width > RoomWidth)
-			{
-				RoomWidth = HallData->HallStartTile->GetDefaultObject<AMazeTileLevelInstance>()->Width;
+				RoomWidth = HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>()->Width;
 			}
 		}
 		if (HallData->HallTiles.Num() > 0)
