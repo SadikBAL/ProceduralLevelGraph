@@ -376,6 +376,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 NewRuntimeNode->RoomFloor = MazeEdNode->RoomFloor;
                 NewRuntimeNode->DoorData = MazeEdNode->DoorData;
                 NewRuntimeNode->NodeGuid = MazeEdNode->NodeGuid;
+                NewRuntimeNode->RoomTags = MazeEdNode->RoomTags;
                 NodeMap.Add(EdNode, NewRuntimeNode);
             }
         }

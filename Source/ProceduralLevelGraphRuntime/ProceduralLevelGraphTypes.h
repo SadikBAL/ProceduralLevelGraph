@@ -78,30 +78,29 @@ enum class ERouteType : uint8
 };
 
 
-
 USTRUCT(BlueprintType)
 struct FDoorData
 {
 	GENERATED_BODY()
-	
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
-	EMazeDirection DoorLocation;
+	EMazeDirection DoorLocation = EMazeDirection::Down;
 	UPROPERTY(EditAnywhere, Category = "Door Data")
-	EMazePinType DoorStatus;
+	EMazePinType DoorStatus = EMazePinType::Closed;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
-	FVector2D DoorOffset;
+	FVector2D DoorOffset = FVector2D::ZeroVector;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
-	EMazeFloor DoorFloor;
+	EMazeFloor DoorFloor = EMazeFloor::Floor0;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
-	EMazeOrientation DoorDirection;
+	EMazeOrientation DoorDirection = EMazeOrientation::Horizontal;
 	UPROPERTY(Transient,VisibleAnywhere, Category = "Door Data")
 	TObjectPtr<class UMazeNodeBase> LinkedNode;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
-	int Offset;
+	int Offset = 0;;
 	//UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	//TObjectPtr<const APassagePoint> PassagePoint;
-
+	
 };
+
 USTRUCT(BlueprintType)
 struct FMazeTileData
 {

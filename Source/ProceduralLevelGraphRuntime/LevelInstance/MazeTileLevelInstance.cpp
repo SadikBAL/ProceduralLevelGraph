@@ -1,6 +1,6 @@
 ﻿#include "MazeTileLevelInstance.h"
 
-#include "FileHelpers.h"
+// #include "FileHelpers.h"
 #include "LevelBound.h"
 #include "LevelInstanceManagerComponent.h"
 #include "PassagePoint.h"
@@ -116,6 +116,7 @@ void AMazeTileLevelInstance::PostEditChangeProperty(FPropertyChangedEvent& Prope
 void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)
 {
 	TileData.DoorData = BaseNode->DoorData;
+	RoomTags = BaseNode->RoomTags;
 	LoadLevelAsync();
 }
 

@@ -60,5 +60,7 @@ public:
 	ULevelStreamingDynamic* LevelStreamingDynamic = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Level")
 	TArray<FDoorData> DoorData;
+	UPROPERTY()
+	FGameplayTagContainer RoomTags;
 
 };

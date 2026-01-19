@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "MazeGraphNodeBase.generated.h"
 
@@ -32,7 +33,9 @@ public:
 	EMazeFloor RoomFloor = EMazeFloor::Floor0;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Node Process")
 	int RoomRotation = 0;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Node Process")
+	UPROPERTY(EditAnywhere, Category = "Node Process", meta = (Categories = "Area"))
+	FGameplayTagContainer RoomTags;
+	UPROPERTY()
 	TArray<FDoorData> DoorData;
 
 protected:

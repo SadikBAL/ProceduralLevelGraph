@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "MazeNodeBase.generated.h"
 
@@ -18,8 +19,9 @@ public:
 	int RoomRotation = 0;
 	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
 	EMazeFloor RoomFloor = EMazeFloor::Floor0;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Node Process")
+	UPROPERTY(BlueprintReadOnly, Category = "Maze Node")
+	FGameplayTagContainer RoomTags;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Maze Node")
 	TArray<FDoorData> DoorData;
 
 	UFUNCTION(BlueprintCallable)
