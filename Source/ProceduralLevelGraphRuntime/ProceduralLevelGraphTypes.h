@@ -4,9 +4,9 @@
 
 class APassagePoint;
 constexpr float TILE_SCALE = 100.0f;
-constexpr float TILE_EDITOR_SCALE = 25.0f;
-constexpr float GRID_SNAP_SCALE = 10.0f;
-constexpr float TILE_EDITOR_PIN_SCALE = 20.0f;
+constexpr float TILE_EDITOR_SCALE = 20.0f;
+constexpr float GRID_SNAP_SCALE = 20.0f;
+constexpr float TILE_EDITOR_PIN_SCALE = 16.0f;
 constexpr int   MAZE_DIRECTION_MAX = 4;
 constexpr int	EMPTY_SIZE = 4;
 

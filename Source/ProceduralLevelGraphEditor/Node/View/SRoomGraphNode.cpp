@@ -53,7 +53,6 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	    	int32 LocalOffset = 0;
 	    	int32 LocalMult = 1;
 	    	if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Up) {
-	    		//Up
 	            VAlign = VAlign_Top;
 	    		LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
 	    		? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
@@ -62,10 +61,19 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 				{
 					LocalMult = -1;
 				}
-	            Padding = FMargin(LocalOffset * LocalMult * TILE_EDITOR_SCALE, PinPadding, 0, 0);
+	    		float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
+	    		float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
+
+	    		if (ScaledOffset >= 0)
+	    		{
+	    			Padding = FMargin(AbsOffset2x, PinPadding, 0, 0);
+	    		}
+	    		else
+	    		{
+	    			Padding = FMargin(0, PinPadding, AbsOffset2x, 0);
+	    		}
 	        }
 	    	else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Right) {
-	    		//Right
 	    		HAlign = HAlign_Right;
 	    		LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
 				? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
@@ -74,10 +82,19 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	    		{
 	    			LocalMult = -1;
 	    		}
-	    		Padding = FMargin(0, LocalOffset * LocalMult  * TILE_EDITOR_SCALE, PinPadding, 0);
+	    		float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
+	    		float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
+
+	    		if (ScaledOffset >= 0)
+	    		{
+	    			Padding = FMargin(0, AbsOffset2x, PinPadding, 0);
+	    		}
+	    		else
+	    		{
+	    			Padding = FMargin(0, 0, PinPadding, AbsOffset2x);
+	    		}
 	    	}
 	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Down) {
-	            //Left
 	        	VAlign = VAlign_Bottom;
 	        	LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
 				? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
@@ -86,10 +103,19 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	        	{
 	        		LocalMult = -1;
 	        	}
-	        	Padding = FMargin(LocalOffset * LocalMult  * TILE_EDITOR_SCALE, 0, 2, PinPadding);
+	        	float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
+	        	float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
+
+	        	if (ScaledOffset >= 0)
+	        	{
+	        		Padding = FMargin(AbsOffset2x, 0, 0, PinPadding);
+	        	}
+	        	else
+	        	{
+	        		Padding = FMargin(0, 0, AbsOffset2x, PinPadding);
+	        	}
 	        }
 	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Left) {
-	            //Down
 	        	HAlign = HAlign_Left;
 	        	LocalOffset = (CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Left || CurrentPinWidget->PinData.DoorLocation == EMazeDirection::Right) 
 				? CurrentPinWidget->PinData.DoorOffset.Y : CurrentPinWidget->PinData.DoorOffset.X;
@@ -98,7 +124,17 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	        	{
 	        		LocalMult = -1;
 	        	}
-	        	Padding = FMargin(PinPadding-4, LocalOffset * LocalMult  * TILE_EDITOR_SCALE,0 , 0);
+	        	float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
+	        	float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
+
+	        	if (ScaledOffset >= 0)
+	        	{
+	        		Padding = FMargin(PinPadding-4, AbsOffset2x, 0, 0);
+	        	}
+	        	else
+	        	{
+	        		Padding = FMargin(PinPadding-4, 0, 0, AbsOffset2x);
+	        	}
 	        }
 
 	        PinOverlay->AddSlot()
