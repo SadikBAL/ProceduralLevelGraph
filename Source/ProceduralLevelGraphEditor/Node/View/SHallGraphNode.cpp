@@ -84,7 +84,7 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	TitleFont.Size = 12;
 	this->SetPixelSnapping(EWidgetPixelSnapping::SnapToPixel);
 	UpdateGraphNode();
-	const FVector2D IconSize(22.0f, 22.0f);
+	const FVector2D IconSize(20.0f, 20.0f);
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icon/T_Button_Icon_Minus.T_Button_Icon_Minus")))
 		ButtonMinusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icon/T_Button_Icon_Plus.T_Button_Icon_Plus")))
@@ -352,7 +352,7 @@ TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, boo
         return SNew(SHorizontalBox)
         	+ SHorizontalBox::Slot()
 			.AutoWidth()
-			.Padding(1)
+			.Padding(0)
 			.HAlign(HAlign_Center)
 			.VAlign(VAlign_Center)
 			[
@@ -370,7 +370,7 @@ TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, boo
 			]
         	+ SHorizontalBox::Slot()
 			.AutoWidth()
-			.Padding(1)
+			.Padding(0)
 			.HAlign(HAlign_Center)
 			.VAlign(VAlign_Center)
 			[
@@ -388,7 +388,7 @@ TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, boo
 			]
             + SHorizontalBox::Slot()
             .AutoWidth()
-            .Padding(1)
+            .Padding(0)
             .HAlign(HAlign_Center)
             .VAlign(VAlign_Center)
             [
@@ -410,7 +410,7 @@ TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, boo
         return SNew(SVerticalBox)
         	+ SVerticalBox::Slot()
 			.AutoHeight()
-			.Padding(1)
+			.Padding(0)
 			.HAlign(HAlign_Center)
 			.VAlign(VAlign_Center)
 			[
@@ -428,7 +428,7 @@ TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, boo
 			]
         	+ SVerticalBox::Slot()
 			.AutoHeight()
-			.Padding(1)
+			.Padding(0)
 			.HAlign(HAlign_Center)
 			.VAlign(VAlign_Center)
 			[
@@ -446,7 +446,7 @@ TSharedRef<SWidget> SHallGraphNode::CreateButtonGroup(bool bForVerticalNode, boo
 			]
             + SVerticalBox::Slot()
             .AutoHeight()
-            .Padding(1)
+            .Padding(0)
             .HAlign(HAlign_Center)
             .VAlign(VAlign_Center)
             [

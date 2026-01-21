@@ -50,8 +50,8 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     FVector2f SnipPosition;
     if (bOnDrag)
     {
-        SnipPosition.X = FMath::GridSnap(NewPosition.X, GRID_SNAP_SCALE);
-        SnipPosition.Y = FMath::GridSnap(NewPosition.Y, GRID_SNAP_SCALE);
+        SnipPosition.X = FMath::GridSnap(GraphNode->GetNodePosX() - DirectionX, GRID_SNAP_SCALE);
+        SnipPosition.Y = FMath::GridSnap(GraphNode->GetNodePosY() - DirectionY, GRID_SNAP_SCALE);
     }
     else
     {
@@ -68,8 +68,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
     }
     const TSharedPtr<SGraphPanel> OwnerPanel = GetOwnerPanel();
     if(!OwnerPanel.IsValid()) return;
-
-    constexpr float ConnectionThreshold = 10.0f;
+    
     UEdGraph* Graph = MovedNode->GetGraph();
     for (UEdGraphPin* MovedNodePin : MovedNode->Pins)
     {
@@ -78,7 +77,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
         for (UEdGraphPin* OtherPin : LinkedPins)
         {
             FVector2D OtherNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,OtherPin);
-            if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) > ConnectionThreshold)
+            if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) > CONNECTION_THRESHOLD)
             {
                  const FScopedTransaction Transaction(NSLOCTEXT("UnrealEd", "GraphEd_BreakPinLink", "Break Pin Link"));
                  MovedNodePin->BreakLinkTo(OtherPin);
@@ -99,7 +98,7 @@ void SMazeGraphNodeBase::MoveTo(const FVector2f& NewPosition, FNodeSet& NodeFilt
                 }
                 FVector2D MovedNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,MovedNodePin);;
                 FVector2D OtherNodePinPos = GetPinPositionInGraphSpace(OwnerPanel,OtherNodePin);
-                if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) <= ConnectionThreshold)
+                if (FVector2D::Distance(MovedNodePinPos, OtherNodePinPos) <= CONNECTION_THRESHOLD)
                 {
                     const UEdGraphSchema* Schema = Graph->GetSchema();
                     if (Schema && Schema->CanCreateConnection(MovedNodePin, OtherNodePin).Response == CONNECT_RESPONSE_MAKE)
