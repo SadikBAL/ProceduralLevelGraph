@@ -81,10 +81,10 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
     this->GraphNode = InNode;
 	this->HallGraphNodeRef = InNode;
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 12;
+	TitleFont.Size = 10;
 	this->SetPixelSnapping(EWidgetPixelSnapping::SnapToPixel);
 	UpdateGraphNode();
-	const FVector2D IconSize(20.0f, 20.0f);
+	const FVector2D IconSize(18.0f, 18.0f);
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icon/T_Button_Icon_Minus.T_Button_Icon_Minus")))
 		ButtonMinusBrush = MakeShareable(new FSlateImageBrush(Texture2D, IconSize));
 	if (UTexture2D* Texture2D = LoadObject<UTexture2D>(nullptr, TEXT("/ProceduralLevelGraph/Icon/T_Button_Icon_Plus.T_Button_Icon_Plus")))
@@ -155,15 +155,14 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 				}
 
 				float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
-				float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
 
 				if (ScaledOffset >= 0)
 				{
-					Padding = FMargin(AbsOffset2x, PinPadding, 0, 0);
+					Padding = FMargin(ScaledOffset, PinPadding, 0, 0);
 				}
 				else
 				{
-					Padding = FMargin(0, PinPadding, AbsOffset2x, 0);
+					Padding = FMargin(0, PinPadding, ScaledOffset, 0);
 				}
 	        }
 	    	else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Right) {
@@ -179,15 +178,14 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	    		}
 
 				float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
-				float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
-
+	    		
 				if (ScaledOffset >= 0)
 				{
-					Padding = FMargin(0, AbsOffset2x, PinPadding, 0);
+					Padding = FMargin(0, ScaledOffset, PinPadding, 0);
 				}
 				else
 				{
-					Padding = FMargin(0, 0, PinPadding, AbsOffset2x);
+					Padding = FMargin(0, 0, PinPadding, ScaledOffset);
 				}
 	    	}
 	        else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Down) {
@@ -202,15 +200,14 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	        	}
 	        	
 				float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
-				float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
 
 				if (ScaledOffset >= 0)
 				{
-					Padding = FMargin(AbsOffset2x, 0, 0, PinPadding);
+					Padding = FMargin(ScaledOffset, 0, 0, PinPadding);
 				}
 				else
 				{
-					Padding = FMargin(0, 0, AbsOffset2x, PinPadding);
+					Padding = FMargin(0, 0, ScaledOffset, PinPadding);
 				}
 	        }
 	        else if (HallGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Left) {
@@ -225,15 +222,14 @@ void SHallGraphNode::Construct(const FArguments& InArgs, UHallGraphNode* InNode)
 	        	}
 
 				float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
-				float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
 
 				if (ScaledOffset >= 0)
 				{
-					Padding = FMargin(PinPadding-4, AbsOffset2x, 0, 0); // Aşağı it (Solda -4 sabit boşluk vardı, korundu)
+					Padding = FMargin(PinPadding-4, ScaledOffset, 0, 0);
 				}
 				else
 				{
-					Padding = FMargin(PinPadding-4, 0, 0, AbsOffset2x); // Yukarı it
+					Padding = FMargin(PinPadding-4, 0, 0, ScaledOffset);
 				}
 	        }
 

@@ -18,7 +18,7 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	this->RoomGraphNodeRef =  Cast<URoomGraphNode>(GraphNode);
 	this->SetPixelSnapping(EWidgetPixelSnapping::SnapToPixel);
 	FSlateFontInfo TitleFont = FCoreStyle::Get().GetFontStyle("NormalFont");
-	TitleFont.Size = 12;
+	TitleFont.Size = 10;
 	UpdateGraphNode();
 	TSharedPtr<SOverlay> PinOverlay;
 	SAssignNew(PinOverlay, SOverlay)
@@ -62,15 +62,15 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 					LocalMult = -1;
 				}
 	    		float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
-	    		float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
+	    		//float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
 
 	    		if (ScaledOffset >= 0)
 	    		{
-	    			Padding = FMargin(AbsOffset2x, PinPadding, 0, 0);
+	    			Padding = FMargin(ScaledOffset, PinPadding, 0, 0);
 	    		}
 	    		else
 	    		{
-	    			Padding = FMargin(0, PinPadding, AbsOffset2x, 0);
+	    			Padding = FMargin(0, PinPadding, ScaledOffset, 0);
 	    		}
 	        }
 	    	else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Right) {
@@ -83,15 +83,15 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	    			LocalMult = -1;
 	    		}
 	    		float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
-	    		float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
+	    		//float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
 
 	    		if (ScaledOffset >= 0)
 	    		{
-	    			Padding = FMargin(0, AbsOffset2x, PinPadding, 0);
+	    			Padding = FMargin(0, ScaledOffset, PinPadding, 0);
 	    		}
 	    		else
 	    		{
-	    			Padding = FMargin(0, 0, PinPadding, AbsOffset2x);
+	    			Padding = FMargin(0, 0, PinPadding, ScaledOffset);
 	    		}
 	    	}
 	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Down) {
@@ -104,15 +104,15 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	        		LocalMult = -1;
 	        	}
 	        	float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
-	        	float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
+	        	//float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
 
 	        	if (ScaledOffset >= 0)
 	        	{
-	        		Padding = FMargin(AbsOffset2x, 0, 0, PinPadding);
+	        		Padding = FMargin(ScaledOffset, 0, 0, PinPadding);
 	        	}
 	        	else
 	        	{
-	        		Padding = FMargin(0, 0, AbsOffset2x, PinPadding);
+	        		Padding = FMargin(0, 0, ScaledOffset, PinPadding);
 	        	}
 	        }
 	        else if (RoomGraphNodeRef->GetRotatedPinDirection(CurrentPinWidget->PinData.DoorLocation) == EMazeDirection::Left) {
@@ -125,18 +125,17 @@ void SRoomGraphNode::Construct(const FArguments& InArgs, URoomGraphNode* InNode)
 	        		LocalMult = -1;
 	        	}
 	        	float ScaledOffset = LocalOffset * LocalMult * TILE_EDITOR_SCALE;
-	        	float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
+	        	//float AbsOffset2x = FMath::Abs(ScaledOffset) * 2.0f;
 
 	        	if (ScaledOffset >= 0)
 	        	{
-	        		Padding = FMargin(PinPadding-4, AbsOffset2x, 0, 0);
+	        		Padding = FMargin(PinPadding-4, ScaledOffset, 0, 0);
 	        	}
 	        	else
 	        	{
-	        		Padding = FMargin(PinPadding-4, 0, 0, AbsOffset2x);
+	        		Padding = FMargin(PinPadding-4, 0, 0, ScaledOffset);
 	        	}
 	        }
-
 	        PinOverlay->AddSlot()
 	        .HAlign(HAlign)
 	        .VAlign(VAlign)
