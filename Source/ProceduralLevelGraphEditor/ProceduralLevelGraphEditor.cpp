@@ -402,6 +402,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                             }
                         }
                     }
+                    RuntimeNode->DoorData[i].OwnerNode = RuntimeNode;
                 }
             }
         }

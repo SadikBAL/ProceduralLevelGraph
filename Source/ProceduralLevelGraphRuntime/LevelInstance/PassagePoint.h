@@ -13,12 +13,17 @@ class APassagePoint : public AActor
 public:
 	
 	APassagePoint();
+#if WITH_EDITORONLY_DATA
+	UPROPERTY()
+	TObjectPtr<ALevelBound> LevelBound = nullptr;
+#endif
 
 #if WITH_EDITOR
-	TObjectPtr<ALevelBound> LevelBound = nullptr;
 	ALevelBound* FindMyLevelBoundActor();
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
-	
+	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
+	EPassageSize PassageSize = EPassageSize::Double;
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	EMazeDirection DoorLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Passage Point Data", meta = (UIMin = "-50", UIMax = "50", ClampMin = "-50", ClampMax = "50", MultipleOf = "1", DisplayPriority="-1"))
@@ -34,12 +39,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	bool IsPassageDataMatchDoorData(FDoorData Data);
 
-#if WITH_EDITOR
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif
-
 protected:
-
+	
 	virtual void BeginPlay() override;
 	
 };

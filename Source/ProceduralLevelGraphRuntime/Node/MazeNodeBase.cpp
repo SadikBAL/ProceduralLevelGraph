@@ -114,3 +114,16 @@ FVector UMazeNodeBase::GetDoorOffset(FDoorData Door)
 	return FVector(0.0f,0.0f,0.0f);
 }
 
+EPassageSize UMazeNodeBase::GetConnectedPassageSize(UMazeNodeBase* ConnectedNode)
+{
+	for (FDoorData Data : DoorData)
+	{
+		if (Data.LinkedNode == ConnectedNode)
+		{
+			return Data.PassageSize;
+		}
+	}
+	return EPassageSize::Double;
+}
+
+

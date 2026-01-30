@@ -2,7 +2,9 @@
 
 #include "ProceduralLevelGraphTypes.generated.h"
 
+class UMazeNodeBase;
 class APassagePoint;
+
 constexpr float TILE_SCALE = 100.0f;
 constexpr float TILE_EDITOR_SCALE = 20.0f;
 constexpr float GRID_SNAP_SCALE = 10.0f;
@@ -47,7 +49,16 @@ enum class EPassageType : uint8
 {
 	Wall,
 	Door,
+	Door_Double,
+	Door_Vertical,
 	Empty
+};
+UENUM(BlueprintType)
+enum class EPassageSize : uint8
+{
+	Single,
+	Double,
+	Vertical
 };
 USTRUCT(BlueprintType)
 struct FPassageActorList
@@ -84,6 +95,8 @@ struct FDoorData
 {
 	GENERATED_BODY()
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
+	EPassageSize PassageSize = EPassageSize::Double;
+	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	EMazeDirection DoorLocation = EMazeDirection::Down;
 	UPROPERTY(EditAnywhere, Category = "Door Data")
 	EMazePinType DoorStatus = EMazePinType::Closed;
@@ -94,7 +107,9 @@ struct FDoorData
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	EMazeOrientation DoorDirection = EMazeOrientation::Horizontal;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
-	TObjectPtr<class UMazeNodeBase> LinkedNode;
+	TObjectPtr<UMazeNodeBase> LinkedNode;
+	UPROPERTY(VisibleAnywhere, Category = "Door Data")
+	TObjectPtr<UMazeNodeBase> OwnerNode;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	int Offset = 0;;
 	//UPROPERTY(VisibleAnywhere, Category = "Door Data")

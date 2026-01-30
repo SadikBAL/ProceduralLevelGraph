@@ -108,7 +108,9 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 				for (UStaticMeshComponent* MeshComp : MeshComponents)
 				{
 					MeshComp->SetVisibility(true);
-					if (Element.Key == EPassageType::Door)
+					if (Element.Key == EPassageType::Door 
+						|| Element.Key == EPassageType::Door_Double 
+						|| Element.Key == EPassageType::Door_Vertical)
 					{
 						MeshComp->SetCollisionProfileName(FName("Interactable_BlockDynamic"));
 					}

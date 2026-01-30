@@ -63,6 +63,7 @@ void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 				else if (const APassagePoint* PassagePoint = Cast<APassagePoint>(Actor))
 				{
 					FDoorData TempData;
+					TempData.PassageSize = PassagePoint->PassageSize;
 					TempData.DoorFloor = PassagePoint->DoorFloor;
 					TempData.Offset = PassagePoint->Offset;
 					//TempData.PassagePoint = PassagePoint;
@@ -134,7 +135,20 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 					{
 						if (Door.LinkedNode)
 						{
-							PassagePoint->UpdatePassageStatus(EPassageType::Door);
+							EPassageSize PassageSize = Door.LinkedNode->GetConnectedPassageSize(Door.OwnerNode);
+							if (PassageSize == EPassageSize::Double)
+							{
+								PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
+							}
+							else if (PassageSize == EPassageSize::Single)
+							{
+								PassagePoint->UpdatePassageStatus(EPassageType::Door);
+							}
+							else if (PassageSize == EPassageSize::Vertical)
+							{
+								PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
+							}
+							
 						}
 						else
 						{

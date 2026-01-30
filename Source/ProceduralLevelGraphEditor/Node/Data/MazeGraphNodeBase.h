@@ -35,7 +35,7 @@ public:
 	int RoomRotation = 0;
 	UPROPERTY(EditAnywhere, Category = "Node Process", meta = (Categories = "Area"))
 	FGameplayTagContainer RoomTags;
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TArray<FDoorData> DoorData;
 
 protected:

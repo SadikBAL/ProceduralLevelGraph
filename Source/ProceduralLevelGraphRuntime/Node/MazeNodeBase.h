@@ -38,6 +38,8 @@ public:
 	FVector GetDoorPosition(EMazeDirection Direction,FDoorData Door);
 	UFUNCTION(BlueprintCallable)
 	FVector GetDoorOffset(FDoorData Door);
+	UFUNCTION()
+	EPassageSize GetConnectedPassageSize(UMazeNodeBase* ConnectedNode);
 	
 protected:
 	UPROPERTY()
