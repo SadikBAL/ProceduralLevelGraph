@@ -102,9 +102,17 @@ void UHallGraphNode::OnHallDataAssetChanged()
 	{
 		if (HallData->HallCapTile)
 		{
-			if (HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>()->Width > RoomWidth)
+			if (AMazeTileLevelInstance* DefaultTile = HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>())
 			{
-				RoomWidth = HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>()->Width;
+				RoomWidth = DefaultTile->Width;
+				if (DefaultTile->DoorData.Num() > 0)
+				{
+					for (FDoorData& Element : DoorData)
+					{
+						Element.PassageSize = DefaultTile->DoorData[0].PassageSize;
+					}
+				}
+				
 			}
 		}
 		if (HallData->HallTiles.Num() > 0)
@@ -139,6 +147,11 @@ void UHallGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
 		{
 			HallData->OnHallDataChanged.RemoveAll(this);
 			HallData->OnHallDataChanged.AddUObject(this, &UHallGraphNode::OnHallDataAssetChanged);
+			if (HallData->HallCapTile)
+			{
+				HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>()->OnMazeTileLevelInstanceUpdated.RemoveAll(this);
+				HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>()->OnMazeTileLevelInstanceUpdated.AddUObject(this, &UHallGraphNode::OnHallDataAssetChanged);
+			}
 			OnHallDataAssetChanged();
 		}
 	}
