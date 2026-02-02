@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetNodeData(UMazeNodeBase* BaseNode);
 	
+	UFUNCTION(BlueprintCallable)
+	void SetNodeDataFromHall(UMazeNodeBase* BaseNode, EHallPartType HallPartType);
+	
 	UPROPERTY(VisibleAnywhere, Category="Level")
 	FMazeTileData TileData;
 	

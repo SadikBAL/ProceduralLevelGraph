@@ -88,6 +88,13 @@ enum class ERouteType : uint8
 	RouteC,
 	RouteD
 };
+UENUM(BlueprintType)
+enum class EHallPartType : uint8
+{
+	Start,
+	Tile,
+	End
+};
 
 
 USTRUCT(BlueprintType)
@@ -124,6 +131,12 @@ struct FMazeTileData
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Maze Nodes")
 	TArray<FDoorData> DoorData;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Maze Nodes")
+	bool bHallTile = false;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Maze Nodes")
+	EHallPartType HallPartType;
 	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
 	//TMap<EMazeDirection, EMazePinType> MazeDirectionMap;
 

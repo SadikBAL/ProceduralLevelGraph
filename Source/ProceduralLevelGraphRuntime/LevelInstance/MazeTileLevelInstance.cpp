@@ -6,15 +6,19 @@
 #include "PassagePoint.h"
 #include "Components/PointLightComponent.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
+#include "ProceduralLevelGraphRuntime/Node/HallNode.h"
 #include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
 
 #if WITH_EDITOR
 #include "UObject/ObjectSaveContext.h"
 #endif
 
+class UHallNode;
+
 AMazeTileLevelInstance::AMazeTileLevelInstance()
 {
-	LevelInstanceManager = CreateDefaultSubobject<ULevelInstanceManagerComponent>(TEXT("LevelInstanceManagerComponent"));
+	LevelInstanceManager = CreateDefaultSubobject<
+		ULevelInstanceManagerComponent>(TEXT("LevelInstanceManagerComponent"));
 	LevelInstanceManager->LevelInstance = this;
 	LevelInstanceManager->SetAutoActivate(true);
 }
@@ -121,6 +125,13 @@ void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)
 	LoadLevelAsync();
 }
 
+void AMazeTileLevelInstance::SetNodeDataFromHall(UMazeNodeBase* BaseNode, EHallPartType HallPartType)
+{
+	TileData.bHallTile = true;
+	TileData.HallPartType = HallPartType;
+	SetNodeData(BaseNode);
+}
+
 void AMazeTileLevelInstance::ApplyMazeTileData()
 {
 	if (ULevel* LoadedLevel = LevelStreamingDynamic->GetLoadedLevel())
@@ -131,7 +142,7 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 			{
 				for (FDoorData Door : TileData.DoorData)
 				{
-					if (PassagePoint->IsPassageDataMatchDoorData(Door))
+					if (TileData.bHallTile)
 					{
 						if (Door.LinkedNode)
 						{
@@ -148,7 +159,28 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 							{
 								PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
 							}
-							
+						}
+						else
+						{
+							PassagePoint->UpdatePassageStatus(EPassageType::Wall);
+						}
+					}
+					else if (PassagePoint->IsPassageDataMatchDoorData(Door))
+					{
+						if (Door.LinkedNode)
+						{
+							switch (Door.PassageSize)
+							{
+								case EPassageSize::Double:
+									PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
+									break;
+								case EPassageSize::Single:
+									PassagePoint->UpdatePassageStatus(EPassageType::Door);
+									break;
+								case EPassageSize::Vertical:
+									PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
+									break;
+							}
 						}
 						else
 						{
@@ -156,7 +188,6 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 						}
 					}
 				}
-				
 			}
 		}
 	}
@@ -206,7 +237,8 @@ void AMazeTileLevelInstance::OnEditorLevelLoadedAndShown()
 	else
 	{
 		FTimerHandle DummyHandle;
-		GetWorld()->GetTimerManager().SetTimer(DummyHandle, this, &ThisClass::OnEditorLevelLoadedAndShown, 1.0f, /*bLooping=*/ false);
+		GetWorld()->GetTimerManager().SetTimer(DummyHandle, this, &ThisClass::OnEditorLevelLoadedAndShown, 1.0f,
+		                                       /*bLooping=*/ false);
 	}
 }
 
@@ -220,14 +252,15 @@ void AMazeTileLevelInstance::LoadLevelAsync()
 	}
 	LevelStreamingDynamic = Cast<ULevelStreamingDynamic>(
 		ULevelStreamingDynamic::LoadLevelInstance(
-			this, LevelName, GetActorLocation(), GetActorRotation(), bSuccess, L"", ULevelStreamingDynamic::StaticClass()));
+			this, LevelName, GetActorLocation(), GetActorRotation(), bSuccess, L"",
+			ULevelStreamingDynamic::StaticClass()));
 	if (bSuccess)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Level Loading : %s"), *LevelStreamingDynamic->GetWorldAssetPackageName());
 		LevelStreamingDynamic->OnLevelShown.AddDynamic(this, &AMazeTileLevelInstance::OnLevelLoadedAndShown);
-		#if WITH_EDITOR 
-			OnEditorLevelLoadedAndShown();
-		#endif
+#if WITH_EDITOR
+		OnEditorLevelLoadedAndShown();
+#endif
 	}
 }
 
