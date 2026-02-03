@@ -8,6 +8,7 @@
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "ProceduralLevelGraphRuntime/Node/HallNode.h"
 #include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
+#include "ProceduralLevelGraphRuntime/Node/RouterNode.h"
 
 #if WITH_EDITOR
 #include "UObject/ObjectSaveContext.h"
@@ -152,6 +153,12 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 								{
 									if (UHallNode* HallNode = Cast<UHallNode>(TileData.DoorData[i].LinkedNode))
 									{
+										UE_LOG(LogTemp,Warning,TEXT("AQ"));
+										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
+									}
+									else if (URouterNode* RouterNode = Cast<URouterNode>(TileData.DoorData[i].LinkedNode))
+									{
+										UE_LOG(LogTemp,Warning,TEXT("AQ"));
 										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
 									}
 									else
@@ -159,14 +166,17 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 										EPassageSize PassageSize = TileData.DoorData[i].LinkedNode->GetConnectedPassageSize(TileData.DoorData[i].OwnerNode);
 										if (PassageSize == EPassageSize::Double)
 										{
+											UE_LOG(LogTemp,Warning,TEXT("AQ"));
 											PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
 										}
 										else if (PassageSize == EPassageSize::Single)
 										{
+											UE_LOG(LogTemp,Warning,TEXT("AQ"));
 											PassagePoint->UpdatePassageStatus(EPassageType::Door);
 										}
 										else if (PassageSize == EPassageSize::Vertical)
 										{
+											UE_LOG(LogTemp,Warning,TEXT("AQ"));
 											PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
 										}
 									}
@@ -182,6 +192,12 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 								{
 									if (UHallNode* HallNode = Cast<UHallNode>(TileData.DoorData[i].LinkedNode))
 									{
+										UE_LOG(LogTemp,Warning,TEXT("AQ"));
+										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
+									}
+									else if (URouterNode* RouterNode = Cast<URouterNode>(TileData.DoorData[i].LinkedNode))
+									{
+										UE_LOG(LogTemp,Warning,TEXT("AQ"));
 										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
 									}
 									else
@@ -189,14 +205,17 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 										EPassageSize PassageSize = TileData.DoorData[i].LinkedNode->GetConnectedPassageSize(TileData.DoorData[i].OwnerNode);
 										if (PassageSize == EPassageSize::Double)
 										{
+											UE_LOG(LogTemp,Warning,TEXT("AQ"));
 											PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
 										}
 										else if (PassageSize == EPassageSize::Single)
 										{
+											UE_LOG(LogTemp,Warning,TEXT("AQ"));
 											PassagePoint->UpdatePassageStatus(EPassageType::Door);
 										}
 										else if (PassageSize == EPassageSize::Vertical)
 										{
+											UE_LOG(LogTemp,Warning,TEXT("AQ"));
 											PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
 										}
 									}
@@ -214,6 +233,10 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 								if (TileData.DoorData[i].LinkedNode)
 								{
 									if (UHallNode* HallNode = Cast<UHallNode>(TileData.DoorData[i].LinkedNode))
+									{
+										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
+									}
+									else if (URouterNode* RouterNode = Cast<URouterNode>(TileData.DoorData[i].LinkedNode))
 									{
 										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
 									}
@@ -244,6 +267,10 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 								if (TileData.DoorData[i].LinkedNode)
 								{
 									if (UHallNode* HallNode = Cast<UHallNode>(TileData.DoorData[i].LinkedNode))
+									{
+										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
+									}
+									else if (URouterNode* RouterNode = Cast<URouterNode>(TileData.DoorData[i].LinkedNode))
 									{
 										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
 									}
