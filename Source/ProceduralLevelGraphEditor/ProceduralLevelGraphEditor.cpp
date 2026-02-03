@@ -342,6 +342,15 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 // Start Location its special node.
                 GraphAsset->StartNode = NewRuntimeNode;
             }
+            else if (URouterGraphNode* RouterEdNode = Cast<URouterGraphNode>(EdNode))
+            {
+                URouterNode* RuntimeRouter = NewObject<URouterNode>(GraphAsset);
+                RuntimeRouter->RoomHeight = RouterEdNode->RoomHeight;
+                RuntimeRouter->RoomWidth = RouterEdNode->RoomWidth;
+                RuntimeRouter->RoomLevelInstanceRefs = RouterEdNode->RoomLevelInstanceRef;
+                RuntimeRouter->HallLevelInstanceRefs = RouterEdNode->HallLevelInstanceRef;
+                NewRuntimeNode = RuntimeRouter;
+            }
             else if (URoomGraphNode* RoomEdNode = Cast<URoomGraphNode>(EdNode))
             {
                 URoomNode* RuntimeRoom = NewObject<URoomNode>(GraphAsset);
@@ -360,15 +369,7 @@ void FProceduralLevelGraphEditor::SaveGraphToRuntimeData()
                 NewRuntimeNode = RuntimeHall;
                 
             }
-            else if (URouterGraphNode* RouterEdNode = Cast<URouterGraphNode>(EdNode))
-            {
-                URouterNode* RuntimeRouter = NewObject<URouterNode>(GraphAsset);
-                RuntimeRouter->RoomHeight = RouterEdNode->RoomHeight;
-                RuntimeRouter->RoomWidth = RouterEdNode->RoomWidth;
-                RuntimeRouter->RoomLevelInstanceRefs = RouterEdNode->RoomLevelInstanceRef;
-                RuntimeRouter->HallLevelInstanceRefs = RouterEdNode->HallLevelInstanceRef;
-                NewRuntimeNode = RuntimeRouter;
-            }
+            
             
             if (NewRuntimeNode)
             {
