@@ -30,7 +30,7 @@ public:
 	void SetNodeData(UMazeNodeBase* BaseNode);
 	
 	UFUNCTION(BlueprintCallable)
-	void SetNodeDataFromHall(UMazeNodeBase* BaseNode, EHallPartType HallPartType);
+	void SetNodeDataFromHall(UMazeNodeBase* BaseNode, EMazeDirection DoorLocation);
 	
 	UPROPERTY(VisibleAnywhere, Category="Level")
 	FMazeTileData TileData;

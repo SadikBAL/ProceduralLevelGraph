@@ -100,9 +100,24 @@ void UHallGraphNode::OnHallDataAssetChanged()
 	RoomWidth = EMPTY_SIZE;
 	if (HallData)
 	{
-		if (HallData->HallCapTile)
+		if (HallData->HallDownCap)
 		{
-			if (AMazeTileLevelInstance* DefaultTile = HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>())
+			if (AMazeTileLevelInstance* DefaultTile = HallData->HallDownCap->GetDefaultObject<AMazeTileLevelInstance>())
+			{
+				RoomWidth = DefaultTile->Width;
+				if (DefaultTile->DoorData.Num() > 0)
+				{
+					for (FDoorData& Element : DoorData)
+					{
+						Element.PassageSize = DefaultTile->DoorData[0].PassageSize;
+					}
+				}
+				
+			}
+		}
+		if (HallData->HallUpCap)
+		{
+			if (AMazeTileLevelInstance* DefaultTile = HallData->HallUpCap->GetDefaultObject<AMazeTileLevelInstance>())
 			{
 				RoomWidth = DefaultTile->Width;
 				if (DefaultTile->DoorData.Num() > 0)
@@ -147,10 +162,15 @@ void UHallGraphNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
 		{
 			HallData->OnHallDataChanged.RemoveAll(this);
 			HallData->OnHallDataChanged.AddUObject(this, &UHallGraphNode::OnHallDataAssetChanged);
-			if (HallData->HallCapTile)
+			if (HallData->HallUpCap)
 			{
-				HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>()->OnMazeTileLevelInstanceUpdated.RemoveAll(this);
-				HallData->HallCapTile->GetDefaultObject<AMazeTileLevelInstance>()->OnMazeTileLevelInstanceUpdated.AddUObject(this, &UHallGraphNode::OnHallDataAssetChanged);
+				HallData->HallUpCap->GetDefaultObject<AMazeTileLevelInstance>()->OnMazeTileLevelInstanceUpdated.RemoveAll(this);
+				HallData->HallUpCap->GetDefaultObject<AMazeTileLevelInstance>()->OnMazeTileLevelInstanceUpdated.AddUObject(this, &UHallGraphNode::OnHallDataAssetChanged);
+			}
+			if (HallData->HallDownCap)
+			{
+				HallData->HallDownCap->GetDefaultObject<AMazeTileLevelInstance>()->OnMazeTileLevelInstanceUpdated.RemoveAll(this);
+				HallData->HallDownCap->GetDefaultObject<AMazeTileLevelInstance>()->OnMazeTileLevelInstanceUpdated.AddUObject(this, &UHallGraphNode::OnHallDataAssetChanged);
 			}
 			OnHallDataAssetChanged();
 		}

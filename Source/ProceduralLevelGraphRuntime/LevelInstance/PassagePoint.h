@@ -37,7 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	void UpdatePassageStatus(EPassageType Status) const;
 	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
-	bool IsPassageDataMatchDoorData(FDoorData Data);
+	bool IsPassageDataMatchDoorData(FDoorData Data, bool bHallDoor = false);
 
 protected:
 	

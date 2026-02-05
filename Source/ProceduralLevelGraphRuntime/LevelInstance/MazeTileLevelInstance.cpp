@@ -126,10 +126,10 @@ void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)
 	LoadLevelAsync();
 }
 
-void AMazeTileLevelInstance::SetNodeDataFromHall(UMazeNodeBase* BaseNode, EHallPartType HallPartType)
+void AMazeTileLevelInstance::SetNodeDataFromHall(UMazeNodeBase* BaseNode, EMazeDirection DoorLocation)
 {
 	TileData.bHallTile = true;
-	TileData.HallPartType = HallPartType;
+	TileData.DoorLocation = DoorLocation;
 	SetNodeData(BaseNode);
 }
 
@@ -145,146 +145,38 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 				{
 					if (TileData.bHallTile)
 					{
-						if (TileData.DoorData[i].OwnerNode->RoomRotation == 180 || TileData.DoorData[i].OwnerNode->RoomRotation == 270)
+						if (TileData.DoorData[i].DoorLocation == TileData.DoorLocation)
 						{
-							if (TileData.HallPartType == EHallPartType::Start && i == 0)
+							if (TileData.DoorData[i].LinkedNode)
 							{
-								if (TileData.DoorData[i].LinkedNode)
+								if (UHallNode* HallNode = Cast<UHallNode>(TileData.DoorData[i].LinkedNode))
 								{
-									if (UHallNode* HallNode = Cast<UHallNode>(TileData.DoorData[i].LinkedNode))
-									{
-										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
-									}
-									else if (URouterNode* RouterNode = Cast<URouterNode>(TileData.DoorData[i].LinkedNode))
-									{
-										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
-									}
-									else
-									{
-										EPassageSize PassageSize = TileData.DoorData[i].LinkedNode->GetConnectedPassageSize(TileData.DoorData[i].OwnerNode);
-										if (PassageSize == EPassageSize::Double)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
-										}
-										else if (PassageSize == EPassageSize::Single)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door);
-										}
-										else if (PassageSize == EPassageSize::Vertical)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
-										}
-									}
+									PassagePoint->UpdatePassageStatus(EPassageType::Empty);
+								}
+								else if (URouterNode* RouterNode = Cast<URouterNode>(TileData.DoorData[i].LinkedNode))
+								{
+									PassagePoint->UpdatePassageStatus(EPassageType::Empty);
 								}
 								else
 								{
-									PassagePoint->UpdatePassageStatus(EPassageType::Wall);
+									EPassageSize PassageSize = TileData.DoorData[i].LinkedNode->GetConnectedPassageSize(TileData.DoorData[i].OwnerNode);
+									if (PassageSize == EPassageSize::Double)
+									{
+										PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
+									}
+									else if (PassageSize == EPassageSize::Single)
+									{
+										PassagePoint->UpdatePassageStatus(EPassageType::Door);
+									}
+									else if (PassageSize == EPassageSize::Vertical)
+									{
+										PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
+									}
 								}
 							}
-							else if (TileData.HallPartType == EHallPartType::End && i == 1)
+							else
 							{
-								if (TileData.DoorData[i].LinkedNode)
-								{
-									if (UHallNode* HallNode = Cast<UHallNode>(TileData.DoorData[i].LinkedNode))
-									{
-										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
-									}
-									else if (URouterNode* RouterNode = Cast<URouterNode>(TileData.DoorData[i].LinkedNode))
-									{
-										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
-									}
-									else
-									{
-										EPassageSize PassageSize = TileData.DoorData[i].LinkedNode->GetConnectedPassageSize(TileData.DoorData[i].OwnerNode);
-										if (PassageSize == EPassageSize::Double)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
-										}
-										else if (PassageSize == EPassageSize::Single)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door);
-										}
-										else if (PassageSize == EPassageSize::Vertical)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
-										}
-									}
-								}
-								else
-								{
-									PassagePoint->UpdatePassageStatus(EPassageType::Wall);
-								}
-							}
-						}
-						else
-						{
-							if (TileData.HallPartType == EHallPartType::Start && i == 1)
-							{
-								if (TileData.DoorData[i].LinkedNode)
-								{
-									if (UHallNode* HallNode = Cast<UHallNode>(TileData.DoorData[i].LinkedNode))
-									{
-										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
-									}
-									else if (URouterNode* RouterNode = Cast<URouterNode>(TileData.DoorData[i].LinkedNode))
-									{
-										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
-									}
-									else
-									{
-										EPassageSize PassageSize = TileData.DoorData[i].LinkedNode->GetConnectedPassageSize(TileData.DoorData[i].OwnerNode);
-										if (PassageSize == EPassageSize::Double)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
-										}
-										else if (PassageSize == EPassageSize::Single)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door);
-										}
-										else if (PassageSize == EPassageSize::Vertical)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
-										}
-									}
-								}
-								else
-								{
-									PassagePoint->UpdatePassageStatus(EPassageType::Wall);
-								}
-							}
-							else if (TileData.HallPartType == EHallPartType::End && i == 0)
-							{
-								if (TileData.DoorData[i].LinkedNode)
-								{
-									if (UHallNode* HallNode = Cast<UHallNode>(TileData.DoorData[i].LinkedNode))
-									{
-										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
-									}
-									else if (URouterNode* RouterNode = Cast<URouterNode>(TileData.DoorData[i].LinkedNode))
-									{
-										PassagePoint->UpdatePassageStatus(EPassageType::Empty);
-									}
-									else
-									{
-										EPassageSize PassageSize = TileData.DoorData[i].LinkedNode->GetConnectedPassageSize(TileData.DoorData[i].OwnerNode);
-										if (PassageSize == EPassageSize::Double)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
-										}
-										else if (PassageSize == EPassageSize::Single)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door);
-										}
-										else if (PassageSize == EPassageSize::Vertical)
-										{
-											PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
-										}
-									}
-								}
-								else
-								{
-									PassagePoint->UpdatePassageStatus(EPassageType::Wall);
-								}
+								PassagePoint->UpdatePassageStatus(EPassageType::Wall);
 							}
 						}
 					}

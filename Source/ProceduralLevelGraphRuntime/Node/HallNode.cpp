@@ -26,15 +26,25 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 	}
 	int HallStartTileHeight = 0;
 	int HallEndTileHeight  = 0;
-	if (HallData->HallCapTile)
+	if (HallData->HallUpCap)
 	{
-		HallStartTileHeight = HallData->HallCapTile->GetDefaultObject<AHallLevelInstance>()->Height;
-		HallEndTileHeight	= HallData->HallCapTile->GetDefaultObject<AHallLevelInstance>()->Height;
+		HallStartTileHeight = HallData->HallUpCap->GetDefaultObject<AHallLevelInstance>()->Height;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("HallNode->SpawnMazeObject: there is no HallCapTile!"));
+		UE_LOG(LogTemp, Warning, TEXT("HallNode->SpawnMazeObject: there is no HallUpCap!"));
 	}
+	if (HallData->HallDownCap)
+	{
+		HallEndTileHeight	= HallData->HallDownCap->GetDefaultObject<AHallLevelInstance>()->Height;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HallNode->SpawnMazeObject: there is no HallDownCap!"));
+	}
+	
+	FRotator RoomRotator = FRotator::ZeroRotator;
+	RoomRotator.Yaw = RoomRotation;
 	
 	FVector TileSpawnLocation = Position;
 	switch (Direction)
@@ -58,29 +68,38 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		default:
 		break;
 	}
-	FRotator Rotator = FRotator::ZeroRotator;
-	Rotator.Yaw = RoomRotation;
-	
-	if (HallData->HallCapTile)
+
+	TSubclassOf<AHallLevelInstance> Start = nullptr;
+	TSubclassOf<AHallLevelInstance> End = nullptr;
+	bool bResult = false;
+	if (Direction == EMazeDirection::Up || Direction == EMazeDirection::Right)
 	{
-		FRotator HallTileRotator = FRotator::ZeroRotator;
+		Start = HallData->HallUpCap;
+		End = HallData->HallDownCap;
+		bResult = true;
+	}
+	else
+	{
+		Start = HallData->HallDownCap;
+		End = HallData->HallUpCap;
+	}
+	if (RoomRotation == 90 || RoomRotation == 0)
+		bResult = !bResult;
+	if (Start)
+	{
 		switch (Direction)
 		{
 			case EMazeDirection::Up:
 				TileSpawnLocation -= FVector(0,HallStartTileHeight * TILE_SCALE * 0.5,0);
-				HallTileRotator.Yaw = 0;
 				break;
 			case EMazeDirection::Down:
 				TileSpawnLocation += FVector(0,HallStartTileHeight * TILE_SCALE * 0.5,0);
-				HallTileRotator.Yaw = 180;
 				break;
 			case EMazeDirection::Left:
 				TileSpawnLocation -= FVector(HallStartTileHeight * TILE_SCALE * 0.5,0,0);
-				HallTileRotator.Yaw = 270;
 				break;
 			case EMazeDirection::Right:
 				TileSpawnLocation += FVector(HallStartTileHeight * TILE_SCALE * 0.5,0,0);
-				HallTileRotator.Yaw = 90;
 				break;
 			default:
 				break;
@@ -89,15 +108,18 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AActor* MazeObject = World->SpawnActor<AActor>(
-			HallData->HallCapTile,
+			Start,
 			TileSpawnLocation,
-			HallTileRotator,
+			RoomRotator,
 			SpawnParams
 		);
 		if (MazeObject)
 		{
 			AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(MazeObject);
-			SpawnedLevelInstance->SetNodeDataFromHall(this,EHallPartType::Start);
+			if (bResult)
+				SpawnedLevelInstance->SetNodeDataFromHall(this,EMazeDirection::Up);
+			else
+				SpawnedLevelInstance->SetNodeDataFromHall(this,EMazeDirection::Down);
 			UE_LOG(LogTemp, Log, TEXT("HallData->HallStartTile %s Spawned successful."), *MazeObject->GetName());
 		}
 		else
@@ -158,13 +180,13 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 				AActor* MazeObject = World->SpawnActor<AActor>(
 					HallData->HallTiles[RandomIndex],
 					TileSpawnLocation,
-					Rotator,
+					RoomRotator,
 					SpawnParams
 				);
 				if (MazeObject)
 				{
 					AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(MazeObject);
-					SpawnedLevelInstance->SetNodeDataFromHall(this,EHallPartType::Tile);
+					SpawnedLevelInstance->SetNodeDataFromHall(this,EMazeDirection::None);
 					UE_LOG(LogTemp, Log, TEXT("HallData->HallTiles %s Spawned successful."), *MazeObject->GetName());
 				}
 				else
@@ -200,26 +222,21 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		}
 
 	}
-	if (HallData->HallCapTile)
+	if (End)
 	{
-		FRotator HallTileRotator = FRotator::ZeroRotator;
 		switch (Direction)
 		{
 		case EMazeDirection::Up:
 			TileSpawnLocation -= FVector(0,HallEndTileHeight * TILE_SCALE * 0.5,0);
-			HallTileRotator.Yaw = 180;
 			break;
 		case EMazeDirection::Down:
 			TileSpawnLocation += FVector(0,HallEndTileHeight * TILE_SCALE * 0.5,0);
-			HallTileRotator.Yaw = 0;
 			break;
 		case EMazeDirection::Left:
 			TileSpawnLocation -= FVector(HallEndTileHeight * TILE_SCALE * 0.5,0,0);
-			HallTileRotator.Yaw = 90;
 			break;
 		case EMazeDirection::Right:
 			TileSpawnLocation += FVector(HallEndTileHeight * TILE_SCALE * 0.5,0,0);
-			HallTileRotator.Yaw = 270;
 			break;
 		default:
 			break;
@@ -228,15 +245,18 @@ void UHallNode::SpawnMazeObject(UWorld* World, FVector Position, EMazeDirection 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AActor* MazeObject = World->SpawnActor<AActor>(
-			HallData->HallCapTile,
+			End,
 			TileSpawnLocation,
-			HallTileRotator,
+			RoomRotator,
 			SpawnParams
 		);
 		if (MazeObject)
 		{
 			AMazeTileLevelInstance* SpawnedLevelInstance = Cast<AMazeTileLevelInstance>(MazeObject);
-			SpawnedLevelInstance->SetNodeDataFromHall(this,EHallPartType::End);
+			if (bResult)
+				SpawnedLevelInstance->SetNodeDataFromHall(this,EMazeDirection::Down);
+			else
+				SpawnedLevelInstance->SetNodeDataFromHall(this,EMazeDirection::Up);
 			UE_LOG(LogTemp, Log, TEXT("HallData->HallEndTile %s Spawned successful."), *MazeObject->GetName());
 		}
 		else

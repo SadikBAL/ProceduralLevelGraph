@@ -17,8 +17,14 @@ public:
 	UPROPERTY ( EditDefaultsOnly , BlueprintReadOnly , Category = "Hall" )
 	TArray<TSubclassOf<AHallLevelInstance>> HallTiles;
 	
+	//UPROPERTY ( EditDefaultsOnly , BlueprintReadOnly , Category = "Hall" )
+	//TSubclassOf<AHallLevelInstance> HallCapTile;
+	
 	UPROPERTY ( EditDefaultsOnly , BlueprintReadOnly , Category = "Hall" )
-	TSubclassOf<AHallLevelInstance> HallCapTile;
+	TSubclassOf<AHallLevelInstance> HallUpCap;
+	
+	UPROPERTY ( EditDefaultsOnly , BlueprintReadOnly , Category = "Hall" )
+	TSubclassOf<AHallLevelInstance> HallDownCap;
 	
 #if WITH_EDITOR
 	DECLARE_MULTICAST_DELEGATE(FOnHallDataChanged);

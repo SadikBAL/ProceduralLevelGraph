@@ -136,6 +136,9 @@ struct FMazeTileData
 	bool bHallTile = false;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Maze Nodes")
+	EMazeDirection DoorLocation;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Maze Nodes")
 	EHallPartType HallPartType;
 	//UPROPERTY(VisibleAnywhere, Category = "Maze Node")
 	//TMap<EMazeDirection, EMazePinType> MazeDirectionMap;

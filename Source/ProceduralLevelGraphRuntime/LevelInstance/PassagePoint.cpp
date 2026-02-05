@@ -151,8 +151,21 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 	}
 }
 
-bool APassagePoint::IsPassageDataMatchDoorData(FDoorData Data)
+bool APassagePoint::IsPassageDataMatchDoorData(FDoorData Data, bool bHallDoor)
 {
+	//Hall Calculation Hall has only 2 door. Up and Down
+	if (bHallDoor)
+	{
+		if (Data.DoorLocation == DoorLocation)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	//Normal Room Calculation
 	if (Data.DoorLocation != DoorLocation)
 	{
 		return false;
