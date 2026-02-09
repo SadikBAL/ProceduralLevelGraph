@@ -12,7 +12,6 @@ APassagePoint::APassagePoint()
 
 #if WITH_EDITOR
 
-
 void APassagePoint::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	const FName PropertyName = (PropertyChangedEvent.Property != nullptr) 
@@ -103,6 +102,7 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 			{
 				if (!ActorTemp)
 					continue;
+				ActorTemp->SetActorHiddenInGame(false);
 				TInlineComponentArray<UStaticMeshComponent*> MeshComponents;
 				ActorTemp->GetComponents(MeshComponents);
 				for (UStaticMeshComponent* MeshComp : MeshComponents)
@@ -133,6 +133,7 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 			{
 				if (!ActorTemp)
 					continue;
+				ActorTemp->SetActorHiddenInGame(true);
 				TInlineComponentArray<UStaticMeshComponent*> MeshComponents;
 				ActorTemp->GetComponents(MeshComponents);
 				for (UStaticMeshComponent* MeshComp : MeshComponents)

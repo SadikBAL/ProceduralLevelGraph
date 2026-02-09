@@ -50,6 +50,8 @@ public:
 	UFUNCTION()
 	void ApplyMazeTileData();
 	UFUNCTION()
+	void RecreateReplicatedActors();
+	UFUNCTION()
 	void GroupActors();
 	UFUNCTION()
 	void OnEditorLevelLoadedAndShown();

@@ -3,8 +3,9 @@
 // #include "FileHelpers.h"
 #include "LevelBound.h"
 #include "LevelInstanceManagerComponent.h"
+#include "LevelInstanceReplicatedInterface.h"
 #include "PassagePoint.h"
-#include "Components/PointLightComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "ProceduralLevelGraphRuntime/Node/HallNode.h"
 #include "ProceduralLevelGraphRuntime/Node/MazeNodeBase.h"
@@ -206,6 +207,46 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 			}
 		}
 	}
+	RecreateReplicatedActors();
+}
+
+void AMazeTileLevelInstance::RecreateReplicatedActors()
+{
+	if (ULevel* LoadedLevel = LevelStreamingDynamic->GetLoadedLevel())
+	{
+		for (AActor* OriginalActor : LoadedLevel->Actors)
+        {
+			if (OriginalActor && OriginalActor->GetIsReplicated() && !OriginalActor->IsHidden())
+			{
+				if (OriginalActor->GetClass()->ImplementsInterface(ULevelInstanceReplicatedInterface::StaticClass()))
+				{
+					if (UKismetSystemLibrary::IsServer(this))
+					{
+						FActorSpawnParameters SpawnParams;
+						SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+						FTransform SpawnTransform = OriginalActor->GetActorTransform();
+						AActor* NewActor = GetWorld()->SpawnActor<AActor>(
+							OriginalActor->GetClass(),
+							SpawnTransform,
+							SpawnParams
+						);
+						if (NewActor)
+						{
+							if (NewActor->GetClass()->ImplementsInterface(ULevelInstanceReplicatedInterface::StaticClass()))
+							{
+								ILevelInstanceReplicatedInterface::Execute_ReplaceActor(NewActor, OriginalActor);
+							}
+						}
+						OriginalActor->Destroy(true);
+					}
+					else
+					{
+						OriginalActor->Destroy(true);
+					}
+				}
+			}
+        }
+	}
 }
 
 void AMazeTileLevelInstance::GroupActors()
@@ -290,3 +331,4 @@ void AMazeTileLevelInstance::OnLevelLoadedAndShown()
 		ApplyMazeTileData();
 	}
 }
+
