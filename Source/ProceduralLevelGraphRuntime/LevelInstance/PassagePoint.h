@@ -26,7 +26,7 @@ public:
 	EPassageSize PassageSize = EPassageSize::Double;
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	EMazeDirection DoorLocation;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Passage Point Data", meta = (UIMin = "-50", UIMax = "50", ClampMin = "-50", ClampMax = "50", MultipleOf = "1", DisplayPriority="-1"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Passage Point Data", meta = (UIMin = "-200", UIMax = "200", ClampMin = "-200", ClampMax = "200", MultipleOf = "1", DisplayPriority="-1"))
 	int Offset = 0;
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	EMazeFloor DoorFloor;

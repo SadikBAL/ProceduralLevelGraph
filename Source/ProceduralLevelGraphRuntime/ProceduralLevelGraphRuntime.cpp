@@ -8,6 +8,7 @@
 #include "NavigationSystem.h"
 #include "ProceduralLevelGraphTypes.h"
 #include "Components/BrushComponent.h"
+#include "LevelInstance/LevelInstanceReplicatedInterface.h"
 #include "LevelInstance/MazeTileLevelInstance.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 #include "Node/EntranceRoom.h"
@@ -78,6 +79,10 @@ void UProceduralLevelGraphRuntime::DeleteMaze()
 			ActorRef->Destroy();
 		}
 		else if (ActorRef && ActorRef->IsA(ANavMeshBoundsVolume::StaticClass()))
+		{
+			ActorRef->Destroy();
+		}
+		else if (ActorRef && ActorRef->GetClass()->ImplementsInterface(ULevelInstanceReplicatedInterface::StaticClass()))
 		{
 			ActorRef->Destroy();
 		}
