@@ -55,6 +55,17 @@ void URoomGraphNode::OnTileBlueprintsChanged()
     {
         RemovePin(Pins[i]);
     }
+
+    // Save editor-assigned DoorStatus values keyed by stable DoorID before clearing
+    TMap<int32, EMazePinType> SavedDoorStatuses;
+    for (const FDoorData& Door : DoorData)
+    {
+        if (Door.DoorID != INDEX_NONE)
+        {
+            SavedDoorStatuses.Add(Door.DoorID, Door.DoorStatus);
+        }
+    }
+
     DoorData.Empty();
     RoomWidth = EMPTY_SIZE;
     RoomHeight = EMPTY_SIZE;
@@ -77,6 +88,19 @@ void URoomGraphNode::OnTileBlueprintsChanged()
             }
         }
     }
+
+    // Restore previously edited DoorStatus values by matching DoorID
+    for (FDoorData& Door : DoorData)
+    {
+        if (Door.DoorID != INDEX_NONE)
+        {
+            if (const EMazePinType* FoundStatus = SavedDoorStatuses.Find(Door.DoorID))
+            {
+                Door.DoorStatus = *FoundStatus;
+            }
+        }
+    }
+
     AllocateDefaultPins();
     if (HasAnyFlags(RF_ClassDefaultObject | RF_NeedLoad))
     {

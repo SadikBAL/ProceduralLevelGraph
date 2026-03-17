@@ -102,6 +102,8 @@ struct FDoorData
 {
 	GENERATED_BODY()
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
+	int32 DoorID = -1;
+	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	EPassageSize PassageSize = EPassageSize::Double;
 	UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	EMazeDirection DoorLocation = EMazeDirection::Down;
@@ -121,7 +123,7 @@ struct FDoorData
 	int Offset = 0;;
 	//UPROPERTY(VisibleAnywhere, Category = "Door Data")
 	//TObjectPtr<const APassagePoint> PassagePoint;
-	
+
 };
 
 USTRUCT(BlueprintType)

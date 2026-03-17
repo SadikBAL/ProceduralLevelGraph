@@ -8,8 +8,6 @@ APassagePoint::APassagePoint()
 {
 }
 
-
-
 #if WITH_EDITOR
 
 void APassagePoint::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -152,6 +150,11 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 	}
 }
 
+void APassagePoint::UpdateDoorStatus(EMazePinType Status)
+{
+	DoorStatus = Status;
+}
+
 bool APassagePoint::IsPassageDataMatchDoorData(FDoorData Data, bool bHallDoor)
 {
 	//Hall Calculation Hall has only 2 door. Up and Down
@@ -181,6 +184,7 @@ bool APassagePoint::IsPassageDataMatchDoorData(FDoorData Data, bool bHallDoor)
 	}
 	return true;
 }
+
 
 
 

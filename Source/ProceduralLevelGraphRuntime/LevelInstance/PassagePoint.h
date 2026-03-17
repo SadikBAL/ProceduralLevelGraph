@@ -22,6 +22,8 @@ public:
 	ALevelBound* FindMyLevelBoundActor();
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
+	
+	//Editable Door Data Start
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	EPassageSize PassageSize = EPassageSize::Double;
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
@@ -30,12 +32,21 @@ public:
 	int Offset = 0;
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	EMazeFloor DoorFloor;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
+	EMazePinType DoorStatus = EMazePinType::Closed;
+	//Editable Door Data End
+	
+	//Test Data
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	EPassageType CurrentPassageStatus;
+	//Test Data End
+	
 	UPROPERTY(EditAnywhere, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	TMap<EPassageType, FPassageActorList> PassageActorMap;
 	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	void UpdatePassageStatus(EPassageType Status) const;
+	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
+	void UpdateDoorStatus(EMazePinType Status);
 	UFUNCTION(BlueprintCallable, Category = "Passage Point Data", meta=(DisplayPriority="-1"))
 	bool IsPassageDataMatchDoorData(FDoorData Data, bool bHallDoor = false);
 

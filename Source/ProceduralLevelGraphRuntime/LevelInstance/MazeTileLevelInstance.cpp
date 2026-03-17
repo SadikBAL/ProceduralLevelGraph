@@ -49,6 +49,21 @@ void AMazeTileLevelInstance::PreSave(FObjectPreSaveContext SaveContext)
 void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 {
 	UE_LOG(LogTemp, Log, TEXT("AMazeTileLevelInstance::LoadMapData()"));
+
+	// Build a position-keyed map of existing DoorIDs to preserve stable IDs across updates
+	TMap<FString, int32> ExistingDoorIDs;
+	int32 MaxID = -1;
+	for (const FDoorData& Existing : DoorData)
+	{
+		if (Existing.DoorID == INDEX_NONE)
+			continue;
+		FString Key = FString::Printf(TEXT("%.1f_%.1f_%d_%d"),
+			Existing.DoorOffset.X, Existing.DoorOffset.Y,
+			(int32)Existing.DoorFloor, (int32)Existing.DoorLocation);
+		ExistingDoorIDs.Add(Key, Existing.DoorID);
+		MaxID = FMath::Max(MaxID, Existing.DoorID);
+	}
+
 	DoorData.Empty();
 	if (UPackage* Package = LoadPackage(nullptr, *LevelName, LOAD_None))
 	{
@@ -76,9 +91,8 @@ void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 					if (PassagePoint->GetActorRotation().Yaw == 0)
 					{
 						TempData.DoorDirection = EMazeOrientation::Vertical;
-						//To-Do DoorStatus must be remembered.
 						TempData.DoorStatus = EMazePinType::Closed;
-						TempData.DoorOffset.X = PassagePoint->GetActorLocation().X / 100.0f;;
+						TempData.DoorOffset.X = PassagePoint->GetActorLocation().X / 100.0f;
 						TempData.DoorOffset.Y = 0;
 						if (PassagePoint->GetActorLocation().Y > 0)
 						{
@@ -93,7 +107,7 @@ void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 					{
 						TempData.DoorDirection = EMazeOrientation::Horizontal;
 						TempData.DoorStatus = EMazePinType::Closed;
-						TempData.DoorOffset.Y = PassagePoint->GetActorLocation().Y / 100.0f;;
+						TempData.DoorOffset.Y = PassagePoint->GetActorLocation().Y / 100.0f;
 						TempData.DoorOffset.X = 0;
 						if (PassagePoint->GetActorLocation().X > 0)
 						{
@@ -104,6 +118,20 @@ void AMazeTileLevelInstance::LoadMapData(TArray<AActor*>& IgnoreList)
 							TempData.DoorLocation = EMazeDirection::Left;
 						}
 					}
+
+					// Assign stable DoorID: reuse existing ID if position matches, otherwise mint a new one
+					FString Key = FString::Printf(TEXT("%.1f_%.1f_%d_%d"),
+						TempData.DoorOffset.X, TempData.DoorOffset.Y,
+						(int32)TempData.DoorFloor, (int32)TempData.DoorLocation);
+					if (const int32* FoundID = ExistingDoorIDs.Find(Key))
+					{
+						TempData.DoorID = *FoundID;
+					}
+					else
+					{
+						TempData.DoorID = ++MaxID;
+					}
+
 					DoorData.Add(TempData);
 				}
 			}
@@ -164,14 +192,17 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 									if (PassageSize == EPassageSize::Double)
 									{
 										PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
+										PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									}
 									else if (PassageSize == EPassageSize::Single)
 									{
 										PassagePoint->UpdatePassageStatus(EPassageType::Door);
+										PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									}
 									else if (PassageSize == EPassageSize::Vertical)
 									{
 										PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
+										PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									}
 								}
 							}
@@ -189,12 +220,15 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 							{
 								case EPassageSize::Double:
 									PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
+									PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									break;
 								case EPassageSize::Single:
 									PassagePoint->UpdatePassageStatus(EPassageType::Door);
+									PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									break;
 								case EPassageSize::Vertical:
 									PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
+									PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									break;
 							}
 						}

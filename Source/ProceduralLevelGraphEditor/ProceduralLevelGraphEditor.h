@@ -14,6 +14,7 @@ class FProceduralLevelGraphEditor : public FAssetEditorToolkit, public FNotifyHo
 public:
     static const FName GraphCanvasTabId;
     static const FName PropertiesTabId;
+    FDelegateHandle OnGraphChangedDelegateHandle;
     void HandleDelete();
     bool CanDelete();
     FProceduralLevelGraphEditor();

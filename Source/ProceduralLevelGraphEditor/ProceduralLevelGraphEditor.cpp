@@ -32,7 +32,7 @@
 const FName FProceduralLevelGraphEditor::GraphCanvasTabId(TEXT("ProceduralLevelGraphEditor_GraphCanvas"));
 const FName FProceduralLevelGraphEditor::PropertiesTabId(TEXT("ProceduralLevelGraphEditor_Properties"));
 
-FDelegateHandle OnGraphChangedDelegateHandle;
+
 
 void FProceduralLevelGraphEditor::HandleDelete()
 {

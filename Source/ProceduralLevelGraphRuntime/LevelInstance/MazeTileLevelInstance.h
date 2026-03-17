@@ -63,7 +63,7 @@ public:
 	bool bLevelLoadedAndShown = false;
 	UPROPERTY()
 	ULevelStreamingDynamic* LevelStreamingDynamic = nullptr;
-	UPROPERTY(VisibleAnywhere, Category = "Level")
+	UPROPERTY(EditAnywhere, Category = "Level")
 	TArray<FDoorData> DoorData;
 	UPROPERTY()
 	FGameplayTagContainer RoomTags;
