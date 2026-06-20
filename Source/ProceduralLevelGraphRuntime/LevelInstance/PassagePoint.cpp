@@ -90,7 +90,7 @@ void APassagePoint::BeginPlay()
 	Super::BeginPlay();
 }
 
-void APassagePoint::UpdatePassageStatus(EPassageType Status) const
+void APassagePoint::UpdatePassageStatus(EPassageType Status)
 {
 	for (auto Element : PassageActorMap)
 	{
@@ -114,7 +114,7 @@ void APassagePoint::UpdatePassageStatus(EPassageType Status) const
 					}
 					else
 					{
-						MeshComp->SetCollisionProfileName(FName("QueryAndPhysics"));
+						MeshComp->SetCollisionProfileName(FName("BlockAll"));
 					}
 				}
 				TInlineComponentArray<UPointLightComponent*> LightComponents;

@@ -15,7 +15,6 @@
 
 UProceduralLevelGraphRuntime::UProceduralLevelGraphRuntime()
 {
-	
 }
 
 #if WITH_EDITOR
@@ -120,6 +119,12 @@ void UProceduralLevelGraphRuntime:: SpawnNode(UWorld* World, UMazeNodeBase* Maze
 	{
 		SpawnedNodes.Add(MazeNodeBase);
 		MazeNodeBase->SpawnMazeObjectFromNode(World,Location,Direction,LinkedNode);
+		
+		if (!CurrentLevelCoordinateSystem)
+		{
+			CurrentLevelCoordinateSystem = NewObject<UProceduralLevelCoordinateSystem>();
+		}
+		
 		for (int i = 0; i < MazeNodeBase->DoorData.Num(); i++)
 		{
 			if (MazeNodeBase->DoorData[i].LinkedNode)
@@ -137,6 +142,12 @@ void UProceduralLevelGraphRuntime::SpawnMaze(UObject* WorldContextObject)
 	{
 		UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
 		SpawnedNodes.Empty();
+		
+		if (!CurrentLevelCoordinateSystem)
+		{
+			CurrentLevelCoordinateSystem = NewObject<UProceduralLevelCoordinateSystem>();
+		}
+		
 		//Its Recursive and Create all Maze of Parts
 		SpawnNode(GEngine->GetWorldFromContextObject(World, EGetWorldErrorMode::LogAndReturnNull),Entrance,EMazeDirection::None,Entrance->GetRoomPosition());
 		//Spawn Navmesh

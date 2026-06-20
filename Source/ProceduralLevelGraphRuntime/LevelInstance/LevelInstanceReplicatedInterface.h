@@ -14,5 +14,5 @@ class ILevelInstanceReplicatedInterface
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void ReplaceActor(AActor* Source);
+	void ReplaceActor(AActor* Source, AActor* PassagePoint);
 };

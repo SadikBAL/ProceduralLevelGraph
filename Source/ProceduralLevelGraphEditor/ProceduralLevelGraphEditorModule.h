@@ -13,7 +13,9 @@ public:
     
     virtual void StartupModule() override;
     virtual void ShutdownModule() override;
-    
+
+    PROCEDURALLEVELGRAPHEDITOR_API void UpdateMazeLevelInstanceBlueprintsDoorRef(FString LevelInstanceName, TArray<AActor*>& IgnoreList);
+
 private:
     TSharedPtr<IAssetTypeActions> ProceduralLevelGraphAssetTypeAction;
     TSharedPtr<IAssetTypeActions> HallDataAssetAssetTypeAction;
@@ -25,5 +27,4 @@ private:
     
     void OnDeleteActorsBegin();
     void OnObjectPreSave(UObject* Object, FObjectPreSaveContext ObjectPreSaveContext);
-    void UpdateMazeLevelInstanceBlueprintsDoorRef(FString LevelInstanceName,TArray<AActor*>& IgnoreList);
 };

@@ -5,6 +5,8 @@
 #include "LevelInstanceManagerComponent.h"
 #include "LevelInstanceReplicatedInterface.h"
 #include "PassagePoint.h"
+#include "Engine/PackageMapClient.h"
+#include "GameFramework/GameModeBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "ProceduralLevelGraphRuntime/ProceduralLevelGraphTypes.h"
 #include "ProceduralLevelGraphRuntime/Node/HallNode.h"
@@ -34,6 +36,23 @@ void AMazeTileLevelInstance::OnLevelInstanceLoaded()
 bool AMazeTileLevelInstance::IsLoadingEnabled() const
 {
 	return false;
+}
+
+void AMazeTileLevelInstance::PostNetInit()
+{
+	Super::PostNetInit();
+
+	LoadLevelAsync();
+}
+
+void AMazeTileLevelInstance::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+FString AMazeTileLevelInstance::GetNetID()
+{
+	return GetWorld()->GetNetDriver()->GuidCache->GetNetGUID(this).ToString() ;
 }
 
 #if WITH_EDITOR
@@ -152,7 +171,7 @@ void AMazeTileLevelInstance::SetNodeData(UMazeNodeBase* BaseNode)
 {
 	TileData.DoorData = BaseNode->DoorData;
 	RoomTags = BaseNode->RoomTags;
-	LoadLevelAsync();
+	//LoadLevelAsync();
 }
 
 void AMazeTileLevelInstance::SetNodeDataFromHall(UMazeNodeBase* BaseNode, EMazeDirection DoorLocation)
@@ -192,18 +211,16 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 									if (PassageSize == EPassageSize::Double)
 									{
 										PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
-										PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									}
 									else if (PassageSize == EPassageSize::Single)
 									{
 										PassagePoint->UpdatePassageStatus(EPassageType::Door);
-										PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									}
 									else if (PassageSize == EPassageSize::Vertical)
 									{
 										PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
-										PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									}
+									PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 								}
 							}
 							else
@@ -220,17 +237,16 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 							{
 								case EPassageSize::Double:
 									PassagePoint->UpdatePassageStatus(EPassageType::Door_Double);
-									PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
+									
 									break;
 								case EPassageSize::Single:
 									PassagePoint->UpdatePassageStatus(EPassageType::Door);
-									PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									break;
 								case EPassageSize::Vertical:
 									PassagePoint->UpdatePassageStatus(EPassageType::Door_Vertical);
-									PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 									break;
 							}
+							PassagePoint->UpdateDoorStatus(TileData.DoorData[i].DoorStatus);
 						}
 						else
 						{
@@ -241,12 +257,11 @@ void AMazeTileLevelInstance::ApplyMazeTileData()
 			}
 		}
 	}
-	RecreateReplicatedActors();
 }
 
 void AMazeTileLevelInstance::RecreateReplicatedActors()
 {
-	if (ULevel* LoadedLevel = LevelStreamingDynamic->GetLoadedLevel())
+	/*if (ULevel* LoadedLevel = LevelStreamingDynamic->GetLoadedLevel())
 	{
 		for (AActor* OriginalActor : LoadedLevel->Actors)
         {
@@ -256,6 +271,7 @@ void AMazeTileLevelInstance::RecreateReplicatedActors()
 				{
 					if (UKismetSystemLibrary::IsServer(this))
 					{
+						APassagePoint* PassagePoint = FindOwnerPasssagePoint(LoadedLevel, OriginalActor);
 						FActorSpawnParameters SpawnParams;
 						SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 						FTransform SpawnTransform = OriginalActor->GetActorTransform();
@@ -268,7 +284,7 @@ void AMazeTileLevelInstance::RecreateReplicatedActors()
 						{
 							if (NewActor->GetClass()->ImplementsInterface(ULevelInstanceReplicatedInterface::StaticClass()))
 							{
-								ILevelInstanceReplicatedInterface::Execute_ReplaceActor(NewActor, OriginalActor);
+								ILevelInstanceReplicatedInterface::Execute_ReplaceActor(NewActor, OriginalActor, PassagePoint);
 							}
 						}
 						OriginalActor->Destroy(true);
@@ -280,7 +296,23 @@ void AMazeTileLevelInstance::RecreateReplicatedActors()
 				}
 			}
         }
+	}*/
+}
+
+APassagePoint* AMazeTileLevelInstance::FindOwnerPasssagePoint(ULevel* Level, AActor* Actor)
+{
+	for (AActor* OriginalActor : Level->Actors)
+	{
+		if (APassagePoint* PassagePoint = Cast<APassagePoint>(OriginalActor))
+		{
+			for (auto Element : PassagePoint->PassageActorMap)
+			{
+				if (Element.Value.Actors.Contains(Actor))
+					return PassagePoint;
+			}
+		}
 	}
+	return nullptr;
 }
 
 void AMazeTileLevelInstance::GroupActors()
@@ -340,9 +372,19 @@ void AMazeTileLevelInstance::LoadLevelAsync()
 		UE_LOG(LogTemp, Error, TEXT("LoadLevelAsync LevelName could not be empty."));
 		return;
 	}
+	
+
+	FString NameOverride = L"";
+	
+	FNetworkGUID NetGUID = GetWorld()->GetNetDriver()->GuidCache->GetNetGUID(this);
+	if (NetGUID != 0)
+	{
+		NameOverride = NetGUID.ToString() + FString("_LevelInstance");
+	}
+	
 	LevelStreamingDynamic = Cast<ULevelStreamingDynamic>(
 		ULevelStreamingDynamic::LoadLevelInstance(
-			this, LevelName, GetActorLocation(), GetActorRotation(), bSuccess, L"",
+			this, LevelName, GetActorLocation(), GetActorRotation(), bSuccess, NameOverride,
 			ULevelStreamingDynamic::StaticClass()));
 	if (bSuccess)
 	{

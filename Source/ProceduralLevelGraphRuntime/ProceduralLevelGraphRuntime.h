@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProceduralLevelCoordinateSystem.h"
 #include "Node/MazeNodeBase.h"
 #include "UObject/Object.h"
 #include "ProceduralLevelGraphRuntime.generated.h"
@@ -56,5 +57,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Procedural Level Graph")
     void SpawnMaze(UObject* WorldContextObject);
-
+    
+    UPROPERTY(BlueprintReadOnly)
+    UProceduralLevelCoordinateSystem* CurrentLevelCoordinateSystem;
 };

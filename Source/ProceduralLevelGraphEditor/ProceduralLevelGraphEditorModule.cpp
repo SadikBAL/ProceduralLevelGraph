@@ -17,6 +17,7 @@
 
 void FProceduralLevelGraphEditorModule::OnObjectPreSave(UObject* Object, FObjectPreSaveContext ObjectPreSaveContext)
 {
+    /*
     AActor* SavedActor = Cast<AActor>(Object);
     UWorld* WorldToScan = nullptr;
     if (SavedActor)
@@ -29,7 +30,7 @@ void FProceduralLevelGraphEditorModule::OnObjectPreSave(UObject* Object, FObject
         TArray<AActor*> IgnoreList;
         UpdateMazeLevelInstanceBlueprintsDoorRef(WorldToScan->GetName(),IgnoreList);
         
-    }
+    }*/
 }
 
 void FProceduralLevelGraphEditorModule::UpdateMazeLevelInstanceBlueprintsDoorRef(FString LevelInstanceName, TArray<AActor*>& IgnoreList)

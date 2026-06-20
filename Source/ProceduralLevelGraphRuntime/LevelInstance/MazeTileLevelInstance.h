@@ -16,7 +16,10 @@ public:
 	AMazeTileLevelInstance();
 	virtual void OnLevelInstanceLoaded() override;
 	virtual bool IsLoadingEnabled() const override;
-	
+	virtual void PostNetInit() override;
+	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable, Category = "MazeTile")
+	FString GetNetID();
 	
 #if WITH_EDITOR
 	virtual  void PreSave(FObjectPreSaveContext SaveContext) override;
@@ -35,7 +38,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category="Level")
 	FMazeTileData TileData;
 	
-	UPROPERTY(VisibleAnywhere, Category="Level")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Level")
 	FString LevelName;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Level", meta = (UIMin = "1", UIMax = "1000", ClampMin = "1", ClampMax = "1000", MultipleOf = "1"))
 	int Width;
@@ -52,10 +55,12 @@ public:
 	UFUNCTION()
 	void RecreateReplicatedActors();
 	UFUNCTION()
+	APassagePoint* FindOwnerPasssagePoint(ULevel* Level, AActor* Actor);
+	UFUNCTION()
 	void GroupActors();
 	UFUNCTION()
 	void OnEditorLevelLoadedAndShown();
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void LoadLevelAsync();
 	UFUNCTION()
 	void OnLevelLoadedAndShown();
